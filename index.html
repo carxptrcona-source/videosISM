@@ -1,1929 +1,948 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ISM FACTORY v1.0 — Inglés Sin Miedo</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg-base: #0a0a0f;
-            --bg-sidebar: #0f0f1a;
-            --bg-panel: #151525;
-            --bg-card: #1c1c35;
-            --bg-card-hover: #252548;
-            --bg-input: #12122a;
-            --text-primary: #f5f5f7;
-            --text-secondary: #9595b0;
-            --text-tertiary: #5a5a7a;
-            --accent: #e63946;
-            --accent-hover: #ff4d5a;
-            --accent-glow: rgba(230, 57, 70, 0.15);
-            --accent2: #1d3557;
-            --border: #2a2a4a;
-            --border-hover: #3a3a6a;
-            --green: #10b981;
-            --yellow: #f59e0b;
-            --red: #ef4444;
-            --cyan: #06b6d4;
-            --white: #ffffff;
-            --sidebar-w: 250px;
-            --radius: 10px;
-            --radius-sm: 6px;
-            --radius-lg: 16px;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg-base); color: var(--text-primary); display: flex; height: 100vh; overflow: hidden; }
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
-
-        /* SIDEBAR */
-        .sidebar {
-            width: var(--sidebar-w); background: var(--bg-sidebar); border-right: 1px solid var(--border);
-            display: flex; flex-direction: column; flex-shrink: 0;
-        }
-        .sidebar-brand {
-            padding: 24px 20px; border-bottom: 1px solid var(--border); text-align: center;
-            background: linear-gradient(180deg, rgba(230,57,70,0.08), transparent);
-        }
-        .sidebar-brand h1 { font-size: 1.1rem; color: var(--accent); font-weight: 900; letter-spacing: 1px; }
-        .sidebar-brand p { font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
-        .sidebar-nav { padding: 12px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
-        .nav-section { font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px; margin: 16px 0 8px 8px; }
-        .nav-btn {
-            background: transparent; border: none; color: var(--text-secondary); padding: 11px 14px;
-            border-radius: var(--radius-sm); cursor: pointer; font-size: 0.82rem; font-weight: 600;
-            text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 10px;
-        }
-        .nav-btn:hover { background: var(--bg-card); color: var(--white); }
-        .nav-btn.active { background: var(--accent-glow); color: var(--accent); border-left: 3px solid var(--accent); }
-        .nav-btn .badge-count {
-            margin-left: auto; background: var(--accent); color: white; font-size: 0.65rem;
-            padding: 2px 7px; border-radius: 10px; font-weight: 800;
-        }
-
-        /* MAIN */
-        .main { flex: 1; overflow-y: auto; padding: 28px 40px; }
-        .view { display: none; animation: fadeIn 0.25s ease; }
-        .view.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
-
-        .page-title { font-size: 1.6rem; font-weight: 900; color: var(--white); margin-bottom: 4px; }
-        .page-desc { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 24px; }
-
-        /* CARDS & GRID */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
-        .card {
-            background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 22px; transition: all 0.2s;
-        }
-        .card:hover { border-color: var(--border-hover); }
-        .card-title { font-size: 0.95rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
-        .card-subtitle { font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 12px; }
-
-        /* BUTTONS */
-        .btn {
-            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
-            padding: 10px 20px; border-radius: var(--radius-sm); cursor: pointer;
-            font-size: 0.82rem; font-weight: 700; border: none; transition: all 0.15s;
-        }
-        .btn-primary { background: var(--accent); color: white; }
-        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(230,57,70,0.3); }
-        .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); }
-        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
-        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
-        .btn-sm { padding: 7px 14px; font-size: 0.75rem; }
-        .btn-lg { padding: 14px 28px; font-size: 0.95rem; }
-        .btn-block { width: 100%; }
-        .btn-success { background: var(--green); color: white; }
-        .btn-warning { background: var(--yellow); color: #000; }
-
-        /* FORMS */
-        .form-group { margin-bottom: 16px; }
-        .form-label { display: block; font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 6px; }
-        .form-input, .form-select, textarea {
-            width: 100%; background: var(--bg-input); border: 1px solid var(--border);
-            color: var(--white); padding: 10px 14px; border-radius: var(--radius-sm);
-            font-size: 0.88rem; transition: all 0.15s;
-        }
-        .form-input:focus, .form-select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
-        textarea { resize: vertical; min-height: 80px; }
-
-        /* TABLES */
-        .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
-        table { width: 100%; border-collapse: collapse; }
-        th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.84rem; }
-        th { background: var(--bg-card); color: var(--text-tertiary); text-transform: uppercase; font-size: 0.7rem; font-weight: 800; }
-        tbody tr:hover { background: var(--bg-card-hover); cursor: pointer; }
-
-        .badge {
-            display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.65rem;
-            font-weight: 800; text-transform: uppercase;
-        }
-        .badge-idea { background: rgba(150,150,180,0.1); color: var(--text-secondary); }
-        .badge-audio { background: rgba(230,57,70,0.1); color: var(--accent); }
-        .badge-edit { background: rgba(245,158,11,0.1); color: var(--yellow); }
-        .badge-ready { background: rgba(16,185,129,0.1); color: var(--green); }
-        .badge-pub { background: rgba(6,182,212,0.1); color: var(--cyan); }
-
-        /* STAT CARDS */
-        .stat-card { text-align: center; padding: 20px; }
-        .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--white); }
-        .stat-label { font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; font-weight: 700; margin-top: 4px; }
-
-        /* FACTORY SPECIFIC */
-        .factory-input-area {
-            background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
-            border: 2px dashed var(--border); border-radius: var(--radius-lg);
-            padding: 40px; text-align: center; transition: all 0.3s;
-        }
-        .factory-input-area:hover { border-color: var(--accent); }
-        .factory-input-area h3 { font-size: 1.3rem; margin-bottom: 8px; }
-
-        .step-indicator {
-            display: flex; gap: 0; margin-bottom: 30px; background: var(--bg-panel);
-            border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
-        }
-        .step {
-            flex: 1; padding: 14px; text-align: center; font-size: 0.75rem; font-weight: 700;
-            color: var(--text-tertiary); border-right: 1px solid var(--border); position: relative;
-            transition: all 0.3s;
-        }
-        .step:last-child { border-right: none; }
-        .step.active { background: var(--accent-glow); color: var(--accent); }
-        .step.done { background: rgba(16,185,129,0.1); color: var(--green); }
-        .step-num { font-size: 1.1rem; font-weight: 900; display: block; margin-bottom: 2px; }
-
-        /* PREVIEW PANEL */
-        .preview-phone {
-            width: 320px; height: 568px; background: #000; border-radius: 20px;
-            border: 3px solid #333; margin: 0 auto; overflow: hidden; position: relative;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
-        }
-        .preview-phone canvas { width: 100%; height: 100%; }
-
-        /* LOADING */
-        .loading-spinner {
-            display: inline-block; width: 20px; height: 20px; border: 3px solid var(--border);
-            border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
-        }
-        @keyframes spin { to { transform: rotate(360deg); } }
-
-        .loading-overlay {
-            position: fixed; inset: 0; background: rgba(10,10,15,0.92); z-index: 1000;
-            display: none; justify-content: center; align-items: center; flex-direction: column; gap: 20px;
-        }
-        .loading-overlay.active { display: flex; }
-        .loading-overlay .loading-spinner { width: 50px; height: 50px; border-width: 4px; }
-
-        /* GENERATED CONTENT */
-        .gen-phrase-row {
-            display: grid; grid-template-columns: 1fr 1fr 0.8fr 60px; gap: 10px;
-            margin-bottom: 8px; align-items: center;
-        }
-        .gen-phrase-row input {
-            background: var(--bg-input); border: 1px solid var(--border); color: white;
-            padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.85rem;
-        }
-        .gen-phrase-row input:focus { border-color: var(--accent); outline: none; }
-
-        /* TEMPLATE SELECTOR */
-        .template-option {
-            border: 2px solid var(--border); border-radius: var(--radius); padding: 16px;
-            cursor: pointer; transition: all 0.2s; text-align: center;
-        }
-        .template-option:hover { border-color: var(--accent); transform: translateY(-2px); }
-        .template-option.selected { border-color: var(--accent); background: var(--accent-glow); }
-        .template-option img, .template-option canvas { width: 100%; border-radius: 6px; }
-        .template-option h4 { margin-top: 10px; font-size: 0.85rem; }
-        .template-option p { font-size: 0.72rem; color: var(--text-tertiary); }
-
-        /* KANBAN */
-        .kanban-board { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; }
-        .kanban-col {
-            flex: 0 0 260px; background: var(--bg-panel); border: 1px solid var(--border);
-            border-radius: var(--radius); display: flex; flex-direction: column; max-height: calc(100vh - 200px);
-        }
-        .kanban-head { padding: 14px; font-weight: 800; font-size: 0.85rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
-        .kanban-body { padding: 10px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
-        .k-card {
-            background: var(--bg-card); border: 1px solid var(--border); padding: 12px;
-            border-radius: var(--radius-sm); cursor: grab; transition: all 0.15s;
-        }
-        .k-card:hover { border-color: var(--accent); transform: translateY(-2px); }
-        .k-card-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; }
-        .k-card-meta { font-size: 0.72rem; color: var(--text-tertiary); }
-
-        /* TTS PANEL */
-        .tts-controls {
-            background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius);
-            padding: 20px; margin-top: 16px;
-        }
-        .voice-option { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; cursor: pointer; }
-        .voice-option:hover { border-color: var(--accent); }
-        .voice-option.selected { border-color: var(--green); background: rgba(16,185,129,0.05); }
-
-        /* TOAST */
-        #toast {
-            position: fixed; bottom: 30px; right: 30px; padding: 14px 24px;
-            border-radius: var(--radius-sm); color: white; font-weight: 700; font-size: 0.85rem;
-            opacity: 0; transition: all 0.3s; z-index: 9999; transform: translateY(20px);
-        }
-        #toast.show { opacity: 1; transform: translateY(0); }
-
-        /* MODAL */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0; background: rgba(10,10,15,0.9);
-            z-index: 500; justify-content: center; align-items: center;
-        }
-        .modal-overlay.open { display: flex; }
-        .modal-box {
-            background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg);
-            width: 95%; max-width: 950px; max-height: 90vh; display: flex; flex-direction: column;
-        }
-        .modal-header {
-            padding: 20px 28px; border-bottom: 1px solid var(--border);
-            display: flex; justify-content: space-between; align-items: center;
-        }
-        .modal-content { padding: 28px; overflow-y: auto; flex: 1; }
-        .modal-footer { padding: 16px 28px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
-
-        /* RESPONSIVE */
-        @media (max-width: 1200px) {
-            .grid-2 { grid-template-columns: 1fr; }
-            .grid-3 { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 768px) {
-            .sidebar { display: none; }
-            .main { padding: 16px; }
-            .grid-3 { grid-template-columns: 1fr; }
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ISM FACTORY v2.1 — Inglés Sin Miedo</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+--bg:#09090f;--bg2:#101020;--bg3:#171730;--bg4:#1e1e42;
+--tx:#f0f0f5;--tx2:#8888aa;--tx3:#555570;
+--red:#e63946;--red2:#ff4d5a;--redG:rgba(230,57,70,.12);
+--grn:#10b981;--ylw:#f59e0b;--cyn:#06b6d4;--orn:#f97316;
+--bdr:#252545;--bdr2:#353560;
+--r:8px;--r2:4px;--r3:14px;
+}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif}
+body{background:var(--bg);color:var(--tx);display:flex;height:100vh;overflow:hidden}
+::-webkit-scrollbar{width:5px}::-webkit-scrollbar-thumb{background:var(--bdr);border-radius:9px}::-webkit-scrollbar-track{background:transparent}
+.sb{width:240px;background:var(--bg2);border-right:1px solid var(--bdr);display:flex;flex-direction:column;flex-shrink:0}
+.sb-hd{padding:20px 16px;border-bottom:1px solid var(--bdr);text-align:center;background:linear-gradient(180deg,var(--redG),transparent)}
+.sb-hd h1{font-size:1rem;color:var(--red);font-weight:900;letter-spacing:1px}
+.sb-hd p{font-size:.58rem;color:var(--tx3);text-transform:uppercase;letter-spacing:2px;margin-top:3px}
+.sb-nav{padding:10px;flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:1px}
+.sb-lbl{font-size:.58rem;color:var(--tx3);text-transform:uppercase;font-weight:800;letter-spacing:1.5px;margin:14px 0 6px 10px}
+.nb{background:0;border:0;color:var(--tx2);padding:10px 12px;border-radius:var(--r2);cursor:pointer;font-size:.8rem;font-weight:600;text-align:left;display:flex;align-items:center;gap:9px;transition:.15s}
+.nb:hover{background:var(--bg3);color:#fff}
+.nb.on{background:var(--redG);color:var(--red);border-left:3px solid var(--red)}
+.nb .cnt{margin-left:auto;background:var(--red);color:#fff;font-size:.6rem;padding:2px 7px;border-radius:9px;font-weight:800}
+.mn{flex:1;overflow-y:auto;padding:24px 36px}
+.vw{display:none;animation:fi .2s ease}.vw.on{display:block}
+@keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+.pt{font-size:1.5rem;font-weight:900;color:#fff;margin-bottom:3px}
+.pd{color:var(--tx2);font-size:.85rem;margin-bottom:22px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.cd{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r);padding:20px;transition:.2s}
+.cd:hover{border-color:var(--bdr2)}
+.cdt{font-size:.7rem;color:var(--tx3);text-transform:uppercase;font-weight:800;letter-spacing:.5px;margin-bottom:10px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:9px 18px;border-radius:var(--r2);cursor:pointer;font-size:.8rem;font-weight:700;border:0;transition:.15s}
+.bp{background:var(--red);color:#fff}.bp:hover{background:var(--red2);transform:translateY(-1px);box-shadow:0 4px 12px rgba(230,57,70,.3)}
+.bs{background:var(--bg4);border:1px solid var(--bdr);color:var(--tx)}.bs:hover{border-color:var(--red);color:var(--red)}
+.bg{background:0;border:1px solid var(--bdr);color:var(--tx2)}.bg:hover{border-color:var(--red)}
+.bsm{padding:6px 12px;font-size:.72rem}
+.blk{width:100%}
+.bgrn{background:var(--grn);color:#fff}
+.fg{margin-bottom:14px}
+.fl{display:block;font-size:.68rem;color:var(--tx2);text-transform:uppercase;font-weight:800;letter-spacing:.5px;margin-bottom:5px}
+.fi,.fs,textarea{width:100%;background:var(--bg);border:1px solid var(--bdr);color:#fff;padding:9px 13px;border-radius:var(--r2);font-size:.85rem;transition:.15s}
+.fi:focus,.fs:focus,textarea:focus{outline:0;border-color:var(--red);box-shadow:0 0 0 3px var(--redG)}
+textarea{resize:vertical;min-height:70px}
+.tw{border:1px solid var(--bdr);border-radius:var(--r);overflow:hidden;max-height:60vh;overflow-y:auto}
+table{width:100%;border-collapse:collapse}
+th,td{padding:11px 14px;border-bottom:1px solid var(--bdr);text-align:left;font-size:.82rem}
+th{background:var(--bg3);color:var(--tx3);text-transform:uppercase;font-size:.68rem;font-weight:800;position:sticky;top:0;z-index:1}
+tbody tr:hover{background:var(--bg4);cursor:pointer}
+.bdg{display:inline-block;padding:2px 9px;border-radius:3px;font-size:.62rem;font-weight:800;text-transform:uppercase}
+.bdg-idea{background:rgba(136,136,170,.1);color:var(--tx2)}
+.bdg-audio{background:var(--redG);color:var(--red)}
+.bdg-edit{background:rgba(245,158,11,.1);color:var(--ylw)}
+.bdg-ready{background:rgba(16,185,129,.1);color:var(--grn)}
+.bdg-pub{background:rgba(6,182,212,.1);color:var(--cyn)}
+.stb{display:flex;gap:0;margin-bottom:26px;background:var(--bg2);border-radius:var(--r);overflow:hidden;border:1px solid var(--bdr)}
+.stp{flex:1;padding:12px;text-align:center;font-size:.72rem;font-weight:700;color:var(--tx3);border-right:1px solid var(--bdr);transition:.3s}
+.stp:last-child{border:0}
+.stp.on{background:var(--redG);color:var(--red)}
+.stp.dn{background:rgba(16,185,129,.08);color:var(--grn)}
+.stp b{display:block;font-size:1rem;margin-bottom:1px}
+.pph{width:310px;height:550px;background:#000;border-radius:18px;border:3px solid #333;margin:0 auto;overflow:hidden;box-shadow:0 16px 50px rgba(0,0,0,.5)}
+.pph canvas{width:100%;height:100%}
+.pr{display:grid;grid-template-columns:1fr 1.1fr .8fr 40px;gap:8px;margin-bottom:7px;align-items:center}
+.pr input{background:var(--bg);border:1px solid var(--bdr);color:#fff;padding:7px 10px;border-radius:var(--r2);font-size:.82rem}
+.pr input:focus{border-color:var(--red);outline:0}
+.kb{display:flex;gap:12px;overflow-x:auto;padding-bottom:8px}
+.kc{flex:0 0 250px;background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r);display:flex;flex-direction:column;max-height:calc(100vh - 180px)}
+.kh{padding:12px;font-weight:800;font-size:.82rem;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between}
+.kby{padding:9px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:7px}
+.kk{background:var(--bg4);border:1px solid var(--bdr);padding:11px;border-radius:var(--r2);cursor:grab;transition:.15s}
+.kk:hover{border-color:var(--red);transform:translateY(-2px)}
+.mo{display:none;position:fixed;inset:0;background:rgba(9,9,15,.92);z-index:500;justify-content:center;align-items:center}
+.mo.op{display:flex}
+.mb{background:var(--bg2);border:1px solid var(--bdr);border-radius:var(--r3);width:95%;max-width:920px;max-height:90vh;display:flex;flex-direction:column}
+.mh{padding:18px 26px;border-bottom:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+.mc{padding:26px;overflow-y:auto;flex:1}
+.mf{padding:14px 26px;border-top:1px solid var(--bdr);display:flex;justify-content:space-between;align-items:center}
+.ld{position:fixed;inset:0;background:rgba(9,9,15,.94);z-index:999;display:none;justify-content:center;align-items:center;flex-direction:column;gap:16px}
+.ld.on{display:flex}
+.sp{width:44px;height:44px;border:4px solid var(--bdr);border-top-color:var(--red);border-radius:50%;animation:spin .7s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.tpo{border:2px solid var(--bdr);border-radius:var(--r);padding:14px;cursor:pointer;transition:.2s;text-align:center}
+.tpo:hover{border-color:var(--red);transform:translateY(-2px)}
+.tpo.sel{border-color:var(--red);background:var(--redG)}
+#toast{position:fixed;bottom:28px;right:28px;padding:12px 22px;border-radius:var(--r2);color:#fff;font-weight:700;font-size:.82rem;opacity:0;transition:.3s;z-index:9999;transform:translateY(16px)}
+#toast.sh{opacity:1;transform:translateY(0)}
+@media(max-width:900px){.sb{display:none}.mn{padding:14px}.g2,.g3{grid-template-columns:1fr}}
+</style>
 </head>
 <body>
-
-<!-- SIDEBAR -->
-<aside class="sidebar">
-    <div class="sidebar-brand">
-        <h1>🎯 ISM FACTORY</h1>
-        <p>Inglés Sin Miedo</p>
-    </div>
-    <nav class="sidebar-nav">
-        <div class="nav-section">Producción</div>
-        <button class="nav-btn active" onclick="goTo('factory',this)">
-            🏭 Fábrica de Shorts
-        </button>
-        <button class="nav-btn" onclick="goTo('database',this)">
-            🗄️ Base de Videos
-            <span class="badge-count" id="nav-count">0</span>
-        </button>
-        <button class="nav-btn" onclick="goTo('kanban',this)">📋 Kanban</button>
-        <button class="nav-btn" onclick="goTo('calendar',this)">📅 Calendario</button>
-
-        <div class="nav-section">Herramientas</div>
-        <button class="nav-btn" onclick="goTo('tts',this)">🔊 Audio / TTS</button>
-        <button class="nav-btn" onclick="goTo('seo',this)">🔍 SEO Generator</button>
-        <button class="nav-btn" onclick="goTo('prompts',this)">🤖 Prompt Hub</button>
-
-        <div class="nav-section">Sistema</div>
-        <button class="nav-btn" onclick="goTo('inspo',this)">👁️ Swipe File</button>
-        <button class="nav-btn" onclick="goTo('settings',this)">⚙️ Config & Backup</button>
-    </nav>
+<aside class="sb">
+<div class="sb-hd"><h1>🎯 ISM FACTORY</h1><p>Inglés Sin Miedo v2.1</p></div>
+<nav class="sb-nav">
+<div class="sb-lbl">Producción</div>
+<button class="nb on" onclick="go('fac',this)">🏭 Fábrica</button>
+<button class="nb" onclick="go('db',this)">🗄️ Videos <span class="cnt" id="nc">0</span></button>
+<button class="nb" onclick="go('kan',this)">📋 Kanban</button>
+<button class="nb" onclick="go('cal',this)">📅 Calendario</button>
+<div class="sb-lbl">Herramientas</div>
+<button class="nb" onclick="go('tts',this)">🔊 Audio/TTS</button>
+<button class="nb" onclick="go('seo',this)">🔍 SEO</button>
+<button class="nb" onclick="go('prm',this)">🤖 Prompts</button>
+<div class="sb-lbl">Sistema</div>
+<button class="nb" onclick="go('ins',this)">👁️ Swipe File</button>
+<button class="nb" onclick="go('cfg',this)">⚙️ Config</button>
+</nav>
 </aside>
+<main class="mn">
 
-<!-- MAIN CONTENT -->
-<main class="main">
+<!-- FACTORY -->
+<div class="vw on" id="v-fac">
+<h1 class="pt">🏭 Fábrica de Shorts</h1>
+<p class="pd">Tema → IA genera guion → Template → Descarga frames</p>
+<div class="stb"><div class="stp on" id="s1"><b>1</b>Tema</div><div class="stp" id="s2"><b>2</b>Guion</div><div class="stp" id="s3"><b>3</b>Template</div><div class="stp" id="s4"><b>4</b>Export</div></div>
 
-    <!-- ==================== FACTORY ==================== -->
-    <div class="view active" id="v-factory">
-        <h1 class="page-title">🏭 Fábrica de Shorts</h1>
-        <p class="page-desc">Escribe un tema → La IA genera todo → Descarga tus frames listos para CapCut.</p>
+<div id="fs1">
+<div style="background:linear-gradient(135deg,var(--bg2),var(--bg3));border:2px dashed var(--bdr);border-radius:var(--r3);padding:36px;text-align:center">
+<h3 style="font-size:1.2rem;margin-bottom:6px">¿Sobre qué será tu Short?</h3>
+<p style="color:var(--tx2);margin-bottom:20px">La IA genera todo automáticamente</p>
+<div style="max-width:580px;margin:0 auto">
+<div class="fg"><input class="fi" id="topicInp" placeholder="Ej: Frases útiles para hablar inglés..." style="font-size:1.05rem;padding:13px 18px;text-align:center"></div>
+<div class="g3" style="margin-bottom:18px">
+<div class="fg"><label class="fl">Cantidad</label><select class="fs" id="cntSel"><option value="10">10</option><option value="12">12</option><option value="15" selected>15</option><option value="18">18</option><option value="20">20</option></select></div>
+<div class="fg"><label class="fl">Nivel</label><select class="fs" id="lvlSel"><option value="basico" selected>Básico</option><option value="intermedio">Intermedio</option><option value="avanzado">Avanzado</option></select></div>
+<div class="fg"><label class="fl">Hook</label><select class="fs" id="hookSel"><option value="curiosidad">Curiosidad 🤯</option><option value="negacion">Negación ❌</option><option value="reto">Reto 💪</option></select></div>
+</div>
+<button class="btn bp" onclick="geminiGen()" style="padding:14px 36px;font-size:.95rem">🚀 Generar con Gemini AI</button>
+<div style="color:var(--tx3);font-size:.7rem;margin-top:10px">Modelo: gemini-2.5-flash (gratis)</div>
+</div>
+</div>
+<div style="margin-top:20px"><p class="cdt">⚡ Temas Rápidos</p><div style="display:flex;flex-wrap:wrap;gap:7px" id="quickBtns"></div></div>
+</div>
 
-        <!-- STEP INDICATOR -->
-        <div class="step-indicator" id="stepBar">
-            <div class="step active" id="step-1"><span class="step-num">1</span>Tema & IA</div>
-            <div class="step" id="step-2"><span class="step-num">2</span>Revisar Guion</div>
-            <div class="step" id="step-3"><span class="step-num">3</span>Template Visual</div>
-            <div class="step" id="step-4"><span class="step-num">4</span>Preview & Export</div>
-        </div>
+<div id="fs2" style="display:none">
+<div class="cd" style="border-left:4px solid var(--red);margin-bottom:18px">
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+<input class="fi" id="gTitle" style="font-size:1.15rem;font-weight:900;background:0;border:0;padding:0;width:60%" placeholder="Título">
+<div style="display:flex;gap:7px"><button class="btn bs bsm" onclick="addGP()">+ Frase</button><button class="btn bg bsm" onclick="geminiGen()">🔄</button></div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1.1fr .8fr 40px;gap:8px;margin-bottom:6px"><span style="font-size:.65rem;color:var(--tx3);font-weight:800">ESPAÑOL</span><span style="font-size:.65rem;color:var(--tx3);font-weight:800">INGLÉS</span><span style="font-size:.65rem;color:var(--tx3);font-weight:800">FONÉTICA</span><span></span></div>
+<div id="gPhrC"></div>
+</div>
+<div class="g2"><div class="cd"><p class="cdt">🎯 Hook</p><input class="fi" id="gHook" style="font-weight:700"></div><div class="cd"><p class="cdt">📂 Categoría</p><input class="fi" id="gCat"></div></div>
+<div style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn bs" onclick="goS(1)">← Volver</button><button class="btn bp" onclick="goS(3)">Template →</button></div>
+</div>
 
-        <!-- STEP 1: TOPIC INPUT -->
-        <div id="factory-step-1">
-            <div class="factory-input-area" id="inputArea">
-                <h3>¿Sobre qué será tu Short?</h3>
-                <p style="color:var(--text-secondary); margin-bottom: 24px;">Escribe un tema y Gemini generará el guion completo automáticamente.</p>
-                <div style="max-width:600px; margin:0 auto;">
-                    <div class="form-group">
-                        <input type="text" class="form-input" id="topicInput" placeholder="Ej: Frases útiles para hablar inglés, Preguntas básicas, Verbos irregulares..." style="font-size:1.1rem; padding:14px 20px; text-align:center;">
-                    </div>
-                    <div class="grid-3" style="margin-bottom:20px;">
-                        <div class="form-group">
-                            <label class="form-label">Cantidad de frases</label>
-                            <select class="form-select" id="phraseCount">
-                                <option value="10">10 frases</option>
-                                <option value="12">12 frases</option>
-                                <option value="15" selected>15 frases</option>
-                                <option value="18">18 frases</option>
-                                <option value="20">20 frases</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Nivel</label>
-                            <select class="form-select" id="levelSelect">
-                                <option value="basico" selected>Básico</option>
-                                <option value="intermedio">Intermedio</option>
-                                <option value="avanzado">Avanzado</option>
-                            </select>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Estilo de Hook</label>
-                            <select class="form-select" id="hookStyle">
-                                <option value="curiosidad" selected>Curiosidad (El 90% no sabe...)</option>
-                                <option value="negacion">Negación (Deja de decir...)</option>
-                                <option value="reto">Reto (¿Puedes decir todas?)</option>
-                                <option value="emoji">Emoji llamativo (🤯🔥)</option>
-                            </select>
-                        </div>
-                    </div>
-                    <button class="btn btn-primary btn-lg" onclick="generateWithGemini()" id="generateBtn" style="padding:16px 40px; font-size:1rem;">
-                        🚀 Generar con Gemini AI
-                    </button>
-                    <p style="color:var(--text-tertiary); font-size:0.72rem; margin-top:12px;">Usa la API gratuita de Gemini • ~5 segundos</p>
-                </div>
-            </div>
+<div id="fs3" style="display:none">
+<p class="cdt" style="margin-bottom:14px">Elige diseño</p>
+<div class="g3">
+<div class="tpo sel" onclick="selTpl('bicolor',this)"><div style="background:#fff;border-radius:5px;padding:10px;min-height:160px" id="tpv1"></div><h4 style="margin-top:8px;font-size:.82rem">Lista Bicolor</h4><p style="font-size:.68rem;color:var(--tx3)">Rojo/Negro viral</p></div>
+<div class="tpo" onclick="selTpl('columnas',this)"><div style="background:linear-gradient(180deg,#1a3a5c,#0d1b2a);border-radius:5px;padding:10px;min-height:160px" id="tpv2"></div><h4 style="margin-top:8px;font-size:.82rem">Columnas</h4><p style="font-size:.68rem;color:var(--tx3)">Azul profesional</p></div>
+<div class="tpo" onclick="selTpl('tarjetas',this)"><div style="background:#111;border-radius:5px;padding:10px;min-height:160px" id="tpv3"></div><h4 style="margin-top:8px;font-size:.82rem">Tarjetas</h4><p style="font-size:.68rem;color:var(--tx3)">1 frase/frame</p></div>
+</div>
+<div class="cd" style="margin-top:18px"><p class="cdt">🎨 Colores</p>
+<div class="g4">
+<div class="fg"><label class="fl">Español</label><input type="color" class="fi" id="cEsp" value="#e63946" style="height:40px;padding:3px"></div>
+<div class="fg"><label class="fl">Inglés</label><input type="color" class="fi" id="cEng" value="#1a1a2e" style="height:40px;padding:3px"></div>
+<div class="fg"><label class="fl">Fondo</label><input type="color" class="fi" id="cBg" value="#ffffff" style="height:40px;padding:3px"></div>
+<div class="fg"><label class="fl">Fuente</label><select class="fs" id="fSel"><option>Montserrat</option><option>Inter</option><option>Arial Black</option></select></div>
+</div></div>
+<div style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn bs" onclick="goS(2)">← Volver</button><button class="btn bp" onclick="goS(4)">Preview →</button></div>
+</div>
 
-            <!-- QUICK TOPICS -->
-            <div style="margin-top:24px;">
-                <p class="card-subtitle">⚡ Temas Rápidos (1 click)</p>
-                <div style="display:flex; flex-wrap:wrap; gap:8px;">
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Frases útiles para hablar inglés</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Preguntas básicas en inglés</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Verbos irregulares más usados</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Expresiones para el trabajo</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Cómo presentarte en inglés</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Frases para viajar</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Emociones y sentimientos</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Saludos y despedidas</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Conectores para hablar fluido</button>
-                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Phrasal verbs esenciales</button>
-                </div>
-            </div>
-        </div>
+<div id="fs4" style="display:none">
+<div class="g2">
+<div><p class="cdt">📱 Preview</p><div class="pph"><canvas id="pvC" width="1080" height="1920"></canvas></div></div>
+<div>
+<div class="cd" style="margin-bottom:14px"><p class="cdt">📥 Exportar</p>
+<button class="btn bp blk" onclick="dlImg()" style="margin-bottom:8px;padding:13px">📥 Descargar PNG</button>
+<button class="btn bgrn blk" onclick="dlFrames()" style="margin-bottom:8px;padding:13px">📦 Todos los Frames</button>
+<button class="btn bs blk" onclick="saveToDB()" style="padding:13px">💾 Guardar en BD</button></div>
+<div class="cd" style="margin-bottom:14px"><p class="cdt">🔍 SEO</p>
+<div class="fg"><label class="fl">Título YT</label><input class="fi" id="seoT" readonly></div>
+<div class="fg"><label class="fl">Descripción</label><textarea id="seoD" rows="2" readonly></textarea></div>
+<div class="fg"><label class="fl">Tags</label><input class="fi" id="seoTg" readonly></div>
+<button class="btn bs bsm" onclick="cpSEO()">📋 Copiar SEO</button></div>
+<div class="cd"><p class="cdt">⏱️ Guía CapCut</p><div id="asmG" style="font-size:.78rem;color:var(--tx2)"></div></div>
+</div></div>
+<div style="display:flex;justify-content:space-between;margin-top:18px"><button class="btn bs" onclick="goS(3)">←</button><button class="btn bp" onclick="resetFac()">🔄 Nuevo</button></div>
+</div>
+</div>
 
-        <!-- STEP 2: REVIEW SCRIPT -->
-        <div id="factory-step-2" style="display:none;">
-            <div class="card" style="margin-bottom:20px; border-left:4px solid var(--accent);">
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
-                    <div>
-                        <input type="text" class="form-input" id="genTitle" style="font-size:1.2rem; font-weight:900; background:transparent; border:none; padding:0; width:500px;" placeholder="Título del video">
-                    </div>
-                    <div style="display:flex; gap:8px;">
-                        <button class="btn btn-secondary btn-sm" onclick="addGenPhrase()">+ Añadir frase</button>
-                        <button class="btn btn-ghost btn-sm" onclick="regenerateScript()">🔄 Regenerar</button>
-                    </div>
-                </div>
-                <div style="display:grid; grid-template-columns:1fr 1fr 0.8fr 60px; gap:10px; margin-bottom:8px;">
-                    <span style="font-size:0.7rem; color:var(--text-tertiary); font-weight:800; text-transform:uppercase;">Español</span>
-                    <span style="font-size:0.7rem; color:var(--text-tertiary); font-weight:800; text-transform:uppercase;">Inglés</span>
-                    <span style="font-size:0.7rem; color:var(--text-tertiary); font-weight:800; text-transform:uppercase;">Fonética</span>
-                    <span></span>
-                </div>
-                <div id="genPhrasesContainer"></div>
-            </div>
+<!-- DATABASE -->
+<div class="vw" id="v-db">
+<h1 class="pt">🗄️ Base de Videos</h1><p class="pd">Click en un video para editar</p>
+<div style="display:flex;gap:10px;margin-bottom:18px">
+<input class="fi" id="dbSrch" placeholder="Buscar..." onkeyup="rDB()" style="max-width:350px">
+<select class="fs" id="dbFlt" onchange="rDB()" style="max-width:180px"><option value="all">Todos</option><option value="idea">Ideas</option><option value="audio">Audio</option><option value="edit">Edición</option><option value="ready">Listos</option><option value="pub">Publicados</option></select>
+<button class="btn bp bsm" style="margin-left:auto" onclick="go('fac',document.querySelectorAll('.nb')[0])">+ Nuevo</button>
+</div>
+<div class="tw"><table><thead><tr><th>Tema</th><th>Estado</th><th>Hook</th><th>#</th><th>Cat</th></tr></thead><tbody id="dbBd"></tbody></table></div>
+</div>
 
-            <!-- SEO Preview -->
-            <div class="grid-2">
-                <div class="card">
-                    <p class="card-subtitle">🎯 Hook Generado</p>
-                    <input type="text" class="form-input" id="genHook" style="font-weight:700; font-size:1rem;">
-                </div>
-                <div class="card">
-                    <p class="card-subtitle">📂 Categoría</p>
-                    <input type="text" class="form-input" id="genCategory">
-                </div>
-            </div>
+<!-- KANBAN -->
+<div class="vw" id="v-kan"><h1 class="pt">📋 Kanban</h1><p class="pd">Arrastra para cambiar estado</p><div class="kb" id="kBoard"></div></div>
 
-            <div style="display:flex; justify-content:space-between; margin-top:20px;">
-                <button class="btn btn-secondary" onclick="goStep(1)">← Volver</button>
-                <button class="btn btn-primary btn-lg" onclick="goStep(3)">Elegir Template Visual →</button>
-            </div>
-        </div>
+<!-- CALENDAR -->
+<div class="vw" id="v-cal"><h1 class="pt">📅 Calendario</h1><p class="pd">Planifica publicaciones</p>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:18px"><button class="btn bs bsm" onclick="chMo(-1)">◀</button><h3 id="calT" style="font-size:1.05rem;font-weight:800"></h3><button class="btn bs bsm" onclick="chMo(1)">▶</button></div>
+<div style="display:grid;grid-template-columns:repeat(7,1fr);gap:5px" id="calG"></div></div>
 
-        <!-- STEP 3: TEMPLATE SELECTION -->
-        <div id="factory-step-3" style="display:none;">
-            <p class="card-subtitle" style="margin-bottom:16px;">Elige el diseño de tu Short</p>
-            <div class="grid-3">
-                <div class="template-option selected" onclick="selectTemplate('lista_bicolor', this)" id="tpl-lista_bicolor">
-                    <div style="background:white; border-radius:6px; padding:12px; min-height:180px;" id="tpl-preview-1"></div>
-                    <h4>Lista Bicolor</h4>
-                    <p>Estilo clásico rojo/negro • 1.3M views</p>
-                </div>
-                <div class="template-option" onclick="selectTemplate('columnas_degradado', this)" id="tpl-columnas_degradado">
-                    <div style="background:linear-gradient(180deg,#1a3a5c,#0d1b2a); border-radius:6px; padding:12px; min-height:180px;" id="tpl-preview-2"></div>
-                    <h4>Columnas Degradado</h4>
-                    <p>Estilo tabla azul/blanco • Profesional</p>
-                </div>
-                <div class="template-option" onclick="selectTemplate('tarjetas_reveal', this)" id="tpl-tarjetas_reveal">
-                    <div style="background:#111; border-radius:6px; padding:12px; min-height:180px;" id="tpl-preview-3"></div>
-                    <h4>Tarjetas Individuales</h4>
-                    <p>Una frase por frame • Para reels</p>
-                </div>
-            </div>
+<!-- TTS -->
+<div class="vw" id="v-tts"><h1 class="pt">🔊 Audio / TTS</h1><p class="pd">TTS del navegador + grabación de voz</p>
+<div class="g2">
+<div class="cd"><p class="cdt">🤖 TTS</p>
+<div class="fg"><label class="fl">Video</label><select class="fs" id="ttsSel" onchange="ldTTS()"></select></div>
+<div class="fg"><label class="fl">Modo</label><select class="fs" id="ttsMode"><option value="both">Esp + Eng</option><option value="en">Solo Inglés</option><option value="es">Solo Español</option></select></div>
+<div class="fg"><label class="fl">Velocidad: <span id="spdV">0.9x</span></label><input type="range" id="ttsSpd" min="0.5" max="1.5" step="0.1" value="0.9" style="width:100%" oninput="document.getElementById('spdV').textContent=this.value+'x'"></div>
+<div id="ttsLst" style="max-height:280px;overflow-y:auto;margin:12px 0"></div>
+<div style="display:flex;gap:7px"><button class="btn bp blk" onclick="playAll()">▶ Play</button><button class="btn bs" onclick="speechSynthesis.cancel()">⏹</button></div>
+</div>
+<div class="cd"><p class="cdt">🎙️ Tu Voz</p>
+<div class="fg"><label class="fl">Video</label><select class="fs" id="teleSel"></select></div>
+<button class="btn bp blk" onclick="openTele()" style="margin-bottom:10px">🎥 Teleprompter</button>
+<button class="btn bs blk" onclick="toggleRec()" id="recBtn">🔴 Grabar</button>
+<div id="recSt" style="margin-top:10px;text-align:center;font-size:.82rem;color:var(--tx3)"></div>
+<audio id="recAud" controls style="width:100%;margin-top:10px;display:none"></audio>
+</div></div></div>
 
-            <!-- CUSTOMIZATION -->
-            <div class="card" style="margin-top:20px;">
-                <p class="card-subtitle">🎨 Personalización</p>
-                <div class="grid-4">
-                    <div class="form-group">
-                        <label class="form-label">Color Español</label>
-                        <input type="color" class="form-input" id="colorEsp" value="#e63946" style="height:42px; padding:4px;">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Color Inglés</label>
-                        <input type="color" class="form-input" id="colorEng" value="#1a1a2e" style="height:42px; padding:4px;">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Fondo</label>
-                        <input type="color" class="form-input" id="colorBg" value="#ffffff" style="height:42px; padding:4px;">
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">Fuente</label>
-                        <select class="form-select" id="fontSelect">
-                            <option value="Montserrat">Montserrat</option>
-                            <option value="Poppins">Poppins</option>
-                            <option value="Inter">Inter</option>
-                            <option value="Arial Black">Arial Black</option>
-                        </select>
-                    </div>
-                </div>
-            </div>
+<!-- SEO -->
+<div class="vw" id="v-seo"><h1 class="pt">🔍 SEO Generator</h1><p class="pd">Genera SEO con Gemini</p>
+<div class="cd" style="max-width:650px">
+<div class="fg"><label class="fl">Video</label><select class="fs" id="seoSel"></select></div>
+<button class="btn bp blk" onclick="genSEO()">🔍 Generar SEO</button>
+<div id="seoRes" style="display:none;margin-top:18px">
+<div class="fg"><label class="fl">Títulos</label><div id="seoTits"></div></div>
+<div class="fg"><label class="fl">Descripción</label><textarea id="seoDsc" rows="3"></textarea></div>
+<div class="fg"><label class="fl">Tags</label><input class="fi" id="seoTgs"></div>
+<div class="fg"><label class="fl">Hashtags</label><input class="fi" id="seoHsh"></div>
+<button class="btn bs bsm" onclick="cpAllSEO()">📋 Copiar</button>
+</div></div></div>
 
-            <div style="display:flex; justify-content:space-between; margin-top:20px;">
-                <button class="btn btn-secondary" onclick="goStep(2)">← Volver</button>
-                <button class="btn btn-primary btn-lg" onclick="goStep(4)">Generar Preview →</button>
-            </div>
-        </div>
+<!-- PROMPTS -->
+<div class="vw" id="v-prm"><h1 class="pt">🤖 Prompts</h1><p class="pd">Click para copiar</p>
+<div class="g2">
+<div class="cd" onclick="cpPrm('script')" style="cursor:pointer"><p class="cdt">📝 Guion</p><p style="font-size:.83rem;color:var(--tx2)">Lista de vocabulario</p></div>
+<div class="cd" onclick="cpPrm('hooks')" style="cursor:pointer"><p class="cdt">🎣 Hooks</p><p style="font-size:.83rem;color:var(--tx2)">Ganchos virales</p></div>
+<div class="cd" onclick="cpPrm('seo')" style="cursor:pointer"><p class="cdt">🔍 SEO</p><p style="font-size:.83rem;color:var(--tx2)">Título+Desc+Tags</p></div>
+<div class="cd" onclick="cpPrm('broll')" style="cursor:pointer"><p class="cdt">🎥 B-Roll</p><p style="font-size:.83rem;color:var(--tx2)">Búsquedas Pexels</p></div>
+</div></div>
 
-        <!-- STEP 4: PREVIEW & EXPORT -->
-        <div id="factory-step-4" style="display:none;">
-            <div class="grid-2">
-                <div>
-                    <p class="card-subtitle">📱 Preview del Short</p>
-                    <div class="preview-phone">
-                        <canvas id="previewCanvas" width="1080" height="1920"></canvas>
-                    </div>
-                </div>
-                <div>
-                    <div class="card" style="margin-bottom:16px;">
-                        <p class="card-subtitle">📥 Exportar</p>
-                        <button class="btn btn-primary btn-block" onclick="downloadImage()" style="margin-bottom:10px; padding:14px;">
-                            📥 Descargar Imagen (1080x1920 PNG)
-                        </button>
-                        <button class="btn btn-success btn-block" onclick="downloadAllFrames()" style="margin-bottom:10px; padding:14px;">
-                            📦 Descargar Todos los Frames (ZIP)
-                        </button>
-                        <button class="btn btn-secondary btn-block" onclick="saveToDatabase()" style="padding:14px;">
-                            💾 Guardar en Base de Datos
-                        </button>
-                    </div>
+<!-- INSPO -->
+<div class="vw" id="v-ins"><h1 class="pt">👁️ Swipe File</h1><p class="pd">Links de videos virales</p>
+<div class="cd"><div style="display:flex;gap:8px;margin-bottom:18px">
+<input class="fi" id="insURL" placeholder="URL...">
+<input class="fi" id="insNote" placeholder="¿Por qué funciona?">
+<button class="btn bp" onclick="addIns()">+</button></div>
+<div id="insLst"></div></div></div>
 
-                    <div class="card" style="margin-bottom:16px;">
-                        <p class="card-subtitle">🔍 SEO Generado</p>
-                        <div class="form-group">
-                            <label class="form-label">Título YouTube</label>
-                            <input type="text" class="form-input" id="seoTitle" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Descripción</label>
-                            <textarea id="seoDesc" rows="3" readonly></textarea>
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Tags</label>
-                            <input type="text" class="form-input" id="seoTags" readonly>
-                        </div>
-                        <button class="btn btn-secondary btn-sm" onclick="copySEO()">📋 Copiar Todo el SEO</button>
-                    </div>
-
-                    <div class="card">
-                        <p class="card-subtitle">⏱️ Guía de Ensamblaje (CapCut)</p>
-                        <div id="assemblyGuide" style="font-size:0.8rem; color:var(--text-secondary);"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="display:flex; justify-content:space-between; margin-top:20px;">
-                <button class="btn btn-secondary" onclick="goStep(3)">← Volver</button>
-                <button class="btn btn-primary btn-lg" onclick="resetFactory()">🔄 Crear Nuevo Short</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== DATABASE ==================== -->
-    <div class="view" id="v-database">
-        <h1 class="page-title">🗄️ Base de Videos</h1>
-        <p class="page-desc">Todos tus guiones generados y en producción.</p>
-        <div style="display:flex; gap:12px; margin-bottom:20px; align-items:center;">
-            <input type="text" class="form-input" id="dbSearch" placeholder="Buscar videos..." onkeyup="renderDB()" style="max-width:400px;">
-            <select class="form-select" id="dbFilter" onchange="renderDB()" style="max-width:200px;">
-                <option value="all">Todos</option>
-                <option value="idea">Ideas</option>
-                <option value="audio">Audio</option>
-                <option value="edit">Edición</option>
-                <option value="ready">Listos</option>
-                <option value="pub">Publicados</option>
-            </select>
-            <div style="margin-left:auto;">
-                <button class="btn btn-primary btn-sm" onclick="goTo('factory', document.querySelectorAll('.nav-btn')[0])">+ Crear Nuevo</button>
-            </div>
-        </div>
-        <div class="table-wrap">
-            <table>
-                <thead><tr><th>Tema</th><th>Estado</th><th>Hook</th><th>Frases</th><th>Fecha</th></tr></thead>
-                <tbody id="dbBody"></tbody>
-            </table>
-        </div>
-    </div>
-
-    <!-- ==================== KANBAN ==================== -->
-    <div class="view" id="v-kanban">
-        <h1 class="page-title">📋 Kanban Workflow</h1>
-        <p class="page-desc">Arrastra los videos entre columnas para actualizar su estado.</p>
-        <div class="kanban-board" id="kanbanBoard"></div>
-    </div>
-
-    <!-- ==================== CALENDAR ==================== -->
-    <div class="view" id="v-calendar">
-        <h1 class="page-title">📅 Calendario de Contenido</h1>
-        <p class="page-desc">Planifica tus publicaciones.</p>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
-            <button class="btn btn-secondary btn-sm" onclick="changeMonth(-1)">◀ Anterior</button>
-            <h3 id="calTitle" style="font-size:1.1rem; font-weight:800;"></h3>
-            <button class="btn btn-secondary btn-sm" onclick="changeMonth(1)">Siguiente ▶</button>
-        </div>
-        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;" id="calGrid"></div>
-    </div>
-
-    <!-- ==================== TTS / AUDIO ==================== -->
-    <div class="view" id="v-tts">
-        <h1 class="page-title">🔊 Audio / Text-to-Speech</h1>
-        <p class="page-desc">Genera audio para tus shorts con TTS del navegador o graba tu propia voz.</p>
-
-        <div class="grid-2">
-            <div class="card">
-                <p class="card-subtitle">🤖 TTS Automático (Gratis)</p>
-                <div class="form-group">
-                    <label class="form-label">Seleccionar Video</label>
-                    <select class="form-select" id="ttsVideoSel" onchange="loadTTSPhrases()"></select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Idioma de voz</label>
-                    <select class="form-select" id="ttsLang">
-                        <option value="both">Español + Inglés (alternado)</option>
-                        <option value="en">Solo Inglés</option>
-                        <option value="es">Solo Español</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Velocidad</label>
-                    <input type="range" id="ttsSpeed" min="0.5" max="1.5" step="0.1" value="0.9" style="width:100%;">
-                    <span id="ttsSpeedVal" style="font-size:0.8rem; color:var(--text-secondary);">0.9x</span>
-                </div>
-                <div id="ttsPhraseList" style="margin:16px 0; max-height:300px; overflow-y:auto;"></div>
-                <div style="display:flex; gap:8px;">
-                    <button class="btn btn-primary btn-block" onclick="playAllTTS()">▶ Reproducir Todo</button>
-                    <button class="btn btn-secondary" onclick="stopTTS()">⏹ Parar</button>
-                </div>
-            </div>
-
-            <div class="card">
-                <p class="card-subtitle">🎙️ Grabar tu Voz</p>
-                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">
-                    Usa el teleprompter integrado para grabar tu voz con ritmo perfecto.
-                </p>
-                <div class="form-group">
-                    <label class="form-label">Video para teleprompter</label>
-                    <select class="form-select" id="teleVideoSel"></select>
-                </div>
-                <button class="btn btn-primary btn-block" onclick="openTeleprompter()" style="margin-bottom:12px;">🎥 Abrir Teleprompter</button>
-                <button class="btn btn-secondary btn-block" onclick="startRecording()" id="recBtn">🔴 Grabar Audio</button>
-                <div id="recStatus" style="margin-top:12px; text-align:center; font-size:0.85rem; color:var(--text-tertiary);"></div>
-                <audio id="recPlayback" controls style="width:100%; margin-top:12px; display:none;"></audio>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SEO GENERATOR ==================== -->
-    <div class="view" id="v-seo">
-        <h1 class="page-title">🔍 SEO Generator</h1>
-        <p class="page-desc">Genera SEO optimizado con IA para cualquier video.</p>
-        <div class="card" style="max-width:700px;">
-            <div class="form-group">
-                <label class="form-label">Seleccionar Video</label>
-                <select class="form-select" id="seoVideoSel"></select>
-            </div>
-            <button class="btn btn-primary btn-block" onclick="generateSEO()">🔍 Generar SEO con Gemini</button>
-            <div id="seoResult" style="margin-top:20px; display:none;">
-                <div class="form-group">
-                    <label class="form-label">Títulos Sugeridos</label>
-                    <div id="seoTitles"></div>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Descripción</label>
-                    <textarea id="seoDescription" rows="4"></textarea>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Tags</label>
-                    <input type="text" class="form-input" id="seoTagsResult">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Hashtags</label>
-                    <input type="text" class="form-input" id="seoHashtags">
-                </div>
-                <button class="btn btn-secondary" onclick="copyAllSEO()">📋 Copiar Todo</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== PROMPT HUB ==================== -->
-    <div class="view" id="v-prompts">
-        <h1 class="page-title">🤖 Prompt Hub</h1>
-        <p class="page-desc">Prompts optimizados listos para copiar y pegar.</p>
-        <div class="grid-2">
-            <div class="card" onclick="copyPromptTemplate('script')" style="cursor:pointer;">
-                <p class="card-subtitle">📝 Generar Guion</p>
-                <p style="font-size:0.85rem; color:var(--text-secondary);">Prompt para crear listas de vocabulario estructuradas</p>
-            </div>
-            <div class="card" onclick="copyPromptTemplate('hooks')" style="cursor:pointer;">
-                <p class="card-subtitle">🎣 Generar Hooks Virales</p>
-                <p style="font-size:0.85rem; color:var(--text-secondary);">3 variantes de ganchos agresivos para un tema</p>
-            </div>
-            <div class="card" onclick="copyPromptTemplate('seo')" style="cursor:pointer;">
-                <p class="card-subtitle">🔍 SEO Completo</p>
-                <p style="font-size:0.85rem; color:var(--text-secondary);">Título + Desc + Tags + Hashtags</p>
-            </div>
-            <div class="card" onclick="copyPromptTemplate('broll')" style="cursor:pointer;">
-                <p class="card-subtitle">🎥 Ideas B-Roll</p>
-                <p style="font-size:0.85rem; color:var(--text-secondary);">Búsquedas exactas para Pexels/Pixabay</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- ==================== SWIPE FILE ==================== -->
-    <div class="view" id="v-inspo">
-        <h1 class="page-title">👁️ Swipe File</h1>
-        <p class="page-desc">Guarda links de videos virales como referencia.</p>
-        <div class="card">
-            <div style="display:flex; gap:10px; margin-bottom:20px;">
-                <input type="text" class="form-input" id="inspoURL" placeholder="URL del Short/Reel viral...">
-                <input type="text" class="form-input" id="inspoNote" placeholder="¿Por qué funciona?">
-                <button class="btn btn-primary" onclick="addInspo()">Guardar</button>
-            </div>
-            <div id="inspoList"></div>
-        </div>
-    </div>
-
-    <!-- ==================== SETTINGS ==================== -->
-    <div class="view" id="v-settings">
-        <h1 class="page-title">⚙️ Configuración</h1>
-        <p class="page-desc">API Keys, backups y ajustes del sistema.</p>
-        <div class="grid-2">
-            <div class="card" style="border-left:4px solid var(--accent);">
-                <p class="card-subtitle">🔑 API Key de Gemini</p>
-                <div class="form-group">
-                    <input type="password" class="form-input" id="apiKeyInput" placeholder="AIzaSy..." value="">
-                </div>
-                <button class="btn btn-primary btn-sm" onclick="saveAPIKey()">Guardar Key</button>
-                <button class="btn btn-secondary btn-sm" onclick="testAPI()" style="margin-left:8px;">🧪 Probar Conexión</button>
-                <div id="apiStatus" style="margin-top:10px; font-size:0.8rem;"></div>
-            </div>
-            <div class="card">
-                <p class="card-subtitle">💾 Backup de Datos</p>
-                <button class="btn btn-success btn-block" onclick="exportAllData()" style="margin-bottom:10px;">📥 Exportar JSON</button>
-                <input type="file" id="importFile" accept=".json" class="form-input" style="margin-bottom:10px;">
-                <button class="btn btn-warning btn-block" onclick="importAllData()">📤 Importar JSON</button>
-            </div>
-        </div>
-    </div>
+<!-- CONFIG -->
+<div class="vw" id="v-cfg"><h1 class="pt">⚙️ Configuración</h1><p class="pd">API Key y backups</p>
+<div class="g2">
+<div class="cd" style="border-left:4px solid var(--red)"><p class="cdt">🔑 API Key Gemini</p>
+<p style="font-size:.75rem;color:var(--tx2);margin-bottom:10px">Obtén tu key en <a href="https://aistudio.google.com/apikey" target="_blank" style="color:var(--red)">aistudio.google.com/apikey</a></p>
+<div class="fg"><input type="password" class="fi" id="akInp" placeholder="AIzaSy..."></div>
+<div class="fg"><label class="fl">Modelo</label>
+<select class="fs" id="mdlSel">
+<option value="gemini-2.5-flash">gemini-2.5-flash ✅ (Recomendado)</option>
+<option value="gemini-2.5-pro">gemini-2.5-pro</option>
+<option value="gemini-2.0-flash">gemini-2.0-flash</option>
+</select></div>
+<div style="display:flex;gap:8px"><button class="btn bp bsm" onclick="saveAK()">Guardar</button><button class="btn bs bsm" onclick="testAK()">🧪 Probar</button></div>
+<div id="akSt" style="margin-top:10px;font-size:.78rem"></div>
+</div>
+<div class="cd"><p class="cdt">💾 Backup</p>
+<button class="btn bgrn blk" onclick="expData()" style="margin-bottom:10px">📥 Exportar</button>
+<input type="file" id="impF" accept=".json" class="fi" style="margin-bottom:10px">
+<button class="btn bs blk" onclick="impData()">📤 Importar</button>
+<hr style="border:0;border-top:1px solid var(--bdr);margin:14px 0">
+<button class="btn bg blk bsm" onclick="if(confirm('¿Resetear a 30 videos semilla?'))seedDB()">🔄 Resetear Semillas</button>
+</div></div></div>
 
 </main>
 
-<!-- LOADING OVERLAY -->
-<div class="loading-overlay" id="loadingOverlay">
-    <div class="loading-spinner"></div>
-    <p style="color:var(--text-secondary); font-size:1rem; font-weight:600;" id="loadingText">Generando con Gemini AI...</p>
+<!-- MODALS -->
+<div class="mo" id="edMo" onclick="if(event.target.id==='edMo')clEd()">
+<div class="mb"><div class="mh">
+<input class="fi" id="edTit" style="font-size:1.15rem;font-weight:900;background:0;border:0;width:55%">
+<button class="btn bg bsm" onclick="clEd()">✕</button></div>
+<div class="mc">
+<div class="g3" style="margin-bottom:18px">
+<div class="fg"><label class="fl">Estado</label><select class="fs" id="edSt"><option value="idea">Idea</option><option value="audio">Audio</option><option value="edit">Edición</option><option value="ready">Listo</option><option value="pub">Publicado</option></select></div>
+<div class="fg"><label class="fl">Fecha</label><input type="date" class="fi" id="edDt"></div>
+<div class="fg"><label class="fl">Categoría</label><input class="fi" id="edCat"></div></div>
+<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><span class="fl" style="margin:0">Frases</span><button class="btn bg bsm" onclick="addEP()">+</button></div>
+<div id="edPC"></div>
+<div class="fg" style="margin-top:14px"><label class="fl">Notas</label><textarea class="fi" id="edNt" rows="2"></textarea></div>
 </div>
+<div class="mf"><button class="btn bg bsm" onclick="delEd()" style="color:var(--red)">🗑</button><button class="btn bp" onclick="saveEd()">💾 Guardar</button></div>
+</div></div>
 
-<!-- TELEPROMPTER MODAL -->
-<div class="modal-overlay" id="teleModal">
-    <div style="width:100%; height:100%; background:#000; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative;">
-        <button class="btn btn-ghost" onclick="closeTeleprompter()" style="position:fixed; top:20px; right:20px; z-index:10; color:#666;">✕ Cerrar (ESC)</button>
-        <div id="teleContent" style="max-width:800px; text-align:center; padding:40px;"></div>
-    </div>
-</div>
+<div class="mo" id="telMo">
+<div style="width:100%;height:100%;background:#000;display:flex;flex-direction:column;align-items:center;overflow-y:auto;position:relative">
+<button class="btn bg" onclick="clTele()" style="position:fixed;top:18px;right:30px;z-index:10;color:#666">✕</button>
+<div id="telC" style="max-width:780px;text-align:center;padding:30px;margin-top:15vh"></div>
+</div></div>
 
-<!-- EDIT VIDEO MODAL -->
-<div class="modal-overlay" id="editModal" onclick="if(event.target.id==='editModal') closeEditModal()">
-    <div class="modal-box">
-        <div class="modal-header">
-            <input type="text" class="form-input" id="editTitle" style="font-size:1.2rem; font-weight:900; background:transparent; border:none; width:60%;">
-            <button class="btn btn-ghost btn-sm" onclick="closeEditModal()">Cerrar</button>
-        </div>
-        <div class="modal-content">
-            <div class="grid-3" style="margin-bottom:20px;">
-                <div class="form-group">
-                    <label class="form-label">Estado</label>
-                    <select class="form-select" id="editStatus"><option value="idea">Idea</option><option value="audio">Audio</option><option value="edit">Edición</option><option value="ready">Listo</option><option value="pub">Publicado</option></select>
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Fecha</label>
-                    <input type="date" class="form-input" id="editDate">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Categoría</label>
-                    <input type="text" class="form-input" id="editCat">
-                </div>
-            </div>
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                <span class="form-label" style="margin:0;">Frases del guion</span>
-                <button class="btn btn-ghost btn-sm" onclick="addEditPhrase()">+ Añadir</button>
-            </div>
-            <div id="editPhrasesContainer"></div>
-            <div class="form-group" style="margin-top:16px;">
-                <label class="form-label">Notas</label>
-                <textarea class="form-input" id="editNotes" rows="3"></textarea>
-            </div>
-        </div>
-        <div class="modal-footer">
-            <button class="btn btn-ghost btn-sm" onclick="deleteEditVideo()" style="color:var(--red);">🗑 Eliminar</button>
-            <button class="btn btn-primary" onclick="saveEditVideo()">💾 Guardar</button>
-        </div>
-    </div>
-</div>
-
-<!-- TOAST -->
+<div class="ld" id="ldOv"><div class="sp"></div><p id="ldTx" style="color:var(--tx2);font-size:.95rem;font-weight:600">Generando...</p></div>
 <div id="toast"></div>
 
 <script>
-// =============================================
-// CONFIGURACIÓN & ESTADO
-// =============================================
-const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
-let API_KEY = '';
-const DB_NAME = 'ISM_FACTORY_V1';
-const STORE = 'videos';
-let db = null;
-let videos = [];
-let inspoItems = [];
-let currentGen = null; // datos generados actualmente
-let selectedTemplate = 'lista_bicolor';
-let currentEditId = null;
-let calendarDate = new Date();
-let dragId = null;
-let mediaRecorder = null;
-let audioChunks = [];
-let ttsQueue = [];
-let ttsPlaying = false;
+// ========================================================
+// 30 VIDEOS SEMILLA COMPLETOS — INGLÉS SIN MIEDO
+// ========================================================
+const SEED=[
+{id:1,tema:"Sobrevivir a Zoom",cat:"Reuniones",frases:[
+{esp:"¿Me escuchan?",eng:"Can you hear me?",fon:"/kan yu jír mi/"},
+{esp:"Estás en silencio",eng:"You're on mute",fon:"/yur on miút/"},
+{esp:"Se congela la pantalla",eng:"The screen is freezing",fon:"/de skrín is frísin/"},
+{esp:"¿Pueden ver mi pantalla?",eng:"Can you see my screen?",fon:"/kan yu sí mai skrín/"},
+{esp:"Perdón, llegué tarde",eng:"Sorry I'm late",fon:"/sóri áim leit/"},
+{esp:"Voy a compartir pantalla",eng:"I'll share my screen",fon:"/áil sher mai skrín/"},
+{esp:"¿Alguna pregunta?",eng:"Any questions?",fon:"/éni kuéschons/"},
+{esp:"Creo que se cortó",eng:"I think we lost them",fon:"/ái zink wi lost dem/"},
+{esp:"Hablemos del tema",eng:"Let's get to it",fon:"/lets guet tu it/"},
+{esp:"Buena reunión",eng:"Great meeting everyone",fon:"/gréit mítin évriwon/"},
+{esp:"Nos vemos mañana",eng:"See you tomorrow",fon:"/sí yu tumórou/"},
+{esp:"Escriban en el chat",eng:"Feel free to use the chat",fon:"/fíl frí tu iús de chat/"},
+{esp:"Déjame explicar",eng:"Let me explain",fon:"/let mi expléin/"},
+{esp:"¿Quién sigue?",eng:"Who's next?",fon:"/jus next/"},
+{esp:"Resumiendo",eng:"To sum up",fon:"/tu sam ap/"}]},
+{id:2,tema:"Escapando con Elegancia",cat:"Laboral",frases:[
+{esp:"Ya me voy",eng:"I'm heading out",fon:"/áim jédin áut/"},
+{esp:"Fue un largo día",eng:"It's been a long day",fon:"/its bin a long déi/"},
+{esp:"Nos vemos mañana",eng:"See you tomorrow",fon:"/sí yu tumórou/"},
+{esp:"Buen fin de semana",eng:"Have a great weekend",fon:"/jav a gréit wíkend/"},
+{esp:"Me escapo temprano",eng:"I'm sneaking out early",fon:"/áim sníkin áut érli/"},
+{esp:"Ya acabé todo",eng:"I'm all done",fon:"/áim ol don/"},
+{esp:"¿Necesitas algo más?",eng:"Need anything else?",fon:"/níd énitin els/"},
+{esp:"Me retiro",eng:"I'm calling it a day",fon:"/áim kólin it a déi/"},
+{esp:"Hasta luego",eng:"Catch you later",fon:"/kach yu léiter/"},
+{esp:"Que descansen",eng:"Get some rest",fon:"/guet som rest/"},
+{esp:"Cuídense",eng:"Take care everyone",fon:"/téik ker évriwon/"},
+{esp:"Buen trabajo hoy",eng:"Good job today",fon:"/gud yob tudéi/"},
+{esp:"Mañana seguimos",eng:"We'll pick it up tomorrow",fon:"/wil pik it ap tumórou/"},
+{esp:"Estoy agotado",eng:"I'm exhausted",fon:"/áim exósted/"},
+{esp:"Adiós a todos",eng:"Bye everyone",fon:"/bái évriwon/"}]},
+{id:3,tema:"El Clásico Email",cat:"Emails",frases:[
+{esp:"Deja de poner 'Dear Sir'",eng:"Stop writing 'Dear Sir'",fon:"/stop ráitin dír ser/"},
+{esp:"Espero que estés bien",eng:"Hope you're doing well",fon:"/jóup yur dúin wél/"},
+{esp:"Te escribo porque",eng:"I'm reaching out because",fon:"/áim ríching áut bikós/"},
+{esp:"Adjunto el archivo",eng:"Please find attached",fon:"/plís fáind atácht/"},
+{esp:"Quedo atento",eng:"Looking forward to hearing",fon:"/lúkin fórward tu jírin/"},
+{esp:"Gracias de antemano",eng:"Thanks in advance",fon:"/zanks in adváns/"},
+{esp:"Por favor confirma",eng:"Please confirm",fon:"/plís konférm/"},
+{esp:"Con copia a",eng:"CC'ing",fon:"/si-síin/"},
+{esp:"Saludos cordiales",eng:"Best regards",fon:"/best rigárds/"},
+{esp:"Lo antes posible",eng:"At your earliest convenience",fon:"/at yur érliest convíniens/"},
+{esp:"Disculpa la demora",eng:"Sorry for the delay",fon:"/sóri for de diléi/"},
+{esp:"En seguimiento a",eng:"Following up on",fon:"/fólowing ap on/"},
+{esp:"Quedo a tus órdenes",eng:"Let me know if you need anything",fon:"/let mi nóu if yu níd énitin/"},
+{esp:"Recibido",eng:"Noted, thank you",fon:"/nóuted zank yu/"},
+{esp:"Un abrazo",eng:"Warm regards",fon:"/worm rigárds/"}]},
+{id:4,tema:"Pidiendo Ayuda",cat:"Laboral",frases:[
+{esp:"¿Me ayudas?",eng:"Can you help me?",fon:"/kan yu jelp mi/"},
+{esp:"Necesito un favor",eng:"I need a favor",fon:"/ái níd a féivor/"},
+{esp:"¿Tienes un minuto?",eng:"Do you have a minute?",fon:"/du yu jav a mínit/"},
+{esp:"No entiendo esto",eng:"I don't get this",fon:"/ái dont guet dis/"},
+{esp:"¿Me explicas?",eng:"Could you explain?",fon:"/kud yu expléin/"},
+{esp:"Estoy atorado",eng:"I'm stuck",fon:"/áim stak/"},
+{esp:"¿Qué opinas?",eng:"What do you think?",fon:"/wot du yu zink/"},
+{esp:"¿Cómo se hace?",eng:"How do you do this?",fon:"/jáu du yu du dis/"},
+{esp:"Dame una mano",eng:"Give me a hand",fon:"/giv mi a jand/"},
+{esp:"No sé por dónde empezar",eng:"I don't know where to start",fon:"/ái dont nóu wer tu start/"},
+{esp:"¿Puedes revisarlo?",eng:"Can you check this?",fon:"/kan yu chek dis/"},
+{esp:"Gracias por tu ayuda",eng:"Thanks for your help",fon:"/zanks for yur jelp/"},
+{esp:"Te debo una",eng:"I owe you one",fon:"/ái óu yu wan/"},
+{esp:"Eres muy amable",eng:"That's very kind of you",fon:"/dats véri káind of yu/"},
+{esp:"El error que TODOS cometen",eng:"The mistake EVERYONE makes",fon:"/de mistéik évriwon méiks/"}]},
+{id:5,tema:"Viernes por la Tarde",cat:"Social",frases:[
+{esp:"¡Por fin viernes!",eng:"TGIF!",fon:"/ti-yi-ái-ef/"},
+{esp:"¿Planes para hoy?",eng:"Any plans tonight?",fon:"/éni plans tunáit/"},
+{esp:"Vamos por unas",eng:"Let's grab some drinks",fon:"/lets grab som drinks/"},
+{esp:"Estoy muerto",eng:"I'm beat",fon:"/áim bít/"},
+{esp:"¿Quién se apunta?",eng:"Who's in?",fon:"/jus in/"},
+{esp:"Yo invito",eng:"It's on me",fon:"/its on mí/"},
+{esp:"Merecemos un descanso",eng:"We deserve a break",fon:"/wi disérv a bréik/"},
+{esp:"Ya no puedo más",eng:"I can't take it anymore",fon:"/ái kant téik it enimor/"},
+{esp:"Fue una semana larga",eng:"It's been a long week",fon:"/its bin a long wík/"},
+{esp:"¡Salud!",eng:"Cheers!",fon:"/chírs/"},
+{esp:"Pásala bien",eng:"Have a good one",fon:"/jav a gud wan/"},
+{esp:"Nos la merecemos",eng:"We earned it",fon:"/wi ernd it/"},
+{esp:"Relájate",eng:"Take it easy",fon:"/téik it ísi/"},
+{esp:"Qué buena onda",eng:"That's awesome",fon:"/dats ósom/"},
+{esp:"El mejor viernes",eng:"Best Friday ever",fon:"/best fráidei éver/"}]},
+{id:6,tema:"Cometiendo Errores",cat:"Profesional",frases:[
+{esp:"Metí la pata",eng:"I messed up",fon:"/ái mest ap/"},
+{esp:"Fue mi error",eng:"That was my bad",fon:"/dat wos mái bad/"},
+{esp:"Lo siento mucho",eng:"I'm so sorry",fon:"/áim so sóri/"},
+{esp:"No volverá a pasar",eng:"It won't happen again",fon:"/it wóunt japen aguén/"},
+{esp:"Déjame arreglarlo",eng:"Let me fix it",fon:"/let mi fix it/"},
+{esp:"Aprendí la lección",eng:"I learned my lesson",fon:"/ái lernd mai léson/"},
+{esp:"No fue intencional",eng:"It wasn't intentional",fon:"/it wósnt inténshonal/"},
+{esp:"Asumo responsabilidad",eng:"I take full responsibility",fon:"/ái téik ful risponsibíliti/"},
+{esp:"¿Cómo lo compenso?",eng:"How can I make it up?",fon:"/jáu kan ái méik it ap/"},
+{esp:"Todos cometen errores",eng:"Everyone makes mistakes",fon:"/évriwon méiks mistéiks/"},
+{esp:"Lo corregiré hoy",eng:"I'll fix it today",fon:"/áil fix it tudéi/"},
+{esp:"Gracias por tu paciencia",eng:"Thanks for your patience",fon:"/zanks for yur péishens/"},
+{esp:"No es excusa",eng:"That's no excuse",fon:"/dats nóu exkiús/"},
+{esp:"Haré mejor trabajo",eng:"I'll do better",fon:"/áil du béter/"},
+{esp:"¿Otra oportunidad?",eng:"Give me another chance",fon:"/giv mi anóder chans/"}]},
+{id:7,tema:"Ganando Tiempo",cat:"Reuniones",frases:[
+{esp:"Déjame pensarlo",eng:"Let me think about it",fon:"/let mi zink abáut it/"},
+{esp:"Dame un segundo",eng:"Give me a sec",fon:"/giv mi a sek/"},
+{esp:"Necesito más tiempo",eng:"I need more time",fon:"/ái níd mor táim/"},
+{esp:"Lo reviso y te digo",eng:"I'll look into it",fon:"/áil luk íntu it/"},
+{esp:"Buena pregunta",eng:"Good question",fon:"/gud kuéschon/"},
+{esp:"Te confirmo mañana",eng:"I'll confirm tomorrow",fon:"/áil konferm tumórou/"},
+{esp:"Permíteme verificar",eng:"Let me double-check",fon:"/let mi dábol chek/"},
+{esp:"Un momento",eng:"Bear with me",fon:"/ber wid mi/"},
+{esp:"Casi lo tengo",eng:"Almost there",fon:"/ólmost der/"},
+{esp:"Estoy en eso",eng:"I'm working on it",fon:"/áim wérkin on it/"},
+{esp:"Ya casi termino",eng:"I'm nearly done",fon:"/áim nírli don/"},
+{esp:"Solo un poco más",eng:"Just a bit more",fon:"/yast a bit mor/"},
+{esp:"Te aviso cuando esté",eng:"I'll let you know",fon:"/áil let yu nóu/"},
+{esp:"Dame hasta el viernes",eng:"Give me until Friday",fon:"/giv mi antíl fráidei/"},
+{esp:"Paciencia por favor",eng:"Please be patient",fon:"/plís bi péishent/"}]},
+{id:8,tema:"El Jefe te Llama",cat:"Profesional",frases:[
+{esp:"¿Tienes un momento?",eng:"Got a minute?",fon:"/gat a mínit/"},
+{esp:"Claro, dime",eng:"Sure, go ahead",fon:"/shur gou ajéd/"},
+{esp:"¿En qué te ayudo?",eng:"How can I help?",fon:"/jáu kan ái jelp/"},
+{esp:"Entendido",eng:"Understood",fon:"/anderstúd/"},
+{esp:"Lo haré de inmediato",eng:"I'll get right on it",fon:"/áil guet ráit on it/"},
+{esp:"¿Cuál es la prioridad?",eng:"What's the priority?",fon:"/wots de praióriti/"},
+{esp:"Buena idea",eng:"That's a great idea",fon:"/dats a gréit aidía/"},
+{esp:"Estoy de acuerdo",eng:"I agree",fon:"/ái agrí/"},
+{esp:"Déjame tomar nota",eng:"Let me take notes",fon:"/let mi téik nóuts/"},
+{esp:"¿Para cuándo?",eng:"When do you need it by?",fon:"/wen du yu níd it bái/"},
+{esp:"Cuente conmigo",eng:"You can count on me",fon:"/yu kan káunt on mi/"},
+{esp:"Ya lo empiezo",eng:"I'll start right away",fon:"/áil start ráit awéi/"},
+{esp:"¿Algo más?",eng:"Anything else?",fon:"/énitin els/"},
+{esp:"Perfecto",eng:"Sounds good",fon:"/sáunds gud/"},
+{esp:"Gracias por avisarme",eng:"Thanks for letting me know",fon:"/zanks for létin mi nóu/"}]},
+{id:9,tema:"Networking Casual",cat:"Social",frases:[
+{esp:"Mucho gusto",eng:"Nice to meet you",fon:"/náis tu mít yu/"},
+{esp:"¿A qué te dedicas?",eng:"What do you do?",fon:"/wot du yu du/"},
+{esp:"Trabajo en...",eng:"I work in...",fon:"/ái work in/"},
+{esp:"¿Tienes tarjeta?",eng:"Do you have a card?",fon:"/du yu jav a kard/"},
+{esp:"Deberíamos conectar",eng:"We should connect",fon:"/wi shud konékt/"},
+{esp:"¿Conoces a...?",eng:"Do you know...?",fon:"/du yu nóu/"},
+{esp:"Qué interesante",eng:"That's interesting",fon:"/dats íntresting/"},
+{esp:"Encantado",eng:"Pleasure to meet you",fon:"/pléyer tu mít yu/"},
+{esp:"Te agrego en LinkedIn",eng:"I'll add you on LinkedIn",fon:"/áil ad yu on linkdín/"},
+{esp:"Mantengamos contacto",eng:"Let's keep in touch",fon:"/lets kíp in tach/"},
+{esp:"¿De dónde eres?",eng:"Where are you from?",fon:"/wer ar yu from/"},
+{esp:"Llevo 5 años ahí",eng:"I've been there 5 years",fon:"/áiv bin der fáiv yirs/"},
+{esp:"Me encanta tu trabajo",eng:"I love your work",fon:"/ái lov yur work/"},
+{esp:"Hablemos pronto",eng:"Let's chat soon",fon:"/lets chat sun/"},
+{esp:"Fue un placer",eng:"It was great meeting you",fon:"/it wos gréit mítin yu/"}]},
+{id:10,tema:"Elogiando al Equipo",cat:"Profesional",frases:[
+{esp:"Buen trabajo",eng:"Great job",fon:"/gréit yob/"},
+{esp:"Estoy orgulloso",eng:"I'm proud of the team",fon:"/áim práud of de tím/"},
+{esp:"Superaron expectativas",eng:"You exceeded expectations",fon:"/yu exsíded ekspektéishons/"},
+{esp:"Sigan así",eng:"Keep it up",fon:"/kíp it ap/"},
+{esp:"Increíble esfuerzo",eng:"Amazing effort",fon:"/améisin éfort/"},
+{esp:"Lo logramos",eng:"We did it",fon:"/wi did it/"},
+{esp:"Eres muy talentoso",eng:"You're very talented",fon:"/yur véri tálented/"},
+{esp:"Gracias por tu dedicación",eng:"Thanks for your dedication",fon:"/zanks for yur dedikéishon/"},
+{esp:"Impresionante",eng:"Impressive",fon:"/imprésiv/"},
+{esp:"Mereces un aplauso",eng:"You deserve applause",fon:"/yu disérv aplos/"},
+{esp:"Excelente presentación",eng:"Excellent presentation",fon:"/ékselent presentéishon/"},
+{esp:"Hiciste la diferencia",eng:"You made the difference",fon:"/yu méid de díferens/"},
+{esp:"Gran trabajo en equipo",eng:"Great teamwork",fon:"/gréit tímwork/"},
+{esp:"Eres inspiración",eng:"You're an inspiration",fon:"/yur an inspiréishon/"},
+{esp:"Felicidades a todos",eng:"Congrats everyone",fon:"/congrátys évriwon/"}]},
+{id:11,tema:"Apagando Incendios",cat:"Profesional",frases:[
+{esp:"Tenemos un problema",eng:"We have a problem",fon:"/wi jav a próblem/"},
+{esp:"Es urgente",eng:"It's urgent",fon:"/its éryent/"},
+{esp:"Hay que resolverlo ya",eng:"We need to fix this now",fon:"/wi níd tu fix dis náu/"},
+{esp:"¿Quién puede ayudar?",eng:"Who can help?",fon:"/ju kan jelp/"},
+{esp:"Enfoquémonos",eng:"Let's focus",fon:"/lets fóukas/"},
+{esp:"No hay tiempo",eng:"There's no time to waste",fon:"/ders nóu táim tu wéist/"},
+{esp:"Busquemos solución",eng:"Let's find a solution",fon:"/lets fáind a solúshon/"},
+{esp:"Mantén la calma",eng:"Stay calm",fon:"/stéi kam/"},
+{esp:"Yo me encargo",eng:"I'll handle it",fon:"/áil jándel it/"},
+{esp:"Prioridad #1",eng:"Top priority",fon:"/top praióriti/"},
+{esp:"¿Cuál es el plan?",eng:"What's the plan?",fon:"/wots de plan/"},
+{esp:"Necesitamos backup",eng:"We need backup",fon:"/wi níd bákap/"},
+{esp:"Está bajo control",eng:"It's under control",fon:"/its ánder kontról/"},
+{esp:"Crisis resuelta",eng:"Crisis resolved",fon:"/kráisis risólvd/"},
+{esp:"Buen manejo",eng:"Well handled",fon:"/wél jándeld/"}]},
+{id:12,tema:"Cansancio Laboral",cat:"Social",frases:[
+{esp:"Estoy agotado",eng:"I'm exhausted",fon:"/áim exósted/"},
+{esp:"Necesito vacaciones",eng:"I need a vacation",fon:"/ái níd a vakéishon/"},
+{esp:"Estoy quemado",eng:"I'm burned out",fon:"/áim bernd áut/"},
+{esp:"No dormí nada",eng:"I didn't sleep at all",fon:"/ái dídnt slip at ol/"},
+{esp:"Necesito café",eng:"I need coffee",fon:"/ái níd kófi/"},
+{esp:"Qué día tan largo",eng:"What a long day",fon:"/wot a long déi/"},
+{esp:"Ya no puedo",eng:"I can't anymore",fon:"/ái kant enimor/"},
+{esp:"Quiero irme a casa",eng:"I want to go home",fon:"/ái wont tu góu jóum/"},
+{esp:"Estoy saturado",eng:"I'm overwhelmed",fon:"/áim ovérwelmd/"},
+{esp:"Dame un break",eng:"I need a break",fon:"/ái níd a bréik/"},
+{esp:"No me concentro",eng:"I can't focus",fon:"/ái kant fóukas/"},
+{esp:"Muero de sueño",eng:"I'm so sleepy",fon:"/áim so slípi/"},
+{esp:"Un día más",eng:"One more day",fon:"/wan mor déi/"},
+{esp:"¿Ya es viernes?",eng:"Is it Friday yet?",fon:"/is it fráidei yet/"},
+{esp:"Sobrevivimos",eng:"We survived",fon:"/wi serváivd/"}]},
+{id:13,tema:"Cobrando el Sueldo",cat:"Social",frases:[
+{esp:"¿Ya cayó la quincena?",eng:"Did we get paid yet?",fon:"/did wi guet péid yet/"},
+{esp:"Mi cuenta en ceros",eng:"My account is empty",fon:"/mái akáunt is émpti/"},
+{esp:"Necesito un aumento",eng:"I need a raise",fon:"/ái níd a réis/"},
+{esp:"El dinero no alcanza",eng:"Money is tight",fon:"/máni is táit/"},
+{esp:"¿Cuándo pagan?",eng:"When's payday?",fon:"/wens péidei/"},
+{esp:"Me pagaron de menos",eng:"I got underpaid",fon:"/ái gat ánderpéid/"},
+{esp:"Voy a ahorrar",eng:"I'm going to save",fon:"/áim góing tu séiv/"},
+{esp:"Gasté de más",eng:"I overspent",fon:"/ái óverspent/"},
+{esp:"Necesito un extra",eng:"I need extra income",fon:"/ái níd éxtra ínkam/"},
+{esp:"Cheque por cheque",eng:"Living paycheck to paycheck",fon:"/lívin péichek tu péichek/"},
+{esp:"¿Depósito directo?",eng:"Direct deposit?",fon:"/dairékt dipósit/"},
+{esp:"Hay que presupuestar",eng:"We need to budget",fon:"/wi níd tu bádyet/"},
+{esp:"Me deben dinero",eng:"They owe me money",fon:"/déi óu mi máni/"},
+{esp:"¡Ya me pagaron!",eng:"I got paid!",fon:"/ái gat péid/"},
+{esp:"A celebrar",eng:"Time to celebrate",fon:"/táim tu sélebréit/"}]},
+{id:14,tema:"Chismes de Oficina",cat:"Social",frases:[
+{esp:"¿Ya te enteraste?",eng:"Did you hear?",fon:"/did yu jír/"},
+{esp:"No le digas a nadie",eng:"Don't tell anyone",fon:"/dont tel éniwon/"},
+{esp:"Es confidencial",eng:"It's confidential",fon:"/its konfidénshel/"},
+{esp:"Me contaron que...",eng:"I heard that...",fon:"/ái jerd dat/"},
+{esp:"¿Es cierto?",eng:"Is that true?",fon:"/is dat tru/"},
+{esp:"No me lo creo",eng:"I can't believe it",fon:"/ái kant bilív it/"},
+{esp:"¿Quién te dijo?",eng:"Who told you?",fon:"/ju told yu/"},
+{esp:"Es solo un rumor",eng:"It's just a rumor",fon:"/its yast a rúmor/"},
+{esp:"Entre nos",eng:"Between us",fon:"/bitwín as/"},
+{esp:"Se corre la voz",eng:"Word gets around",fon:"/werd guets aráund/"},
+{esp:"No quiero problemas",eng:"I don't want trouble",fon:"/ái dont wont trábol/"},
+{esp:"Cambiemos de tema",eng:"Let's change the subject",fon:"/lets chéiny de sábyekt/"},
+{esp:"Qué escándalo",eng:"What a scandal",fon:"/wot a skándal/"},
+{esp:"Yo no dije nada",eng:"I didn't say anything",fon:"/ái dídnt séi énitin/"},
+{esp:"¡Cuéntame todo!",eng:"Tell me everything!",fon:"/tel mi évritin/"}]},
+{id:15,tema:"Pidiendo Permisos",cat:"Profesional",frases:[
+{esp:"¿Puedo faltar mañana?",eng:"Can I take tomorrow off?",fon:"/kan ái téik tumórou of/"},
+{esp:"Necesito día personal",eng:"I need a personal day",fon:"/ái níd a pérsonal déi/"},
+{esp:"Tengo cita médica",eng:"I have a doctor's appointment",fon:"/ái jav a dóktors apóintment/"},
+{esp:"¿Puedo salir temprano?",eng:"Can I leave early?",fon:"/kan ái lív érli/"},
+{esp:"Trabajo desde casa",eng:"I'll work from home",fon:"/áil work from jóum/"},
+{esp:"Necesito vacaciones",eng:"I need time off",fon:"/ái níd táim of/"},
+{esp:"¿Me dan permiso?",eng:"May I have permission?",fon:"/méi ái jav permíshon/"},
+{esp:"Es emergencia",eng:"It's an emergency",fon:"/its an imeryensi/"},
+{esp:"Compenso las horas",eng:"I'll make up the hours",fon:"/áil méik ap de áuers/"},
+{esp:"Regreso el lunes",eng:"I'll be back Monday",fon:"/áil bi bak mándei/"},
+{esp:"¿Hay problema?",eng:"Is that okay?",fon:"/is dat okéi/"},
+{esp:"Ya pedí permiso",eng:"I already got approval",fon:"/ái olrédi gat aprúval/"},
+{esp:"Gracias por entender",eng:"Thanks for understanding",fon:"/zanks for anderstándin/"},
+{esp:"Me pongo al día",eng:"I'll catch up",fon:"/áil kach ap/"},
+{esp:"¿Cuántos días me quedan?",eng:"How many days do I have left?",fon:"/jáu méni déis du ái jav left/"}]},
+{id:16,tema:"Celebrando Éxitos",cat:"Social",frases:[
+{esp:"¡Lo logramos!",eng:"We made it!",fon:"/wi méid it/"},
+{esp:"Increíble noticia",eng:"Amazing news",fon:"/améisin niús/"},
+{esp:"Estoy tan feliz",eng:"I'm so happy",fon:"/áim so jápi/"},
+{esp:"¡Felicidades!",eng:"Congratulations!",fon:"/congráchuléishons/"},
+{esp:"Te lo mereces",eng:"You deserve it",fon:"/yu disérv it/"},
+{esp:"Qué orgulloso",eng:"I'm so proud",fon:"/áim so práud/"},
+{esp:"¡Brindemos!",eng:"Let's toast!",fon:"/lets tóust/"},
+{esp:"Gran logro",eng:"Great achievement",fon:"/gréit achívment/"},
+{esp:"Hay que celebrar",eng:"This calls for a celebration",fon:"/dis cols for a selebréishon/"},
+{esp:"Eres increíble",eng:"You're amazing",fon:"/yur améisin/"},
+{esp:"¡Lo hiciste!",eng:"You did it!",fon:"/yu did it/"},
+{esp:"Qué talento",eng:"Such talent",fon:"/sach tálent/"},
+{esp:"Estoy impresionado",eng:"I'm impressed",fon:"/áim imprést/"},
+{esp:"Fiesta esta noche",eng:"Party tonight",fon:"/párty tunáit/"},
+{esp:"El mejor equipo",eng:"The best team",fon:"/de best tím/"}]},
+{id:17,tema:"Excusas Clásicas",cat:"Social",frases:[
+{esp:"Mi alarma no sonó",eng:"My alarm didn't go off",fon:"/mái alárm dídnt góu of/"},
+{esp:"Había mucho tráfico",eng:"There was a lot of traffic",fon:"/der wos a lot of tráfik/"},
+{esp:"Se me olvidó",eng:"I forgot",fon:"/ái forgat/"},
+{esp:"Estaba enfermo",eng:"I was sick",fon:"/ái wos sik/"},
+{esp:"No me llegó el correo",eng:"I didn't get the email",fon:"/ái dídnt guet de ímail/"},
+{esp:"Mi internet se cayó",eng:"My internet went down",fon:"/mái ínternet went dáun/"},
+{esp:"Tuve una emergencia",eng:"I had an emergency",fon:"/ái jad an imeryensi/"},
+{esp:"Pensé que era mañana",eng:"I thought it was tomorrow",fon:"/ái zot it wos tumórou/"},
+{esp:"No sabía",eng:"I didn't know",fon:"/ái dídnt nóu/"},
+{esp:"Se me pasó el tiempo",eng:"I lost track of time",fon:"/ái lost trak of táim/"},
+{esp:"Estuve en otra junta",eng:"I was in another meeting",fon:"/ái wos in anóder mítin/"},
+{esp:"Mi carro se descompuso",eng:"My car broke down",fon:"/mái kar bróuk dáun/"},
+{esp:"Problemas personales",eng:"Personal issues",fon:"/pérsonal íshus/"},
+{esp:"No encontraba el lugar",eng:"I couldn't find the place",fon:"/ái kúdnt fáind de pléis/"},
+{esp:"No pasa otra vez",eng:"It won't happen again",fon:"/it wóunt jápen aguén/"}]},
+{id:18,tema:"Frustración Tecnológica",cat:"Profesional",frases:[
+{esp:"No funciona",eng:"It's not working",fon:"/its nat wérkin/"},
+{esp:"Se trabó mi compu",eng:"My computer froze",fon:"/mái compiúter fróus/"},
+{esp:"Necesito reiniciar",eng:"I need to restart",fon:"/ái níd tu ristárt/"},
+{esp:"La página no carga",eng:"The page won't load",fon:"/de péiy wóunt lóud/"},
+{esp:"¿Cuál es la contraseña?",eng:"What's the password?",fon:"/wots de páswerd/"},
+{esp:"Me bloqueó la cuenta",eng:"I got locked out",fon:"/ái gat lokt áut/"},
+{esp:"Otra actualización",eng:"Another update",fon:"/anóder apdéit/"},
+{esp:"Odio esta app",eng:"I hate this app",fon:"/ái jéit dis ap/"},
+{esp:"No guarda cambios",eng:"It won't save",fon:"/it wóunt séiv/"},
+{esp:"¿Quién arregla esto?",eng:"Who can fix this?",fon:"/ju kan fix dis/"},
+{esp:"Ya intenté todo",eng:"I've tried everything",fon:"/áiv tráid évritin/"},
+{esp:"Necesito soporte",eng:"I need tech support",fon:"/ái níd tek sopórt/"},
+{esp:"En mi compu funciona",eng:"It works on my computer",fon:"/it works on mái compiúter/"},
+{esp:"Perdí todo",eng:"I lost all my work",fon:"/ái lost ol mái work/"},
+{esp:"¡Ya funcionó!",eng:"It's working now!",fon:"/its wérkin náu/"}]},
+{id:19,tema:"Mostrando Empatía",cat:"Social",frases:[
+{esp:"¿Estás bien?",eng:"Are you okay?",fon:"/ar yu okéi/"},
+{esp:"Lamento escuchar eso",eng:"I'm sorry to hear that",fon:"/áim sóri tu jír dat/"},
+{esp:"Cuenta conmigo",eng:"You can count on me",fon:"/yu kan káunt on mi/"},
+{esp:"Estoy aquí para ti",eng:"I'm here for you",fon:"/áim jír for yu/"},
+{esp:"Debe ser difícil",eng:"That must be hard",fon:"/dat mast bi jard/"},
+{esp:"Te entiendo",eng:"I understand",fon:"/ái anderstánd/"},
+{esp:"No estás solo",eng:"You're not alone",fon:"/yur nat alóun/"},
+{esp:"Tómate tu tiempo",eng:"Take your time",fon:"/téik yur táim/"},
+{esp:"¿Cómo te ayudo?",eng:"How can I help?",fon:"/jáu kan ái jelp/"},
+{esp:"Todo estará bien",eng:"Everything will be okay",fon:"/évritin wil bi okéi/"},
+{esp:"Lo siento mucho",eng:"I'm so sorry",fon:"/áim so sóri/"},
+{esp:"Eres muy fuerte",eng:"You're so strong",fon:"/yur so strong/"},
+{esp:"Aquí estoy",eng:"I'm right here",fon:"/áim ráit jír/"},
+{esp:"No te preocupes",eng:"Don't worry",fon:"/dont wéri/"},
+{esp:"Saldremos adelante",eng:"We'll get through this",fon:"/wil guet zru dis/"}]},
+{id:20,tema:"Acordando Plazos",cat:"Profesional",frases:[
+{esp:"¿Para cuándo es?",eng:"When is it due?",fon:"/wen is it diú/"},
+{esp:"Lo necesito el viernes",eng:"I need it by Friday",fon:"/ái níd it bái fráidei/"},
+{esp:"¿Es factible?",eng:"Is that doable?",fon:"/is dat dúabol/"},
+{esp:"Necesito más tiempo",eng:"I need an extension",fon:"/ái níd an exténshon/"},
+{esp:"La fecha límite es...",eng:"The deadline is...",fon:"/de dédlain is/"},
+{esp:"Vamos a tiempo",eng:"We're on track",fon:"/wir on trak/"},
+{esp:"Estamos retrasados",eng:"We're behind schedule",fon:"/wir bijáind skédyul/"},
+{esp:"Puedo adelantarlo",eng:"I can move it up",fon:"/ái kan muv it ap/"},
+{esp:"¿Podemos extender?",eng:"Can we extend it?",fon:"/kan wi exténd it/"},
+{esp:"Lo entrego mañana",eng:"I'll deliver tomorrow",fon:"/áil dilíver tumórou/"},
+{esp:"Sin falta",eng:"Without fail",fon:"/widáut féil/"},
+{esp:"Es prioridad",eng:"It's a priority",fon:"/its a praióriti/"},
+{esp:"Ya casi está",eng:"It's almost ready",fon:"/its ólmost rédi/"},
+{esp:"Puntual",eng:"Right on time",fon:"/ráit on táim/"},
+{esp:"Cumplimos el plazo",eng:"We met the deadline",fon:"/wi met de dédlain/"}]},
+{id:21,tema:"Siendo Diplomático",cat:"Reuniones",frases:[
+{esp:"Con todo respeto",eng:"With all due respect",fon:"/wid ol diú rispékt/"},
+{esp:"Entiendo tu punto",eng:"I see your point",fon:"/ái sí yur póint/"},
+{esp:"Buena observación",eng:"Good observation",fon:"/gud obsevéishon/"},
+{esp:"Tal vez podríamos",eng:"Perhaps we could",fon:"/perjáps wi kud/"},
+{esp:"Yo sugeriría",eng:"I would suggest",fon:"/ái wud soyést/"},
+{esp:"Veámoslo diferente",eng:"Let's look at it differently",fon:"/lets luk at it díferentli/"},
+{esp:"Ambos tienen razón",eng:"You both have a point",fon:"/yu bóuz jav a póint/"},
+{esp:"Busquemos acuerdo",eng:"Let's find common ground",fon:"/lets fáind cómon gráund/"},
+{esp:"Aprecio tu opinión",eng:"I appreciate your input",fon:"/ái aprísheit yur ínput/"},
+{esp:"Tomaré nota",eng:"I'll take that into account",fon:"/áil téik dat íntu akáunt/"},
+{esp:"Es tema delicado",eng:"It's a sensitive topic",fon:"/its a sénsitiv tópik/"},
+{esp:"Hay pros y contras",eng:"There are pros and cons",fon:"/der ar pros and kons/"},
+{esp:"Considerémoslo",eng:"Let's consider it",fon:"/lets konsíder it/"},
+{esp:"Buen punto",eng:"Fair point",fon:"/fer póint/"},
+{esp:"Acordemos algo",eng:"Let's agree on something",fon:"/lets agrí on sámtin/"}]},
+{id:22,tema:"Entrevista de Trabajo",cat:"Profesional",frases:[
+{esp:"Gracias por la oportunidad",eng:"Thanks for the opportunity",fon:"/zanks for de oportuníti/"},
+{esp:"Tengo 5 años de experiencia",eng:"I have 5 years of experience",fon:"/ái jav fáiv yirs of expíriens/"},
+{esp:"Mi fortaleza es...",eng:"My strength is...",fon:"/mái strengz is/"},
+{esp:"Soy muy organizado",eng:"I'm very organized",fon:"/áim véri organaísd/"},
+{esp:"Trabajo bien en equipo",eng:"I'm a team player",fon:"/áim a tím pléier/"},
+{esp:"Me apasiona...",eng:"I'm passionate about...",fon:"/áim páshoneit abáut/"},
+{esp:"¿Cuáles son los beneficios?",eng:"What are the benefits?",fon:"/wot ar de bénefits/"},
+{esp:"Puedo empezar ya",eng:"I can start immediately",fon:"/ái kan start imídietli/"},
+{esp:"¿Cuál es el horario?",eng:"What are the hours?",fon:"/wot ar de áuers/"},
+{esp:"Estoy muy interesado",eng:"I'm very interested",fon:"/áim véri íntrested/"},
+{esp:"Me adapto fácilmente",eng:"I adapt easily",fon:"/ái adápt ísili/"},
+{esp:"Aprendo rápido",eng:"I'm a fast learner",fon:"/áim a fast lérner/"},
+{esp:"¿Hay crecimiento?",eng:"Is there room for growth?",fon:"/is der rum for gróuz/"},
+{esp:"Mis referencias",eng:"Here are my references",fon:"/jír ar mái réferenses/"},
+{esp:"¿Cuándo me avisan?",eng:"When will I hear back?",fon:"/wen wil ái jír bak/"}]},
+{id:23,tema:"Empezando la Mañana",cat:"Social",frases:[
+{esp:"Buenos días",eng:"Good morning",fon:"/gud mornin/"},
+{esp:"¿Cómo amaneciste?",eng:"How did you sleep?",fon:"/jáu did yu slip/"},
+{esp:"Necesito café primero",eng:"I need coffee first",fon:"/ái níd kófi ferst/"},
+{esp:"¿Qué hay de nuevo?",eng:"What's new?",fon:"/wots niú/"},
+{esp:"Listo para el día",eng:"Ready for the day",fon:"/rédi for de déi/"},
+{esp:"Hoy será buen día",eng:"Today's gonna be a good day",fon:"/tudéis gona bi a gud déi/"},
+{esp:"¿Qué hay en la agenda?",eng:"What's on the agenda?",fon:"/wots on de ayénda/"},
+{esp:"Primero lo primero",eng:"First things first",fon:"/ferst zings ferst/"},
+{esp:"¿Desayunaste?",eng:"Did you eat breakfast?",fon:"/did yu ít brékfast/"},
+{esp:"Llegué temprano",eng:"I got here early",fon:"/ái gat jír érli/"},
+{esp:"Un día a la vez",eng:"One day at a time",fon:"/wan déi at a táim/"},
+{esp:"¿Tráfico pesado?",eng:"Heavy traffic?",fon:"/jévi tráfik/"},
+{esp:"Ya estoy despierto",eng:"I'm wide awake",fon:"/áim wáid awéik/"},
+{esp:"Qué bonito día",eng:"What a beautiful day",fon:"/wot a biútiful déi/"},
+{esp:"Arrancamos",eng:"Let's get started",fon:"/lets guet stárted/"}]},
+{id:24,tema:"Cuando Estás Confundido",cat:"Reuniones",frases:[
+{esp:"No entiendo",eng:"I don't understand",fon:"/ái dont anderstánd/"},
+{esp:"¿Puedes repetir?",eng:"Can you say that again?",fon:"/kan yu séi dat aguén/"},
+{esp:"¿Qué quieres decir?",eng:"What do you mean?",fon:"/wot du yu mín/"},
+{esp:"Estoy perdido",eng:"I'm lost",fon:"/áim lost/"},
+{esp:"¿Podrías explicar?",eng:"Could you explain?",fon:"/kud yu expléin/"},
+{esp:"¿En serio?",eng:"Are you serious?",fon:"/ar yu sírios/"},
+{esp:"No tiene sentido",eng:"It doesn't make sense",fon:"/it dásnt méik sens/"},
+{esp:"¿Cómo así?",eng:"How so?",fon:"/jáu so/"},
+{esp:"Estoy confundido",eng:"I'm confused",fon:"/áim confiúsd/"},
+{esp:"Más despacio",eng:"Slow down please",fon:"/slóu dáun plís/"},
+{esp:"Déjame procesar",eng:"Let me process that",fon:"/let mi próses dat/"},
+{esp:"¿Puedes simplificarlo?",eng:"Can you simplify it?",fon:"/kan yu símplifai it/"},
+{esp:"¿Un ejemplo?",eng:"Can you give an example?",fon:"/kan yu giv an exámpl/"},
+{esp:"Ahora sí entendí",eng:"Now I get it",fon:"/náu ái guet it/"},
+{esp:"Ya me quedó claro",eng:"That's clear now",fon:"/dats klír náu/"}]},
+{id:25,tema:"Cambiando de Tema",cat:"Reuniones",frases:[
+{esp:"Hablando de otra cosa",eng:"On a different note",fon:"/on a díferent nóut/"},
+{esp:"Cambiemos de tema",eng:"Let's change the subject",fon:"/lets chéiny de sábyekt/"},
+{esp:"Por cierto",eng:"By the way",fon:"/bái de wéi/"},
+{esp:"Se me olvidaba",eng:"I almost forgot",fon:"/ái ólmost forgat/"},
+{esp:"Antes de que se me olvide",eng:"Before I forget",fon:"/bifór ái forguét/"},
+{esp:"Eso me recuerda",eng:"That reminds me",fon:"/dat rimáinds mi/"},
+{esp:"A propósito",eng:"Speaking of which",fon:"/spíkin of wich/"},
+{esp:"Volviendo al tema",eng:"Getting back on track",fon:"/guétin bak on trak/"},
+{esp:"Otra cosa",eng:"One more thing",fon:"/wan mor zing/"},
+{esp:"Ya que mencionas eso",eng:"Since you mention it",fon:"/sins yu ménshon it/"},
+{esp:"Aprovechando",eng:"While we're at it",fon:"/wáil wir at it/"},
+{esp:"En otro orden",eng:"On another note",fon:"/on anóder nóut/"},
+{esp:"Quiero agregar",eng:"I'd like to add something",fon:"/áid láik tu ad sámtin/"},
+{esp:"Un momento",eng:"Hold on a second",fon:"/jóuld on a sékond/"},
+{esp:"Para no olvidar",eng:"Just so I don't forget",fon:"/yast so ái dont forguét/"}]},
+{id:26,tema:"Motivando al Equipo",cat:"Profesional",frases:[
+{esp:"¡Vamos con todo!",eng:"Let's go all in!",fon:"/lets góu ol in/"},
+{esp:"Podemos lograrlo",eng:"We can do this",fon:"/wi kan du dis/"},
+{esp:"No se rindan",eng:"Don't give up",fon:"/dont giv ap/"},
+{esp:"Falta poco",eng:"We're almost there",fon:"/wir ólmost der/"},
+{esp:"Juntos somos fuertes",eng:"Together we're strong",fon:"/tuguéder wir strong/"},
+{esp:"Creo en ustedes",eng:"I believe in you",fon:"/ái bilív in yu/"},
+{esp:"Vale la pena",eng:"The effort is worth it",fon:"/de éfort is werz it/"},
+{esp:"Un paso a la vez",eng:"One step at a time",fon:"/wan step at a táim/"},
+{esp:"Gran equipo",eng:"We're a great team",fon:"/wir a gréit tím/"},
+{esp:"¡Ánimo!",eng:"Keep going!",fon:"/kíp góin/"},
+{esp:"Los retos nos fortalecen",eng:"Challenges make us stronger",fon:"/chálenyis méik as strónguer/"},
+{esp:"Confío en el equipo",eng:"I trust the team",fon:"/ái trast de tím/"},
+{esp:"Demos lo mejor",eng:"Let's give it our best",fon:"/lets giv it áuer best/"},
+{esp:"El éxito está cerca",eng:"Success is near",fon:"/saksés is nír/"},
+{esp:"¡A darle!",eng:"Let's make it happen!",fon:"/lets méik it jápen/"}]},
+{id:27,tema:"Cuando Te Equivocas",cat:"Profesional",frases:[
+{esp:"Me equivoqué",eng:"I was wrong",fon:"/ái wos rong/"},
+{esp:"Tienes razón",eng:"You're right",fon:"/yur ráit/"},
+{esp:"Perdón por eso",eng:"Sorry about that",fon:"/sóri abáut dat/"},
+{esp:"Lo malinterpreté",eng:"I misunderstood",fon:"/ái misanderstúd/"},
+{esp:"Mi error, lo acepto",eng:"My mistake, I own it",fon:"/mái mistéik ái óun it/"},
+{esp:"Debí haberlo pensado",eng:"I should have thought about it",fon:"/ái shud jav zot abáut it/"},
+{esp:"No lo pensé bien",eng:"I didn't think it through",fon:"/ái dídnt zink it zru/"},
+{esp:"Acepto la corrección",eng:"I accept the correction",fon:"/ái aksépt de korekshon/"},
+{esp:"Voy a corregirlo",eng:"I'll correct it",fon:"/áil korékt it/"},
+{esp:"Gracias por decirme",eng:"Thanks for telling me",fon:"/zanks for télin mi/"},
+{esp:"No pasa otra vez",eng:"It won't happen again",fon:"/it wóunt jápen aguén/"},
+{esp:"Aprendí algo nuevo",eng:"I learned something new",fon:"/ái lernd sámtin niú/"},
+{esp:"Reconozco mi falla",eng:"I acknowledge my fault",fon:"/ái aknóledy mái folt/"},
+{esp:"¿Cómo lo arreglo?",eng:"How do I fix this?",fon:"/jáu du ái fix dis/"},
+{esp:"La próxima será mejor",eng:"Next time will be better",fon:"/next táim wil bi béter/"}]},
+{id:28,tema:"Despedidas Rápidas",cat:"Social",frases:[
+{esp:"¡Nos vemos!",eng:"See you later!",fon:"/sí yu léiter/"},
+{esp:"Cuídate mucho",eng:"Take care",fon:"/téik ker/"},
+{esp:"Fue un gusto verte",eng:"Great seeing you",fon:"/gréit síin yu/"},
+{esp:"Hasta pronto",eng:"See you soon",fon:"/sí yu sun/"},
+{esp:"Que te vaya bien",eng:"Good luck",fon:"/gud lak/"},
+{esp:"Me tengo que ir",eng:"I gotta go",fon:"/ái gara góu/"},
+{esp:"Ya me voy corriendo",eng:"I'm running late",fon:"/áim raning léit/"},
+{esp:"Hablamos luego",eng:"Talk to you later",fon:"/tok tu yu léiter/"},
+{esp:"Te marco después",eng:"I'll call you later",fon:"/áil kol yu léiter/"},
+{esp:"Chao chao",eng:"Bye-bye",fon:"/bái bái/"},
+{esp:"Fue divertido",eng:"That was fun",fon:"/dat wos fan/"},
+{esp:"Que descanses",eng:"Get some rest",fon:"/guet som rest/"},
+{esp:"Éxito",eng:"Best of luck",fon:"/best of lak/"},
+{esp:"Nos estamos viendo",eng:"Catch you around",fon:"/kach yu aráund/"},
+{esp:"¡Adiós!",eng:"Goodbye!",fon:"/gudbái/"}]},
+{id:29,tema:"Lidiando con Clientes",cat:"Profesional",frases:[
+{esp:"¿En qué le ayudo?",eng:"How can I help you?",fon:"/jáu kan ái jelp yu/"},
+{esp:"Entiendo su situación",eng:"I understand your situation",fon:"/ái anderstánd yur sichuéishon/"},
+{esp:"Déjeme revisar",eng:"Let me check on that",fon:"/let mi chek on dat/"},
+{esp:"Disculpe las molestias",eng:"Sorry for the inconvenience",fon:"/sóri for de inconvíniens/"},
+{esp:"Lo resolveremos",eng:"We'll resolve this",fon:"/wil risólv dis/"},
+{esp:"Tiene toda la razón",eng:"You're absolutely right",fon:"/yur ábsolutli ráit/"},
+{esp:"Le damos seguimiento",eng:"We'll follow up",fon:"/wil fólou ap/"},
+{esp:"¿Algo más?",eng:"Anything else I can do?",fon:"/énitin els ái kan du/"},
+{esp:"Apreciamos su paciencia",eng:"We appreciate your patience",fon:"/wi aprísheit yur péishens/"},
+{esp:"Es nuestra prioridad",eng:"It's our top priority",fon:"/its áuer top praióriti/"},
+{esp:"Le mantendremos informado",eng:"We'll keep you posted",fon:"/wil kíp yu póusted/"},
+{esp:"Gracias por preferirnos",eng:"Thank you for choosing us",fon:"/zank yu for chúsin as/"},
+{esp:"Con gusto le ayudo",eng:"I'd be happy to help",fon:"/áid bi jápi tu jelp/"},
+{esp:"¿Tiene alguna duda?",eng:"Do you have any questions?",fon:"/du yu jav éni kuéschons/"},
+{esp:"Estamos para servirle",eng:"We're here to help",fon:"/wir jír tu jelp/"}]},
+{id:30,tema:"Ideas Millonarias",cat:"Profesional",frases:[
+{esp:"Tengo una idea",eng:"I have an idea",fon:"/ái jav an aidía/"},
+{esp:"¿Qué tal si...?",eng:"What if we...?",fon:"/wot if wi/"},
+{esp:"Piensen en esto",eng:"Think about this",fon:"/zink abáut dis/"},
+{esp:"Podríamos intentar",eng:"We could try",fon:"/wi kud trái/"},
+{esp:"Imaginen que",eng:"Imagine that",fon:"/imáyin dat/"},
+{esp:"Es una locura pero...",eng:"It sounds crazy but...",fon:"/it sáunds créisi bat/"},
+{esp:"¿Y si lo hacemos diferente?",eng:"What if we do it differently?",fon:"/wot if wi du it díferentli/"},
+{esp:"Propongo algo",eng:"I'd like to propose something",fon:"/áid láik tu propóus sámtin/"},
+{esp:"Sería innovador",eng:"It would be innovative",fon:"/it wud bi ínoveytiv/"},
+{esp:"Nadie lo ha hecho",eng:"No one has done this",fon:"/nóu wan jas dan dis/"},
+{esp:"El mercado lo necesita",eng:"The market needs this",fon:"/de márket níds dis/"},
+{esp:"Los números funcionan",eng:"The numbers work",fon:"/de námbers work/"},
+{esp:"¿Quién se une?",eng:"Who's on board?",fon:"/jus on bord/"},
+{esp:"Es ahora o nunca",eng:"It's now or never",fon:"/its náu or néver/"},
+{esp:"Hagámoslo realidad",eng:"Let's make it happen",fon:"/lets méik it jápen/"}]}
+];
 
-// =============================================
-// INDEXED DB
-// =============================================
-function openDB() {
-    return new Promise((res, rej) => {
-        const r = indexedDB.open(DB_NAME, 1);
-        r.onupgradeneeded = e => {
-            const d = e.target.result;
-            if (!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE, { keyPath: 'id' });
-        };
-        r.onsuccess = e => { db = e.target.result; res(); };
-        r.onerror = () => rej('DB Error');
-    });
-}
-function dbGetAll() {
-    return new Promise(res => {
-        const tx = db.transaction(STORE, 'readonly');
-        const r = tx.objectStore(STORE).getAll();
-        r.onsuccess = () => res(r.result);
-    });
-}
-function dbPut(obj) {
-    return new Promise(res => {
-        const tx = db.transaction(STORE, 'readwrite');
-        tx.objectStore(STORE).put(obj);
-        tx.oncomplete = () => res();
-    });
-}
-function dbDel(id) {
-    return new Promise(res => {
-        const tx = db.transaction(STORE, 'readwrite');
-        tx.objectStore(STORE).delete(id);
-        tx.oncomplete = () => res();
-    });
-}
+// ========================================================
+// ESTADO GLOBAL
+// ========================================================
+const DB='ISM_F21',ST='vids';
+let idb=null,V=[],ins=[],gen=null,tpl='bicolor',eId=null,calD=new Date(),drgId=null,rec=null,chunks=[];
+let AK='',MDL='gemini-2.5-flash';
 
-// =============================================
+// DB OPERATIONS
+const oDB=()=>new Promise((r,j)=>{const q=indexedDB.open(DB,1);q.onupgradeneeded=e=>{const d=e.target.result;if(!d.objectStoreNames.contains(ST))d.createObjectStore(ST,{keyPath:'id'})};q.onsuccess=e=>{idb=e.target.result;r()};q.onerror=()=>j()});
+const gA=()=>new Promise(r=>{const t=idb.transaction(ST,'readonly'),q=t.objectStore(ST).getAll();q.onsuccess=()=>r(q.result)});
+const pV=o=>new Promise(r=>{const t=idb.transaction(ST,'readwrite');t.objectStore(ST).put(o);t.oncomplete=()=>r()});
+const dV=id=>new Promise(r=>{const t=idb.transaction(ST,'readwrite');t.objectStore(ST).delete(id);t.oncomplete=()=>r()});
+
 // INIT
-// =============================================
-window.onload = async () => {
-    await openDB();
-    videos = await dbGetAll();
-    API_KEY = localStorage.getItem('ism_api_key') || '';
-    if (API_KEY) document.getElementById('apiKeyInput').value = API_KEY;
-    const ins = localStorage.getItem('ism_inspo_v2');
-    if (ins) inspoItems = JSON.parse(ins);
-    renderAll();
-    document.addEventListener('keydown', e => {
-        if (e.key === 'Escape') { closeTeleprompter(); closeEditModal(); }
-    });
-    document.getElementById('ttsSpeed').addEventListener('input', e => {
-        document.getElementById('ttsSpeedVal').textContent = e.target.value + 'x';
-    });
+window.onload=async()=>{
+    await oDB();V=await gA();
+    AK=localStorage.getItem('ism_ak')||'';
+    MDL=localStorage.getItem('ism_mdl')||'gemini-2.5-flash';
+    if(AK)document.getElementById('akInp').value=AK;
+    document.getElementById('mdlSel').value=MDL;
+    const i=localStorage.getItem('ism_ins2');if(i)ins=JSON.parse(i);
+    if(V.length===0)await seedDB();
+    initQuick();rAll();
+    document.addEventListener('keydown',e=>{if(e.key==='Escape'){clTele();clEd()}});
 };
 
-function renderAll() {
-    renderDB();
-    renderKanban();
-    renderCalendar();
-    populateSelects();
-    renderInspo();
-    document.getElementById('nav-count').textContent = videos.length;
+async function seedDB(){
+    for(let v of V)await dV(v.id);
+    for(let s of SEED)await pV({id:s.id,tema:s.tema,estado:'idea',cat:s.cat,date:'',hook:s.frases[0]?.eng||'',frases:s.frases,seo:{},notas:'',tpl:'bicolor',ts:Date.now()});
+    V=await gA();rAll();toast('✅ 30 videos cargados');
 }
 
-// =============================================
+function initQuick(){
+    const t=['Frases útiles para hablar inglés','Preguntas básicas en inglés','Verbos irregulares','Expresiones para el trabajo','Cómo presentarte en inglés','Frases para viajar','Emociones y sentimientos','Saludos y despedidas','Conectores para hablar fluido','Phrasal verbs esenciales','Días y meses en inglés','Números y cantidades'];
+    document.getElementById('quickBtns').innerHTML=t.map(x=>`<button class="btn bg bsm" onclick="document.getElementById('topicInp').value='${x}'">${x}</button>`).join('');
+}
+function rAll(){rDB();rKan();rCal();pSels();rIns();document.getElementById('nc').textContent=V.length}
+
 // NAVIGATION
-// =============================================
-function goTo(id, btn) {
-    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById('v-' + id).classList.add('active');
-    if (btn) btn.classList.add('active');
-    if (id === 'tts' || id === 'seo') populateSelects();
+function go(id,b){document.querySelectorAll('.vw').forEach(v=>v.classList.remove('on'));document.querySelectorAll('.nb').forEach(n=>n.classList.remove('on'));document.getElementById('v-'+id).classList.add('on');if(b)b.classList.add('on');if(id==='tts'||id==='seo')pSels()}
+function toast(m,t='ok'){const e=document.getElementById('toast');e.textContent=m;e.style.background=t==='error'?'var(--red)':'var(--grn)';e.classList.add('sh');setTimeout(()=>e.classList.remove('sh'),3500)}
+function showL(m='Generando...'){document.getElementById('ldTx').textContent=m;document.getElementById('ldOv').classList.add('on')}
+function hideL(){document.getElementById('ldOv').classList.remove('on')}
+
+// FACTORY STEPS
+function goS(n){for(let i=1;i<=4;i++){document.getElementById('fs'+i).style.display=i===n?'block':'none';const s=document.getElementById('s'+i);s.classList.remove('on','dn');if(i<n)s.classList.add('dn');if(i===n)s.classList.add('on')};if(n===3)rTplPrev();if(n===4)rFinal()}
+
+// GEMINI API — MODELO CORRECTO: gemini-2.5-flash
+function getEP(){return`https://generativelanguage.googleapis.com/v1beta/models/${MDL}:generateContent`}
+
+async function geminiGen(){
+    const topic=document.getElementById('topicInp').value.trim();
+    if(!topic)return toast('Escribe un tema','error');
+    if(!AK){AK=localStorage.getItem('ism_ak')||'';if(!AK)return toast('Configura API Key en ⚙️','error')}
+    const cnt=document.getElementById('cntSel').value,lvl=document.getElementById('lvlSel').value,hk=document.getElementById('hookSel').value;
+    const hkM={curiosidad:'Hook de curiosidad: "El 90% no sabe esto" o "¿Sabías que...?"',negacion:'Hook de negación: "NUNCA digas esto" o "Deja de decir X"',reto:'Hook de reto: "¿Puedes decir las '+cnt+'?"'};
+    const prompt=`Eres profesor de inglés para hispanohablantes creando YouTube Shorts virales.\n\nTEMA: "${topic}"\nNIVEL: ${lvl}\nCANTIDAD: ${cnt} frases exactas\n\nINSTRUCCIONES:\n1. Genera exactamente ${cnt} pares español → inglés\n2. ${hkM[hk]}\n3. Fonética APROXIMADA EN ESPAÑOL entre barras /\n4. Progresión fácil → difícil\n5. Frases inglés CORTAS (máx 5-6 palabras)\n6. Título viral (máx 55 chars con emoji)\n7. Descripción corta (máx 150 chars)\n8. 8 tags SEO por coma\n9. 4 hashtags\n10. Categoría\n\nRESPONDE SOLO JSON VÁLIDO sin markdown:\n{"titulo":"","hook":"","categoria":"","frases":[{"esp":"","eng":"","fon":""}],"seo":{"titulo_yt":"","descripcion":"","tags":"","hashtags":""}}`;
+    showL('🧠 Gemini 2.5 Flash generando...');
+    try{
+        const r=await fetch(getEP()+'?key='+AK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:prompt}]}],generationConfig:{temperature:0.85,maxOutputTokens:2500}})});
+        if(!r.ok){const err=await r.json();throw new Error(err.error?.message||'Error '+r.status)}
+        const d=await r.json();let txt=d.candidates[0].content.parts[0].text;
+        txt=txt.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();
+        gen=JSON.parse(txt);hideL();loadGen();goS(2);toast('✅ Guion generado');
+    }catch(e){hideL();console.error(e);toast('Error: '+e.message,'error')}
 }
 
-function toast(msg, type = 'success') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.background = type === 'error' ? 'var(--red)' : 'var(--green)';
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3000);
-}
+function loadGen(){if(!gen)return;document.getElementById('gTitle').value=gen.titulo||'';document.getElementById('gHook').value=gen.hook||'';document.getElementById('gCat').value=gen.categoria||'';rGP()}
+function rGP(){document.getElementById('gPhrC').innerHTML=gen.frases.map((f,i)=>`<div class="pr"><input value="${f.esp}" onchange="gen.frases[${i}].esp=this.value" placeholder="Español" style="${i===0?'border-color:var(--red);font-weight:700':''}"><input value="${f.eng}" onchange="gen.frases[${i}].eng=this.value" placeholder="English" style="font-weight:700"><input value="${f.fon||''}" onchange="gen.frases[${i}].fon=this.value" placeholder="/fonética/"><button class="btn bg bsm" onclick="gen.frases.splice(${i},1);rGP()" style="color:var(--red)">✕</button></div>`).join('')}
+function addGP(){gen.frases.push({esp:'',eng:'',fon:''});rGP()}
 
-function showLoading(msg = 'Generando con Gemini AI...') {
-    document.getElementById('loadingText').textContent = msg;
-    document.getElementById('loadingOverlay').classList.add('active');
-}
-function hideLoading() {
-    document.getElementById('loadingOverlay').classList.remove('active');
-}
+// TEMPLATES
+function selTpl(t,el){tpl=t;document.querySelectorAll('.tpo').forEach(e=>e.classList.remove('sel'));el.classList.add('sel')}
+function rTplPrev(){if(!gen||!gen.frases.length)return;const f=gen.frases.slice(0,5);
+document.getElementById('tpv1').innerHTML=f.map(r=>`<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:.6rem;font-family:Montserrat"><span style="color:#e63946;font-weight:700">${r.esp}</span><span style="color:#1a1a2e;font-weight:800">${r.eng}</span></div>`).join('')+'<div style="text-align:center;color:#999;font-size:.45rem;margin-top:4px">+'+Math.max(0,gen.frases.length-5)+' más</div>';
+document.getElementById('tpv2').innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;font-size:.55rem"><div style="background:rgba(255,255,255,.12);color:#fff;padding:3px;text-align:center;font-weight:800;border-radius:2px">ESP</div><div style="background:rgba(255,255,255,.12);color:#fff;padding:3px;text-align:center;font-weight:800;border-radius:2px">ENG</div>${f.map(r=>`<div style="color:#ffd;padding:2px">${r.esp}</div><div style="color:#8ef;font-weight:700;padding:2px">${r.eng}</div>`).join('')}</div>`;
+document.getElementById('tpv3').innerHTML=`<div style="text-align:center"><div style="color:#e63946;font-size:.7rem;font-weight:800;margin-bottom:3px">${f[0].esp}</div><div style="color:#fff;font-size:1rem;font-weight:900">${f[0].eng}</div><div style="color:#06b6d4;font-size:.55rem;font-family:monospace;margin-top:3px">${f[0].fon||''}</div><div style="color:#555;font-size:.45rem;margin-top:10px">1/${gen.frases.length}</div></div>`}
 
-// =============================================
-// FACTORY — STEP NAVIGATION
-// =============================================
-function goStep(n) {
-    for (let i = 1; i <= 4; i++) {
-        document.getElementById('factory-step-' + i).style.display = i === n ? 'block' : 'none';
-        const s = document.getElementById('step-' + i);
-        s.classList.remove('active', 'done');
-        if (i < n) s.classList.add('done');
-        if (i === n) s.classList.add('active');
-    }
-    if (n === 3) renderTemplatePreviews();
-    if (n === 4) renderFinalPreview();
-}
+// CANVAS
+function rFinal(){if(!gen)return;const c=document.getElementById('pvC'),x=c.getContext('2d');c.width=1080;c.height=1920;const cE=document.getElementById('cEsp').value,cN=document.getElementById('cEng').value,cB=document.getElementById('cBg').value,fF=document.getElementById('fSel').value;if(tpl==='bicolor')drawBi(x,c,cE,cN,cB,fF);else if(tpl==='columnas')drawCol(x,c,fF);else drawCrd(x,c,cE,cN,fF);if(gen.seo){document.getElementById('seoT').value=gen.seo.titulo_yt||'';document.getElementById('seoD').value=gen.seo.descripcion||'';document.getElementById('seoTg').value=gen.seo.tags||''};rAsm()}
 
-// =============================================
-// FACTORY — GEMINI API CALL
-// =============================================
-function quickTopic(btn) {
-    document.getElementById('topicInput').value = btn.textContent;
-}
+function drawBi(x,c,cE,cN,cB,fF){const W=c.width,H=c.height,fr=gen.frases,n=fr.length;x.fillStyle=cB;x.fillRect(0,0,W,H);x.fillStyle=cE;x.fillRect(0,0,W,150);x.fillStyle='#fff';x.font=`bold 46px ${fF}`;x.textAlign='center';wTx(x,gen.hook||gen.titulo||'Inglés Sin Miedo',W/2,65,W-80,50);const sY=200,lH=Math.min(82,(H-380)/n);fr.forEach((f,i)=>{const y=sY+i*lH;if(i%2===0){x.fillStyle='rgba(0,0,0,.03)';x.fillRect(20,y-lH*.25,W-40,lH)}const sz=Math.min(40,560/n*2.4);x.textAlign='left';x.font=`bold ${sz}px ${fF}`;x.fillStyle=cE;x.fillText(f.esp,55,y+14);x.textAlign='right';x.font=`800 ${sz}px ${fF}`;x.fillStyle=cN;x.fillText(f.eng,W-55,y+14)});x.fillStyle=cE;x.fillRect(0,H-130,W,130);x.fillStyle='#fff';x.textAlign='center';x.font=`900 44px ${fF}`;x.fillText('INGLÉS SIN MIEDO',W/2,H-65);x.font=`600 26px ${fF}`;x.fillStyle='rgba(255,255,255,.7)';x.fillText('@inglessinmiedo',W/2,H-28)}
 
-async function generateWithGemini() {
-    const topic = document.getElementById('topicInput').value.trim();
-    if (!topic) return toast('Escribe un tema primero', 'error');
+function drawCol(x,c,fF){const W=c.width,H=c.height,fr=gen.frases,n=fr.length;const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,'#1a3a5c');g.addColorStop(.5,'#0d2137');g.addColorStop(1,'#091520');x.fillStyle=g;x.fillRect(0,0,W,H);x.fillStyle='#ffd700';x.font=`900 42px ${fF}`;x.textAlign='center';wTx(x,'💡 '+(gen.hook||gen.titulo),W/2,70,W-80,48);const hY=150,cW=(W-100)/2;x.fillStyle='rgba(255,255,255,.1)';x.beginPath();x.roundRect(40,hY,cW,54,8);x.fill();x.beginPath();x.roundRect(60+cW,hY,cW,54,8);x.fill();x.fillStyle='#fff';x.font=`800 32px ${fF}`;x.textAlign='center';x.fillText('ESPAÑOL',40+cW/2,hY+38);x.fillText('INGLÉS',60+cW+cW/2,hY+38);const sY=240,lH=Math.min(76,(H-420)/n);fr.forEach((f,i)=>{const y=sY+i*lH;if(i%2===0){x.fillStyle='rgba(255,255,255,.025)';x.fillRect(40,y-8,W-80,lH)}const sz=Math.min(35,520/n*2.1);x.textAlign='left';x.font=`600 ${sz}px ${fF}`;x.fillStyle='#fff';x.fillText(f.esp,55,y+26);x.fillStyle='#5cb8ff';x.font=`800 ${sz}px ${fF}`;x.fillText(f.eng,60+cW+15,y+26)});x.strokeStyle='rgba(255,255,255,.08)';x.lineWidth=2;x.beginPath();x.moveTo(W/2,230);x.lineTo(W/2,sY+n*lH);x.stroke();x.fillStyle='rgba(255,255,255,.06)';x.fillRect(0,H-110,W,110);x.fillStyle='#fff';x.textAlign='center';x.font=`800 38px ${fF}`;x.fillText('INGLÉS SIN MIEDO 🎯',W/2,H-48)}
 
-    if (!API_KEY) {
-        API_KEY = localStorage.getItem('ism_api_key') || '';
-        if (!API_KEY) return toast('Configura tu API Key en ⚙️ Settings', 'error');
-    }
+function drawCrd(x,c,cE,cN,fF){const W=c.width,H=c.height,f=gen.frases[0];if(!f)return;x.fillStyle='#0a0a15';x.fillRect(0,0,W,H);const cW=W-160,cH=560,cx=(W-cW)/2,cy=(H-cH)/2-70;x.fillStyle='#1a1a30';x.strokeStyle='#333';x.lineWidth=3;x.beginPath();x.roundRect(cx,cy,cW,cH,26);x.fill();x.stroke();x.shadowColor=cE;x.shadowBlur=35;x.fillStyle=cE;x.beginPath();x.roundRect(cx,cy,cW,7,[26,26,0,0]);x.fill();x.shadowBlur=0;x.fillStyle=cE;x.font=`700 58px ${fF}`;x.textAlign='center';x.fillText(f.esp,W/2,cy+170);x.fillStyle='#fff';x.font=`900 78px ${fF}`;x.fillText(f.eng,W/2,cy+305);if(f.fon){x.fillStyle='#06b6d4';x.font=`600 44px monospace`;x.fillText(f.fon,W/2,cy+410)}x.fillStyle='#555';x.font=`600 32px ${fF}`;x.fillText('1 / '+gen.frases.length,W/2,cy+cH+70);x.fillStyle=cE;x.font=`900 40px ${fF}`;x.fillText('INGLÉS SIN MIEDO',W/2,H-90)}
 
-    const count = document.getElementById('phraseCount').value;
-    const level = document.getElementById('levelSelect').value;
-    const hookStyle = document.getElementById('hookStyle').value;
+function wTx(x,t,px,py,mW,lH){const w=t.split(' ');let l='';for(let s of w){const test=l+s+' ';if(x.measureText(test).width>mW&&l){x.fillText(l.trim(),px,py);l=s+' ';py+=lH}else l=test}x.fillText(l.trim(),px,py)}
 
-    const hookInstructions = {
-        curiosidad: 'Usa un hook de curiosidad como "El 90% no sabe decir esto en inglés 🤯" o "¿Sabías que...?"',
-        negacion: 'Usa un hook de negación como "Deja de decir X, di Y" o "NUNCA digas esto en inglés"',
-        reto: 'Usa un hook de reto como "¿Puedes decir las 15 sin equivocarte?" o "Solo el 5% puede con la #10"',
-        emoji: 'Usa un hook con emojis llamativos como "🤯🔥 Frases que NECESITAS saber"'
-    };
+function rAsm(){if(!gen)return;let t=0;let h='<table style="width:100%;font-size:.72rem"><tr><th style="padding:5px">#</th><th>Frase</th><th>Ini</th><th>Dur</th></tr>';gen.frases.forEach((f,i)=>{const d=Math.max(1.4,f.eng.split(/\s+/).length*.48+.7);h+=`<tr><td style="padding:5px;color:var(--red);font-weight:700">${i+1}</td><td>${f.eng}</td><td>${t.toFixed(1)}s</td><td>${d.toFixed(1)}s</td></tr>`;t+=d});h+=`</table><p style="margin-top:8px;color:var(--red);font-weight:700">⏱ Total: ${t.toFixed(1)}s</p>`;if(t>58)h+=`<p style="color:var(--ylw)">⚠️ Largo para Short</p>`;document.getElementById('asmG').innerHTML=h}
 
-    const prompt = `Eres un profesor de inglés experto creando contenido viral para YouTube Shorts en español para hispanohablantes.
+// EXPORTS
+function dlImg(){const c=document.getElementById('pvC'),a=document.createElement('a');a.download='ISM_'+(gen?.titulo||'short').replace(/[^a-zA-Z0-9]/g,'_')+'.png';a.href=c.toDataURL('image/png');a.click();toast('📥 Descargada')}
+function dlFrames(){if(tpl!=='tarjetas')return dlImg();const cv=document.createElement('canvas');cv.width=1080;cv.height=1920;const x=cv.getContext('2d'),cE=document.getElementById('cEsp').value,cN=document.getElementById('cEng').value,fF=document.getElementById('fSel').value;gen.frases.forEach((f,i)=>{const W=1080,H=1920;x.fillStyle='#0a0a15';x.fillRect(0,0,W,H);const cW=W-160,cH=560,cx2=(W-cW)/2,cy=(H-cH)/2-70;x.fillStyle='#1a1a30';x.strokeStyle='#333';x.lineWidth=3;x.beginPath();x.roundRect(cx2,cy,cW,cH,26);x.fill();x.stroke();x.shadowColor=cE;x.shadowBlur=35;x.fillStyle=cE;x.beginPath();x.roundRect(cx2,cy,cW,7,[26,26,0,0]);x.fill();x.shadowBlur=0;x.fillStyle=cE;x.font=`700 58px ${fF}`;x.textAlign='center';x.fillText(f.esp,W/2,cy+170);x.fillStyle='#fff';x.font=`900 78px ${fF}`;x.fillText(f.eng,W/2,cy+305);if(f.fon){x.fillStyle='#06b6d4';x.font=`600 44px monospace`;x.fillText(f.fon,W/2,cy+410)}x.fillStyle='#555';x.font=`600 32px ${fF}`;x.fillText(`${i+1}/${gen.frases.length}`,W/2,cy+cH+70);x.fillStyle=cE;x.font=`900 40px ${fF}`;x.fillText('INGLÉS SIN MIEDO',W/2,H-90);const a=document.createElement('a');a.download=`ISM_frame_${String(i+1).padStart(2,'0')}.png`;a.href=cv.toDataURL('image/png');a.click()});toast(`📦 ${gen.frases.length} frames`)}
+function cpSEO(){const t=document.getElementById('seoT').value,d=document.getElementById('seoD').value,tg=document.getElementById('seoTg').value;navigator.clipboard.writeText(`TÍTULO:\n${t}\n\nDESC:\n${d}\n\nTAGS:\n${tg}`).then(()=>toast('📋 Copiado'))}
+async function saveToDB(){if(!gen)return;const v={id:Date.now(),tema:gen.titulo||'Sin título',estado:'ready',cat:gen.categoria||'',date:'',hook:gen.hook||'',frases:gen.frases,seo:gen.seo||{},notas:'',tpl:tpl,ts:Date.now()};V.push(v);await pV(v);rAll();toast('💾 Guardado')}
+function resetFac(){gen=null;document.getElementById('topicInp').value='';goS(1)}
 
-TEMA: "${topic}"
-NIVEL: ${level}
-CANTIDAD DE FRASES: ${count}
-
-INSTRUCCIONES:
-1. Genera exactamente ${count} pares de frases (español → inglés)
-2. ${hookInstructions[hookStyle]}
-3. Incluye la fonética aproximada en español para cada frase en inglés (entre barras /)
-4. Las frases deben ser progresivas: de más fácil a más difícil
-5. Cada frase en inglés debe ser CORTA (máximo 5 palabras idealmente)
-6. Genera un título viral para YouTube (máximo 60 caracteres)
-7. Genera una descripción corta para YouTube
-8. Genera 8 tags relevantes separados por comas
-9. Genera 5 hashtags
-10. Sugiere una categoría (Ej: Vocabulario, Gramática, Frases Útiles, etc.)
-
-FORMATO DE RESPUESTA: Responde ÚNICAMENTE con un JSON válido, sin markdown, sin backticks, sin explicaciones. Solo el JSON puro:
-{
-  "titulo": "título viral aquí",
-  "hook": "gancho para el inicio del video",
-  "categoria": "categoría",
-  "frases": [
-    {"esp": "frase en español", "eng": "English phrase", "fon": "/fonética/"}
-  ],
-  "seo": {
-    "titulo_yt": "título para YouTube",
-    "descripcion": "descripción corta",
-    "tags": "tag1, tag2, tag3",
-    "hashtags": "#hashtag1 #hashtag2"
-  }
-}`;
-
-    showLoading('🧠 Generando guion con Gemini AI...');
-
-    try {
-        const response = await fetch(`${GEMINI_ENDPOINT}?key=${API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: {
-                    temperature: 0.8,
-                    maxOutputTokens: 2048
-                }
-            })
-        });
-
-        if (!response.ok) {
-            const err = await response.json();
-            throw new Error(err.error?.message || 'Error de API');
-        }
-
-        const data = await response.json();
-        let text = data.candidates[0].content.parts[0].text;
-
-        // Limpiar posible markdown
-        text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-
-        currentGen = JSON.parse(text);
-        hideLoading();
-        loadGeneratedScript();
-        goStep(2);
-        toast('✅ Guion generado exitosamente');
-    } catch (err) {
-        hideLoading();
-        console.error(err);
-        toast('Error: ' + err.message, 'error');
-    }
-}
-
-function regenerateScript() {
-    goStep(1);
-    generateWithGemini();
-}
-
-function loadGeneratedScript() {
-    if (!currentGen) return;
-    document.getElementById('genTitle').value = currentGen.titulo || '';
-    document.getElementById('genHook').value = currentGen.hook || '';
-    document.getElementById('genCategory').value = currentGen.categoria || '';
-    renderGenPhrases();
-}
-
-function renderGenPhrases() {
-    const container = document.getElementById('genPhrasesContainer');
-    container.innerHTML = currentGen.frases.map((f, i) => `
-        <div class="gen-phrase-row">
-            <input type="text" value="${f.esp}" onchange="currentGen.frases[${i}].esp=this.value" placeholder="Español" style="${i===0?'border-color:var(--accent);font-weight:700;':''}">
-            <input type="text" value="${f.eng}" onchange="currentGen.frases[${i}].eng=this.value" placeholder="English" style="font-weight:700;">
-            <input type="text" value="${f.fon||''}" onchange="currentGen.frases[${i}].fon=this.value" placeholder="/fonética/">
-            <button class="btn btn-ghost btn-sm" onclick="currentGen.frases.splice(${i},1);renderGenPhrases()" style="color:var(--red);">✕</button>
-        </div>
-    `).join('');
-}
-
-function addGenPhrase() {
-    currentGen.frases.push({ esp: '', eng: '', fon: '' });
-    renderGenPhrases();
-}
-
-// =============================================
-// FACTORY — TEMPLATE SELECTION
-// =============================================
-function selectTemplate(tpl, el) {
-    selectedTemplate = tpl;
-    document.querySelectorAll('.template-option').forEach(t => t.classList.remove('selected'));
-    el.classList.add('selected');
-}
-
-function renderTemplatePreviews() {
-    if (!currentGen || !currentGen.frases.length) return;
-    const f = currentGen.frases.slice(0, 5);
-
-    // Preview 1: Lista Bicolor
-    const p1 = document.getElementById('tpl-preview-1');
-    p1.innerHTML = f.map(fr => `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:0.65rem;font-family:Montserrat,sans-serif;">
-        <span style="color:#e63946;font-weight:700;">${fr.esp}</span>
-        <span style="color:#1a1a2e;font-weight:800;">${fr.eng}</span>
-    </div>`).join('') + '<div style="text-align:center;color:#999;font-size:0.5rem;margin-top:6px;">+ ' + (currentGen.frases.length - 5) + ' más...</div>';
-
-    // Preview 2: Columnas degradado
-    const p2 = document.getElementById('tpl-preview-2');
-    p2.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:0.6rem;">
-        <div style="background:rgba(255,255,255,0.15);color:#fff;padding:4px;text-align:center;font-weight:800;border-radius:3px;">ESPAÑOL</div>
-        <div style="background:rgba(255,255,255,0.15);color:#fff;padding:4px;text-align:center;font-weight:800;border-radius:3px;">INGLÉS</div>
-        ${f.map(fr => `<div style="color:#ffd;padding:3px;font-size:0.58rem;">${fr.esp}</div><div style="color:#8ef;padding:3px;font-weight:700;font-size:0.58rem;">${fr.eng}</div>`).join('')}
-    </div>`;
-
-    // Preview 3: Tarjetas
-    const p3 = document.getElementById('tpl-preview-3');
-    p3.innerHTML = `<div style="text-align:center;">
-        <div style="color:#e63946;font-size:0.8rem;font-weight:800;margin-bottom:4px;">${f[0].esp}</div>
-        <div style="color:#fff;font-size:1.1rem;font-weight:900;">${f[0].eng}</div>
-        <div style="color:#06b6d4;font-size:0.65rem;font-family:monospace;margin-top:4px;">${f[0].fon||''}</div>
-        <div style="color:#555;font-size:0.5rem;margin-top:12px;">Frame 1 de ${currentGen.frases.length}</div>
-    </div>`;
-}
-
-// =============================================
-// FACTORY — CANVAS RENDERING
-// =============================================
-function renderFinalPreview() {
-    if (!currentGen) return;
-    const canvas = document.getElementById('previewCanvas');
-    const ctx = canvas.getContext('2d');
-    canvas.width = 1080;
-    canvas.height = 1920;
-
-    const colorEsp = document.getElementById('colorEsp').value;
-    const colorEng = document.getElementById('colorEng').value;
-    const colorBg = document.getElementById('colorBg').value;
-    const fontFamily = document.getElementById('fontSelect').value;
-
-    if (selectedTemplate === 'lista_bicolor') {
-        renderListaBicolor(ctx, canvas, colorEsp, colorEng, colorBg, fontFamily);
-    } else if (selectedTemplate === 'columnas_degradado') {
-        renderColumnasDegradado(ctx, canvas, fontFamily);
-    } else if (selectedTemplate === 'tarjetas_reveal') {
-        renderTarjetasReveal(ctx, canvas, colorEsp, colorEng, fontFamily);
-    }
-
-    // SEO fields
-    if (currentGen.seo) {
-        document.getElementById('seoTitle').value = currentGen.seo.titulo_yt || '';
-        document.getElementById('seoDesc').value = currentGen.seo.descripcion || '';
-        document.getElementById('seoTags').value = currentGen.seo.tags || '';
-    }
-
-    // Assembly guide
-    renderAssemblyGuide();
-}
-
-function renderListaBicolor(ctx, canvas, colorEsp, colorEng, colorBg, fontFamily) {
-    const W = canvas.width, H = canvas.height;
-    const frases = currentGen.frases;
-    const count = frases.length;
-
-    // Background
-    ctx.fillStyle = colorBg;
-    ctx.fillRect(0, 0, W, H);
-
-    // Title area
-    ctx.fillStyle = colorEsp;
-    ctx.fillRect(0, 0, W, 160);
-    ctx.fillStyle = '#fff';
-    ctx.font = `bold 52px ${fontFamily}`;
-    ctx.textAlign = 'center';
-    const title = currentGen.hook || currentGen.titulo || 'Inglés Sin Miedo';
-    wrapText(ctx, title, W / 2, 70, W - 80, 56);
-
-    // Phrases
-    const startY = 220;
-    const lineH = Math.min(85, (H - 400) / count);
-    const midX = W / 2;
-
-    frases.forEach((f, i) => {
-        const y = startY + i * lineH;
-
-        // Alternating row background
-        if (i % 2 === 0) {
-            ctx.fillStyle = 'rgba(0,0,0,0.03)';
-            ctx.fillRect(20, y - lineH * 0.3, W - 40, lineH);
-        }
-
-        // Spanish (left)
-        ctx.textAlign = 'left';
-        ctx.font = `bold ${Math.min(42, 600/count*2.5)}px ${fontFamily}`;
-        ctx.fillStyle = colorEsp;
-        ctx.fillText(f.esp, 60, y + 15);
-
-        // English (right)
-        ctx.textAlign = 'right';
-        ctx.font = `800 ${Math.min(44, 600/count*2.5)}px ${fontFamily}`;
-        ctx.fillStyle = colorEng;
-        ctx.fillText(f.eng, W - 60, y + 15);
-    });
-
-    // Bottom branding
-    ctx.fillStyle = colorEsp;
-    ctx.fillRect(0, H - 140, W, 140);
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.font = `900 48px ${fontFamily}`;
-    ctx.fillText('INGLÉS SIN MIEDO', W / 2, H - 70);
-    ctx.font = `600 28px ${fontFamily}`;
-    ctx.fillStyle = 'rgba(255,255,255,0.7)';
-    ctx.fillText('@inglessinmiedo', W / 2, H - 30);
-}
-
-function renderColumnasDegradado(ctx, canvas, fontFamily) {
-    const W = canvas.width, H = canvas.height;
-    const frases = currentGen.frases;
-    const count = frases.length;
-
-    // Gradient background
-    const grad = ctx.createLinearGradient(0, 0, 0, H);
-    grad.addColorStop(0, '#1a3a5c');
-    grad.addColorStop(0.5, '#0d2137');
-    grad.addColorStop(1, '#091520');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-
-    // Title
-    ctx.fillStyle = '#ffd700';
-    ctx.font = `900 48px ${fontFamily}`;
-    ctx.textAlign = 'center';
-    ctx.fillText('💡 ' + (currentGen.hook || currentGen.titulo), W / 2, 90);
-
-    // Column headers
-    const headerY = 160;
-    const colW = (W - 100) / 2;
-    ctx.fillStyle = 'rgba(255,255,255,0.12)';
-    ctx.beginPath();
-    ctx.roundRect(40, headerY, colW, 60, 10);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.roundRect(60 + colW, headerY, colW, 60, 10);
-    ctx.fill();
-
-    ctx.fillStyle = '#fff';
-    ctx.font = `800 36px ${fontFamily}`;
-    ctx.textAlign = 'center';
-    ctx.fillText('ESPAÑOL', 40 + colW / 2, headerY + 42);
-    ctx.fillText('INGLÉS', 60 + colW + colW / 2, headerY + 42);
-
-    // Phrases
-    const startY = 260;
-    const lineH = Math.min(80, (H - 450) / count);
-
-    frases.forEach((f, i) => {
-        const y = startY + i * lineH;
-
-        if (i % 2 === 0) {
-            ctx.fillStyle = 'rgba(255,255,255,0.03)';
-            ctx.fillRect(40, y - 10, W - 80, lineH);
-        }
-
-        const fontSize = Math.min(38, 550 / count * 2.2);
-
-        ctx.textAlign = 'left';
-        ctx.font = `600 ${fontSize}px ${fontFamily}`;
-        ctx.fillStyle = '#fff';
-        ctx.fillText(f.esp, 60, y + 30);
-
-        ctx.fillStyle = '#5cb8ff';
-        ctx.font = `800 ${fontSize}px ${fontFamily}`;
-        ctx.fillText(f.eng, 60 + colW + 20, y + 30);
-    });
-
-    // Separator line
-    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
-    ctx.lineWidth = 2;
-    ctx.beginPath();
-    ctx.moveTo(W / 2, 240);
-    ctx.lineTo(W / 2, startY + count * lineH);
-    ctx.stroke();
-
-    // Bottom
-    ctx.fillStyle = 'rgba(255,255,255,0.08)';
-    ctx.fillRect(0, H - 120, W, 120);
-    ctx.fillStyle = '#fff';
-    ctx.textAlign = 'center';
-    ctx.font = `800 40px ${fontFamily}`;
-    ctx.fillText('INGLÉS SIN MIEDO 🎯', W / 2, H - 55);
-}
-
-function renderTarjetasReveal(ctx, canvas, colorEsp, colorEng, fontFamily) {
-    const W = canvas.width, H = canvas.height;
-    const f = currentGen.frases[0];
-    if (!f) return;
-
-    // Dark background
-    ctx.fillStyle = '#0a0a15';
-    ctx.fillRect(0, 0, W, H);
-
-    // Center card
-    const cardW = W - 160, cardH = 600;
-    const cx = (W - cardW) / 2, cy = (H - cardH) / 2 - 80;
-
-    ctx.fillStyle = '#1a1a30';
-    ctx.strokeStyle = '#333';
-    ctx.lineWidth = 3;
-    ctx.beginPath();
-    ctx.roundRect(cx, cy, cardW, cardH, 30);
-    ctx.fill();
-    ctx.stroke();
-
-    // Glow effect
-    ctx.shadowColor = colorEsp;
-    ctx.shadowBlur = 40;
-    ctx.fillStyle = colorEsp;
-    ctx.beginPath();
-    ctx.roundRect(cx, cy, cardW, 8, [30, 30, 0, 0]);
-    ctx.fill();
-    ctx.shadowBlur = 0;
-
-    // Spanish
-    ctx.fillStyle = colorEsp;
-    ctx.font = `700 64px ${fontFamily}`;
-    ctx.textAlign = 'center';
-    ctx.fillText(f.esp, W / 2, cy + 180);
-
-    // English
-    ctx.fillStyle = '#fff';
-    ctx.font = `900 84px ${fontFamily}`;
-    ctx.fillText(f.eng, W / 2, cy + 320);
-
-    // Phonetics
-    if (f.fon) {
-        ctx.fillStyle = '#06b6d4';
-        ctx.font = `600 48px monospace`;
-        ctx.fillText(f.fon, W / 2, cy + 430);
-    }
-
-    // Counter
-    ctx.fillStyle = '#555';
-    ctx.font = `600 36px ${fontFamily}`;
-    ctx.fillText(`1 / ${currentGen.frases.length}`, W / 2, cy + cardH + 80);
-
-    // Branding
-    ctx.fillStyle = colorEsp;
-    ctx.font = `900 44px ${fontFamily}`;
-    ctx.fillText('INGLÉS SIN MIEDO', W / 2, H - 100);
-}
-
-function wrapText(ctx, text, x, y, maxW, lineH) {
-    const words = text.split(' ');
-    let line = '';
-    for (let w of words) {
-        const test = line + w + ' ';
-        if (ctx.measureText(test).width > maxW && line) {
-            ctx.fillText(line.trim(), x, y);
-            line = w + ' ';
-            y += lineH;
-        } else { line = test; }
-    }
-    ctx.fillText(line.trim(), x, y);
-}
-
-function renderAssemblyGuide() {
-    if (!currentGen) return;
-    const guide = document.getElementById('assemblyGuide');
-    let time = 0;
-    let html = '<table style="width:100%;font-size:0.75rem;"><tr><th style="padding:6px;">Frame</th><th>Frase</th><th>Inicio</th><th>Duración</th></tr>';
-    currentGen.frases.forEach((f, i) => {
-        const dur = Math.max(1.5, f.eng.split(/\s+/).length * 0.5 + 0.8);
-        html += `<tr><td style="padding:6px;color:var(--accent);font-weight:700;">#${i + 1}</td>
-            <td>${f.eng}</td><td>${time.toFixed(1)}s</td><td>${dur.toFixed(1)}s</td></tr>`;
-        time += dur;
-    });
-    html += '</table>';
-    html += `<p style="margin-top:10px;color:var(--accent);font-weight:700;">⏱ Duración total estimada: ${time.toFixed(1)}s</p>`;
-    if (time > 58) html += `<p style="color:var(--red);font-weight:700;">⚠️ Demasiado largo para Short (máx 60s). Reduce frases.</p>`;
-    guide.innerHTML = html;
-}
-
-// =============================================
-// EXPORT
-// =============================================
-function downloadImage() {
-    const canvas = document.getElementById('previewCanvas');
-    const link = document.createElement('a');
-    link.download = `ISM_${(currentGen.titulo || 'short').replace(/\s+/g, '_')}_1080x1920.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    toast('📥 Imagen descargada');
-}
-
-function downloadAllFrames() {
-    if (selectedTemplate !== 'tarjetas_reveal') {
-        downloadImage();
-        return;
-    }
-    // For card template, generate one frame per phrase
-    const canvas = document.createElement('canvas');
-    canvas.width = 1080;
-    canvas.height = 1920;
-    const ctx = canvas.getContext('2d');
-    const colorEsp = document.getElementById('colorEsp').value;
-    const colorEng = document.getElementById('colorEng').value;
-    const fontFamily = document.getElementById('fontSelect').value;
-
-    currentGen.frases.forEach((f, i) => {
-        const W = 1080, H = 1920;
-        ctx.fillStyle = '#0a0a15';
-        ctx.fillRect(0, 0, W, H);
-
-        const cardW = W - 160, cardH = 600;
-        const cx = (W - cardW) / 2, cy = (H - cardH) / 2 - 80;
-        ctx.fillStyle = '#1a1a30';
-        ctx.strokeStyle = '#333';
-        ctx.lineWidth = 3;
-        ctx.beginPath();
-        ctx.roundRect(cx, cy, cardW, cardH, 30);
-        ctx.fill();
-        ctx.stroke();
-
-        ctx.shadowColor = colorEsp;
-        ctx.shadowBlur = 40;
-        ctx.fillStyle = colorEsp;
-        ctx.beginPath();
-        ctx.roundRect(cx, cy, cardW, 8, [30, 30, 0, 0]);
-        ctx.fill();
-        ctx.shadowBlur = 0;
-
-        ctx.fillStyle = colorEsp;
-        ctx.font = `700 64px ${fontFamily}`;
-        ctx.textAlign = 'center';
-        ctx.fillText(f.esp, W / 2, cy + 180);
-
-        ctx.fillStyle = '#fff';
-        ctx.font = `900 84px ${fontFamily}`;
-        ctx.fillText(f.eng, W / 2, cy + 320);
-
-        if (f.fon) {
-            ctx.fillStyle = '#06b6d4';
-            ctx.font = `600 48px monospace`;
-            ctx.fillText(f.fon, W / 2, cy + 430);
-        }
-
-        ctx.fillStyle = '#555';
-        ctx.font = `600 36px ${fontFamily}`;
-        ctx.fillText(`${i + 1} / ${currentGen.frases.length}`, W / 2, cy + cardH + 80);
-
-        ctx.fillStyle = colorEsp;
-        ctx.font = `900 44px ${fontFamily}`;
-        ctx.fillText('INGLÉS SIN MIEDO', W / 2, H - 100);
-
-        const link = document.createElement('a');
-        link.download = `ISM_frame_${String(i + 1).padStart(2, '0')}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-    });
-    toast(`📦 ${currentGen.frases.length} frames descargados`);
-}
-
-function copySEO() {
-    const t = document.getElementById('seoTitle').value;
-    const d = document.getElementById('seoDesc').value;
-    const tags = document.getElementById('seoTags').value;
-    const all = `TÍTULO:\n${t}\n\nDESCRIPCIÓN:\n${d}\n\nTAGS:\n${tags}`;
-    navigator.clipboard.writeText(all).then(() => toast('📋 SEO copiado'));
-}
-
-async function saveToDatabase() {
-    if (!currentGen) return;
-    const video = {
-        id: Date.now(),
-        tema: currentGen.titulo || 'Sin título',
-        estado: 'ready',
-        category: currentGen.categoria || '',
-        date: '',
-        hook: currentGen.hook || '',
-        frases: currentGen.frases,
-        seo: currentGen.seo || {},
-        notas: '',
-        template: selectedTemplate,
-        created: Date.now()
-    };
-    videos.push(video);
-    await dbPut(video);
-    renderAll();
-    toast('💾 Video guardado en la base de datos');
-}
-
-function resetFactory() {
-    currentGen = null;
-    document.getElementById('topicInput').value = '';
-    goStep(1);
-}
-
-// =============================================
 // DATABASE
-// =============================================
-function renderDB() {
-    const search = (document.getElementById('dbSearch')?.value || '').toLowerCase();
-    const filter = document.getElementById('dbFilter')?.value || 'all';
-    let filtered = videos.filter(v => {
-        const matchS = v.tema.toLowerCase().includes(search);
-        const matchF = filter === 'all' || v.estado === filter;
-        return matchS && matchF;
-    });
-    document.getElementById('dbBody').innerHTML = filtered.map(v => `
-        <tr onclick="openEditModal(${v.id})">
-            <td style="font-weight:700;">${v.tema}</td>
-            <td><span class="badge badge-${v.estado}">${v.estado}</span></td>
-            <td style="color:var(--text-secondary);font-size:0.8rem;font-style:italic;">"${v.hook || (v.frases?.[0]?.eng || '-')}"</td>
-            <td>${v.frases?.length || 0}</td>
-            <td style="font-size:0.8rem;color:var(--text-tertiary);">${v.date || '-'}</td>
-        </tr>
-    `).join('');
-}
+function rDB(){const s=(document.getElementById('dbSrch')?.value||'').toLowerCase(),f=document.getElementById('dbFlt')?.value||'all';let fv=V.filter(v=>{const ms=v.tema.toLowerCase().includes(s);return ms&&(f==='all'||v.estado===f)});document.getElementById('dbBd').innerHTML=fv.map(v=>`<tr onclick="opEd(${v.id})"><td style="font-weight:700">${v.tema}</td><td><span class="bdg bdg-${v.estado}">${v.estado}</span></td><td style="color:var(--tx2);font-style:italic;font-size:.78rem">"${v.hook||v.frases?.[0]?.eng||'-'}"</td><td>${v.frases?.length||0}</td><td style="font-size:.78rem;color:var(--tx3)">${v.cat||'-'}</td></tr>`).join('')}
 
-// =============================================
 // KANBAN
-// =============================================
-function renderKanban() {
-    const cols = [
-        { k: 'idea', l: '💡 Ideas', c: 'var(--text-secondary)' },
-        { k: 'audio', l: '🎙 Audio', c: 'var(--accent)' },
-        { k: 'edit', l: '✂️ Edición', c: 'var(--yellow)' },
-        { k: 'ready', l: '✅ Listo', c: 'var(--green)' },
-        { k: 'pub', l: '🚀 Publicado', c: 'var(--cyan)' }
-    ];
-    document.getElementById('kanbanBoard').innerHTML = cols.map(c => {
-        const items = videos.filter(v => v.estado === c.k);
-        return `<div class="kanban-col" ondragover="event.preventDefault()" ondrop="kanbanDrop(event,'${c.k}')">
-            <div class="kanban-head"><span>${c.l}</span><span style="color:var(--text-tertiary);">${items.length}</span></div>
-            <div class="kanban-body">
-                ${items.map(v => `<div class="k-card" draggable="true" ondragstart="dragId=${v.id}" onclick="openEditModal(${v.id})">
-                    <div class="k-card-title">${v.tema}</div>
-                    <div class="k-card-meta">${v.frases?.length || 0} frases • ${v.category || ''}</div>
-                </div>`).join('')}
-            </div>
-        </div>`;
-    }).join('');
-}
+function rKan(){const cols=[{k:'idea',l:'💡 Ideas'},{k:'audio',l:'🎙 Audio'},{k:'edit',l:'✂️ Edición'},{k:'ready',l:'✅ Listo'},{k:'pub',l:'🚀 Pub'}];document.getElementById('kBoard').innerHTML=cols.map(c=>{const it=V.filter(v=>v.estado===c.k);return`<div class="kc" ondragover="event.preventDefault()" ondrop="kDr(event,'${c.k}')"><div class="kh"><span>${c.l}</span><span style="color:var(--tx3)">${it.length}</span></div><div class="kby">${it.map(v=>`<div class="kk" draggable="true" ondragstart="drgId=${v.id}" onclick="opEd(${v.id})"><div style="font-weight:700;font-size:.83rem;margin-bottom:3px">${v.tema}</div><div style="font-size:.7rem;color:var(--tx3)">${v.frases?.length||0} frases</div></div>`).join('')}</div></div>`}).join('')}
+async function kDr(e,st){e.preventDefault();if(!drgId)return;const v=V.find(x=>x.id===drgId);if(v){v.estado=st;if(st==='pub'&&!v.date)v.date=new Date().toISOString().split('T')[0];await pV(v);rAll()}drgId=null}
 
-async function kanbanDrop(e, status) {
-    e.preventDefault();
-    if (!dragId) return;
-    const v = videos.find(x => x.id === dragId);
-    if (v) {
-        v.estado = status;
-        if (status === 'pub' && !v.date) v.date = new Date().toISOString().split('T')[0];
-        await dbPut(v);
-        renderAll();
-    }
-    dragId = null;
-}
-
-// =============================================
 // CALENDAR
-// =============================================
-function renderCalendar() {
-    const m = calendarDate.getMonth(), y = calendarDate.getFullYear();
-    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    document.getElementById('calTitle').textContent = `${months[m]} ${y}`;
-    const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
-    let html = days.map(d => `<div style="text-align:center;font-size:0.7rem;font-weight:800;color:var(--text-tertiary);padding:8px;">${d}</div>`).join('');
-    const first = new Date(y, m, 1).getDay();
-    const total = new Date(y, m + 1, 0).getDate();
-    for (let i = 0; i < first; i++) html += '<div></div>';
-    for (let d = 1; d <= total; d++) {
-        const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-        const vids = videos.filter(v => v.date === ds);
-        const today = new Date().toISOString().split('T')[0] === ds;
-        html += `<div style="background:var(--bg-panel);border:1px solid ${today ? 'var(--accent)' : 'var(--border)'};border-radius:6px;min-height:80px;padding:8px;">
-            <div style="font-size:0.7rem;font-weight:800;color:${today ? 'var(--accent)' : 'var(--text-tertiary)'};">${d}</div>
-            ${vids.map(v => `<div style="font-size:0.6rem;background:var(--bg-card);padding:4px 6px;border-radius:4px;margin-top:4px;border-left:3px solid var(--accent);cursor:pointer;" onclick="openEditModal(${v.id})">${v.tema}</div>`).join('')}
-        </div>`;
-    }
-    document.getElementById('calGrid').innerHTML = html;
-}
+function rCal(){const m=calD.getMonth(),y=calD.getFullYear();const ms=['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];document.getElementById('calT').textContent=ms[m]+' '+y;let h=['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'].map(d=>`<div style="text-align:center;font-size:.68rem;font-weight:800;color:var(--tx3);padding:7px">${d}</div>`).join('');const f=new Date(y,m,1).getDay(),t=new Date(y,m+1,0).getDate(),td=new Date().toISOString().split('T')[0];for(let i=0;i<f;i++)h+='<div></div>';for(let d=1;d<=t;d++){const ds=`${y}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;const vs=V.filter(v=>v.date===ds);h+=`<div style="background:var(--bg2);border:1px solid ${td===ds?'var(--red)':'var(--bdr)'};border-radius:5px;min-height:72px;padding:6px"><div style="font-size:.68rem;font-weight:800;color:${td===ds?'var(--red)':'var(--tx3)'}">${d}</div>${vs.map(v=>`<div style="font-size:.55rem;background:var(--bg4);padding:3px 5px;border-radius:3px;margin-top:3px;border-left:2px solid var(--red);cursor:pointer" onclick="opEd(${v.id})">${v.tema}</div>`).join('')}</div>`}document.getElementById('calG').innerHTML=h}
+function chMo(d){calD.setMonth(calD.getMonth()+d);rCal()}
 
-function changeMonth(d) {
-    calendarDate.setMonth(calendarDate.getMonth() + d);
-    renderCalendar();
-}
-
-// =============================================
 // EDIT MODAL
-// =============================================
-function openEditModal(id) {
-    const v = videos.find(x => x.id === id);
-    if (!v) return;
-    currentEditId = id;
-    document.getElementById('editTitle').value = v.tema;
-    document.getElementById('editStatus').value = v.estado;
-    document.getElementById('editDate').value = v.date || '';
-    document.getElementById('editCat').value = v.category || '';
-    document.getElementById('editNotes').value = v.notas || '';
-    renderEditPhrases();
-    document.getElementById('editModal').classList.add('open');
-}
+function opEd(id){const v=V.find(x=>x.id===id);if(!v)return;eId=id;document.getElementById('edTit').value=v.tema;document.getElementById('edSt').value=v.estado;document.getElementById('edDt').value=v.date||'';document.getElementById('edCat').value=v.cat||'';document.getElementById('edNt').value=v.notas||'';rEP();document.getElementById('edMo').classList.add('op')}
+function rEP(){const v=V.find(x=>x.id===eId);if(!v||!v.frases)return;document.getElementById('edPC').innerHTML=v.frases.map((f,i)=>`<div class="pr"><input value="${f.esp}" id="ef${i}e"><input value="${f.eng}" id="ef${i}n" style="font-weight:700"><input value="${f.fon||''}" id="ef${i}f"><button class="btn bg bsm" onclick="rmEP(${i})" style="color:var(--red)">✕</button></div>`).join('')}
+function addEP(){const v=V.find(x=>x.id===eId);cEP();v.frases.push({esp:'',eng:'',fon:''});rEP()}
+function rmEP(i){const v=V.find(x=>x.id===eId);cEP();v.frases.splice(i,1);rEP()}
+function cEP(){const v=V.find(x=>x.id===eId);if(!v)return;v.frases=v.frases.map((f,i)=>({esp:document.getElementById('ef'+i+'e')?.value||f.esp,eng:document.getElementById('ef'+i+'n')?.value||f.eng,fon:document.getElementById('ef'+i+'f')?.value||f.fon||''}))}
+async function saveEd(){const v=V.find(x=>x.id===eId);if(!v)return;cEP();v.tema=document.getElementById('edTit').value;v.estado=document.getElementById('edSt').value;v.date=document.getElementById('edDt').value;v.cat=document.getElementById('edCat').value;v.notas=document.getElementById('edNt').value;await pV(v);clEd();rAll();toast('💾')}
+async function delEd(){if(!confirm('¿Eliminar?'))return;await dV(eId);V=V.filter(v=>v.id!==eId);clEd();rAll();toast('🗑')}
+function clEd(){document.getElementById('edMo').classList.remove('op');eId=null}
 
-function renderEditPhrases() {
-    const v = videos.find(x => x.id === currentEditId);
-    if (!v || !v.frases) return;
-    document.getElementById('editPhrasesContainer').innerHTML = v.frases.map((f, i) => `
-        <div class="gen-phrase-row">
-            <input type="text" value="${f.esp}" id="ep-${i}-esp" placeholder="Español">
-            <input type="text" value="${f.eng}" id="ep-${i}-eng" placeholder="English" style="font-weight:700;">
-            <input type="text" value="${f.fon || ''}" id="ep-${i}-fon" placeholder="/fonética/">
-            <button class="btn btn-ghost btn-sm" onclick="removeEditPhrase(${i})" style="color:var(--red);">✕</button>
-        </div>
-    `).join('');
-}
+// TTS
+function pSels(){const o='<option value="">--</option>'+V.map(v=>`<option value="${v.id}">${v.tema}</option>`).join('');['ttsSel','teleSel','seoSel'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=o})}
+function ldTTS(){const id=+document.getElementById('ttsSel').value;const v=V.find(x=>x.id===id);if(!v||!v.frases){document.getElementById('ttsLst').innerHTML='';return}document.getElementById('ttsLst').innerHTML=v.frases.map((f,i)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--bg4);border-radius:var(--r2);margin-bottom:5px;font-size:.8rem"><div><span style="color:var(--red);font-weight:700">${f.esp}</span> → <span style="font-weight:800">${f.eng}</span></div><button class="btn bg bsm" onclick="spk('${f.esp.replace(/'/g,"\\'")}','${f.eng.replace(/'/g,"\\'")}')">▶</button></div>`).join('')}
+function spk(e,n){const m=document.getElementById('ttsMode').value,s=+document.getElementById('ttsSpd').value;speechSynthesis.cancel();if(m==='es'||m==='both'){const u=new SpeechSynthesisUtterance(e);u.lang='es-MX';u.rate=s;speechSynthesis.speak(u)}if(m==='en'||m==='both'){const u=new SpeechSynthesisUtterance(n);u.lang='en-US';u.rate=s;speechSynthesis.speak(u)}}
+function playAll(){const id=+document.getElementById('ttsSel').value;const v=V.find(x=>x.id===id);if(!v)return toast('Selecciona','error');const m=document.getElementById('ttsMode').value,s=+document.getElementById('ttsSpd').value;speechSynthesis.cancel();v.frases.forEach(f=>{if(m==='es'||m==='both'){const u=new SpeechSynthesisUtterance(f.esp);u.lang='es-MX';u.rate=s;speechSynthesis.speak(u)}if(m==='en'||m==='both'){const u=new SpeechSynthesisUtterance(f.eng);u.lang='en-US';u.rate=s;speechSynthesis.speak(u)}});toast('▶')}
 
-function addEditPhrase() {
-    const v = videos.find(x => x.id === currentEditId);
-    if (!v) return;
-    collectEditPhrases();
-    v.frases.push({ esp: '', eng: '', fon: '' });
-    renderEditPhrases();
-}
-
-function removeEditPhrase(i) {
-    const v = videos.find(x => x.id === currentEditId);
-    collectEditPhrases();
-    v.frases.splice(i, 1);
-    renderEditPhrases();
-}
-
-function collectEditPhrases() {
-    const v = videos.find(x => x.id === currentEditId);
-    if (!v) return;
-    v.frases = v.frases.map((f, i) => ({
-        esp: document.getElementById(`ep-${i}-esp`)?.value || f.esp,
-        eng: document.getElementById(`ep-${i}-eng`)?.value || f.eng,
-        fon: document.getElementById(`ep-${i}-fon`)?.value || f.fon || ''
-    }));
-}
-
-async function saveEditVideo() {
-    const v = videos.find(x => x.id === currentEditId);
-    if (!v) return;
-    collectEditPhrases();
-    v.tema = document.getElementById('editTitle').value;
-    v.estado = document.getElementById('editStatus').value;
-    v.date = document.getElementById('editDate').value;
-    v.category = document.getElementById('editCat').value;
-    v.notas = document.getElementById('editNotes').value;
-    await dbPut(v);
-    closeEditModal();
-    renderAll();
-    toast('💾 Guardado');
-}
-
-async function deleteEditVideo() {
-    if (!confirm('¿Eliminar este video?')) return;
-    await dbDel(currentEditId);
-    videos = videos.filter(v => v.id !== currentEditId);
-    closeEditModal();
-    renderAll();
-    toast('🗑 Eliminado');
-}
-
-function closeEditModal() {
-    document.getElementById('editModal').classList.remove('open');
-    currentEditId = null;
-}
-
-// =============================================
-// TTS / AUDIO
-// =============================================
-function populateSelects() {
-    const opts = '<option value="">-- Selecciona --</option>' + videos.map(v => `<option value="${v.id}">${v.tema}</option>`).join('');
-    ['ttsVideoSel', 'teleVideoSel', 'seoVideoSel'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.innerHTML = opts;
-    });
-}
-
-function loadTTSPhrases() {
-    const id = parseInt(document.getElementById('ttsVideoSel').value);
-    const v = videos.find(x => x.id === id);
-    if (!v || !v.frases) { document.getElementById('ttsPhraseList').innerHTML = ''; return; }
-    document.getElementById('ttsPhraseList').innerHTML = v.frases.map((f, i) => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-card);border-radius:var(--radius-sm);margin-bottom:6px;font-size:0.82rem;">
-            <div><span style="color:var(--accent);font-weight:700;">${f.esp}</span> → <span style="color:var(--white);font-weight:800;">${f.eng}</span></div>
-            <button class="btn btn-ghost btn-sm" onclick="speakPhrase('${f.esp.replace(/'/g,"\\'")}','${f.eng.replace(/'/g,"\\'")}')">▶</button>
-        </div>
-    `).join('');
-}
-
-function speakPhrase(esp, eng) {
-    const lang = document.getElementById('ttsLang').value;
-    const speed = parseFloat(document.getElementById('ttsSpeed').value);
-    window.speechSynthesis.cancel();
-
-    if (lang === 'es' || lang === 'both') {
-        const u1 = new SpeechSynthesisUtterance(esp);
-        u1.lang = 'es-MX'; u1.rate = speed;
-        window.speechSynthesis.speak(u1);
-    }
-    if (lang === 'en' || lang === 'both') {
-        const u2 = new SpeechSynthesisUtterance(eng);
-        u2.lang = 'en-US'; u2.rate = speed;
-        window.speechSynthesis.speak(u2);
-    }
-}
-
-function playAllTTS() {
-    const id = parseInt(document.getElementById('ttsVideoSel').value);
-    const v = videos.find(x => x.id === id);
-    if (!v || !v.frases) return toast('Selecciona un video', 'error');
-    const lang = document.getElementById('ttsLang').value;
-    const speed = parseFloat(document.getElementById('ttsSpeed').value);
-    window.speechSynthesis.cancel();
-
-    v.frases.forEach(f => {
-        if (lang === 'es' || lang === 'both') {
-            const u1 = new SpeechSynthesisUtterance(f.esp);
-            u1.lang = 'es-MX'; u1.rate = speed;
-            window.speechSynthesis.speak(u1);
-        }
-        if (lang === 'en' || lang === 'both') {
-            const u2 = new SpeechSynthesisUtterance(f.eng);
-            u2.lang = 'en-US'; u2.rate = speed;
-            window.speechSynthesis.speak(u2);
-        }
-    });
-    toast('▶ Reproduciendo...');
-}
-
-function stopTTS() {
-    window.speechSynthesis.cancel();
-    toast('⏹ Detenido');
-}
-
-// =============================================
 // TELEPROMPTER
-// =============================================
-function openTeleprompter() {
-    const id = parseInt(document.getElementById('teleVideoSel').value);
-    const v = videos.find(x => x.id === id);
-    if (!v) return toast('Selecciona un video', 'error');
-    document.getElementById('teleContent').innerHTML = v.frases.map(f => `
-        <div style="margin-bottom:60px;">
-            <div style="font-size:2rem;color:var(--yellow);font-weight:700;opacity:0.8;margin-bottom:10px;">${f.esp}</div>
-            <div style="font-size:4rem;color:#fff;font-weight:900;line-height:1.1;text-transform:uppercase;margin-bottom:10px;">${f.eng}</div>
-            <div style="font-size:2rem;color:var(--cyan);font-family:monospace;">${f.fon || ''}</div>
-        </div>
-    `).join('');
-    document.getElementById('teleModal').classList.add('open');
-}
+function openTele(){const id=+document.getElementById('teleSel').value;const v=V.find(x=>x.id===id);if(!v)return toast('Selecciona','error');document.getElementById('telC').innerHTML=v.frases.map(f=>`<div style="margin-bottom:50px"><div style="font-size:1.8rem;color:var(--ylw);font-weight:700;opacity:.8;margin-bottom:8px">${f.esp}</div><div style="font-size:3.5rem;color:#fff;font-weight:900;line-height:1.1;text-transform:uppercase;margin-bottom:8px">${f.eng}</div><div style="font-size:1.8rem;color:var(--cyn);font-family:monospace">${f.fon||''}</div></div>`).join('');document.getElementById('telMo').classList.add('op')}
+function clTele(){document.getElementById('telMo').classList.remove('op')}
 
-function closeTeleprompter() {
-    document.getElementById('teleModal').classList.remove('open');
-}
-
-// =============================================
 // RECORDING
-// =============================================
-async function startRecording() {
-    const btn = document.getElementById('recBtn');
-    if (mediaRecorder && mediaRecorder.state === 'recording') {
-        mediaRecorder.stop();
-        btn.innerHTML = '🔴 Grabar Audio';
-        btn.classList.remove('btn-warning');
-        btn.classList.add('btn-secondary');
-        return;
-    }
-    try {
-        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-        mediaRecorder = new MediaRecorder(stream);
-        audioChunks = [];
-        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
-        mediaRecorder.onstop = () => {
-            const blob = new Blob(audioChunks, { type: 'audio/webm' });
-            const url = URL.createObjectURL(blob);
-            const audio = document.getElementById('recPlayback');
-            audio.src = url;
-            audio.style.display = 'block';
-            document.getElementById('recStatus').innerHTML = '✅ Grabación lista • <a href="' + url + '" download="ISM_audio.webm" style="color:var(--accent);">Descargar</a>';
-            stream.getTracks().forEach(t => t.stop());
-        };
-        mediaRecorder.start();
-        btn.innerHTML = '⏹ Detener Grabación';
-        btn.classList.remove('btn-secondary');
-        btn.classList.add('btn-warning');
-        document.getElementById('recStatus').textContent = '🔴 Grabando...';
-        document.getElementById('recPlayback').style.display = 'none';
-    } catch (err) {
-        toast('No se pudo acceder al micrófono', 'error');
-    }
-}
+async function toggleRec(){const b=document.getElementById('recBtn');if(rec&&rec.state==='recording'){rec.stop();b.innerHTML='🔴 Grabar';b.className='btn bs blk';return}try{const st=await navigator.mediaDevices.getUserMedia({audio:true});rec=new MediaRecorder(st);chunks=[];rec.ondataavailable=e=>chunks.push(e.data);rec.onstop=()=>{const bl=new Blob(chunks,{type:'audio/webm'}),u=URL.createObjectURL(bl);document.getElementById('recAud').src=u;document.getElementById('recAud').style.display='block';document.getElementById('recSt').innerHTML='✅ <a href="'+u+'" download="ISM_audio.webm" style="color:var(--red)">Descargar</a>';st.getTracks().forEach(t=>t.stop())};rec.start();b.innerHTML='⏹ Detener';b.className='btn bp blk';document.getElementById('recSt').textContent='🔴 Grabando...';document.getElementById('recAud').style.display='none'}catch(e){toast('Error mic','error')}}
 
-// =============================================
 // SEO GENERATOR
-// =============================================
-async function generateSEO() {
-    const id = parseInt(document.getElementById('seoVideoSel').value);
-    const v = videos.find(x => x.id === id);
-    if (!v) return toast('Selecciona un video', 'error');
-    if (!API_KEY) return toast('Configura tu API Key', 'error');
+async function genSEO(){const id=+document.getElementById('seoSel').value;const v=V.find(x=>x.id===id);if(!v)return toast('Selecciona','error');if(!AK)return toast('API Key','error');const fr=v.frases.map(f=>`${f.esp} → ${f.eng}`).join('\n');const p=`Experto YouTube SEO canal "Inglés Sin Miedo" Shorts educativos.\nVideo: "${v.tema}"\nContenido:\n${fr}\nGenera 3 títulos (<55 chars emoji), desc (150 chars), 10 tags, 5 hashtags.\nSolo JSON: {"titulos":["","",""],"descripcion":"","tags":"","hashtags":""}`;showL('🔍 SEO...');try{const r=await fetch(getEP()+'?key='+AK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:p}]}],generationConfig:{temperature:.7,maxOutputTokens:1024}})});if(!r.ok){const e=await r.json();throw new Error(e.error?.message||'Error')}const d=await r.json();let t=d.candidates[0].content.parts[0].text;t=t.replace(/```json\s*/g,'').replace(/```\s*/g,'').trim();const s=JSON.parse(t);document.getElementById('seoTits').innerHTML=s.titulos.map((t2,i)=>`<div style="padding:7px 10px;background:var(--bg4);border-radius:var(--r2);margin-bottom:5px;cursor:pointer;font-weight:700" onclick="navigator.clipboard.writeText(this.textContent);toast('📋')">${i+1}. ${t2}</div>`).join('');document.getElementById('seoDsc').value=s.descripcion;document.getElementById('seoTgs').value=s.tags;document.getElementById('seoHsh').value=s.hashtags;document.getElementById('seoRes').style.display='block';hideL();toast('✅')}catch(e){hideL();toast(e.message,'error')}}
+function cpAllSEO(){const t=document.getElementById('seoTits').textContent,d=document.getElementById('seoDsc').value,tg=document.getElementById('seoTgs').value,h=document.getElementById('seoHsh').value;navigator.clipboard.writeText(`TÍTULOS:\n${t}\n\nDESC:\n${d}\n\nTAGS:\n${tg}\n\n${h}`);toast('📋')}
 
-    const frases = v.frases.map(f => `${f.esp} → ${f.eng}`).join('\n');
-    const prompt = `Eres un experto en YouTube SEO para el nicho de educación en inglés para hispanohablantes.
+// PROMPTS
+function cpPrm(t){const p={script:`Profesor inglés para hispanohablantes. Lista vocabulario YouTube Short.\nTEMA: [TU TEMA]\nCANTIDAD: 15\nNIVEL: Básico\nReglas: pares esp→eng, hook viral, fonética, fácil→difícil, cortas.\nJSON: {titulo,hook,categoria,frases:[{esp,eng,fon}],seo:{titulo_yt,descripcion,tags,hashtags}}`,hooks:`5 hooks virales para Short inglés sobre: [TEMA]\nEstilos: curiosidad, negación, reto, shock, autoridad`,seo:`YouTube SEO "Inglés Sin Miedo" Shorts. Video: [TEMA]. 3 títulos (<55), desc, 10 tags, 5 hashtags.`,broll:`Analiza guion Short inglés, 5 búsquedas exactas B-Roll Pexels:\n[GUION]`};navigator.clipboard.writeText(p[t]).then(()=>toast('📋'))}
 
-Video: "${v.tema}"
-Canal: "Inglés Sin Miedo" (YouTube Shorts)
-Contenido del video:
-${frases}
+// INSPO
+function addIns(){const u=document.getElementById('insURL').value,n=document.getElementById('insNote').value;if(!u)return;ins.push({u,n,d:new Date().toLocaleDateString()});localStorage.setItem('ism_ins2',JSON.stringify(ins));document.getElementById('insURL').value='';document.getElementById('insNote').value='';rIns()}
+function rIns(){document.getElementById('insLst').innerHTML=ins.map((i,x)=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:10px;background:var(--bg4);border:1px solid var(--bdr);border-radius:var(--r2);margin-bottom:7px"><div><a href="${i.u}" target="_blank" style="color:var(--red);font-weight:700;word-break:break-all;font-size:.82rem">${i.u}</a><div style="font-size:.72rem;color:var(--tx2);margin-top:3px">${i.n} • ${i.d}</div></div><button class="btn bg bsm" onclick="ins.splice(${x},1);localStorage.setItem('ism_ins2',JSON.stringify(ins));rIns()" style="color:var(--red)">✕</button></div>`).join('')}
 
-Genera:
-1. 3 títulos virales para YouTube (máx 60 caracteres cada uno, incluir emojis)
-2. Descripción optimizada (máx 200 caracteres, con CTA y emojis)
-3. 10 tags SEO separados por comas
-4. 5 hashtags relevantes
-
-Responde SOLO con JSON puro sin markdown:
-{"titulos":["t1","t2","t3"],"descripcion":"desc","tags":"tag1,tag2","hashtags":"#h1 #h2"}`;
-
-    showLoading('🔍 Generando SEO...');
-    try {
-        const response = await fetch(`${GEMINI_ENDPOINT}?key=${API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 1024 } })
-        });
-        const data = await response.json();
-        let text = data.candidates[0].content.parts[0].text;
-        text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        const seo = JSON.parse(text);
-
-        document.getElementById('seoTitles').innerHTML = seo.titulos.map((t, i) =>
-            `<div style="padding:8px 12px;background:var(--bg-card);border-radius:var(--radius-sm);margin-bottom:6px;cursor:pointer;font-weight:700;" onclick="navigator.clipboard.writeText('${t.replace(/'/g, "\\'")}');toast('Copiado')">${i + 1}. ${t}</div>`
-        ).join('');
-        document.getElementById('seoDescription').value = seo.descripcion;
-        document.getElementById('seoTagsResult').value = seo.tags;
-        document.getElementById('seoHashtags').value = seo.hashtags;
-        document.getElementById('seoResult').style.display = 'block';
-        hideLoading();
-        toast('✅ SEO generado');
-    } catch (err) {
-        hideLoading();
-        toast('Error: ' + err.message, 'error');
-    }
-}
-
-function copyAllSEO() {
-    const titles = document.getElementById('seoTitles').textContent;
-    const desc = document.getElementById('seoDescription').value;
-    const tags = document.getElementById('seoTagsResult').value;
-    const hash = document.getElementById('seoHashtags').value;
-    navigator.clipboard.writeText(`TÍTULOS:\n${titles}\n\nDESCRIPCIÓN:\n${desc}\n\nTAGS:\n${tags}\n\nHASHTAGS:\n${hash}`);
-    toast('📋 SEO copiado');
-}
-
-// =============================================
-// PROMPT HUB
-// =============================================
-function copyPromptTemplate(type) {
-    const templates = {
-        script: `Eres un profesor de inglés para hispanohablantes. Crea una lista de vocabulario para un YouTube Short.
-
-TEMA: [ESCRIBE TU TEMA AQUÍ]
-CANTIDAD: 15 frases
-NIVEL: Básico
-
-REGLAS:
-1. Genera pares español → inglés
-2. La primera frase debe ser un HOOK viral
-3. Incluye fonética aproximada
-4. Progresión fácil → difícil
-5. Frases cortas (máx 5 palabras en inglés)
-
-Formato: JSON con campos: titulo, hook, categoria, frases[{esp,eng,fon}], seo{titulo_yt,descripcion,tags,hashtags}`,
-
-        hooks: `Dame 5 variantes de hooks virales para un YouTube Short de inglés sobre: [TU TEMA]
-
-Estilos:
-1. Curiosidad ("El 90% no sabe...")
-2. Negación ("NUNCA digas esto...")
-3. Reto ("¿Puedes decir las 10?")
-4. Shock ("Esta palabra NO significa lo que crees")
-5. Autoridad ("Un nativo NUNCA diría esto")`,
-
-        seo: `Experto YouTube SEO. Canal: "Inglés Sin Miedo" (Shorts educativos).
-Video sobre: [TEMA]
-Genera: 3 títulos virales (<60 chars), descripción con CTA, 10 tags, 5 hashtags.`,
-
-        broll: `Analiza este guion de Short educativo de inglés y dame 5 búsquedas exactas en inglés para encontrar B-Roll en Pexels.com:
-[PEGA TU GUION AQUÍ]
-Que sean búsquedas específicas como "business meeting office" no genéricas.`
-    };
-
-    navigator.clipboard.writeText(templates[type]).then(() => toast('📋 Prompt copiado al portapapeles'));
-}
-
-// =============================================
-// SWIPE FILE
-// =============================================
-function addInspo() {
-    const url = document.getElementById('inspoURL').value;
-    const note = document.getElementById('inspoNote').value;
-    if (!url) return;
-    inspoItems.push({ url, note, date: new Date().toLocaleDateString() });
-    localStorage.setItem('ism_inspo_v2', JSON.stringify(inspoItems));
-    document.getElementById('inspoURL').value = '';
-    document.getElementById('inspoNote').value = '';
-    renderInspo();
-}
-
-function renderInspo() {
-    document.getElementById('inspoList').innerHTML = inspoItems.map((item, i) => `
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;">
-            <div>
-                <a href="${item.url}" target="_blank" style="color:var(--accent);font-weight:700;word-break:break-all;font-size:0.85rem;">${item.url}</a>
-                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${item.note} • ${item.date}</div>
-            </div>
-            <button class="btn btn-ghost btn-sm" onclick="inspoItems.splice(${i},1);localStorage.setItem('ism_inspo_v2',JSON.stringify(inspoItems));renderInspo();" style="color:var(--red);">✕</button>
-        </div>
-    `).join('');
-}
-
-// =============================================
 // SETTINGS
-// =============================================
-function saveAPIKey() {
-    API_KEY = document.getElementById('apiKeyInput').value.trim();
-    localStorage.setItem('ism_api_key', API_KEY);
-    toast('🔑 API Key guardada');
-}
+function saveAK(){AK=document.getElementById('akInp').value.trim();MDL=document.getElementById('mdlSel').value;localStorage.setItem('ism_ak',AK);localStorage.setItem('ism_mdl',MDL);toast('🔑 Guardado')}
+async function testAK(){if(!AK)AK=document.getElementById('akInp').value.trim();MDL=document.getElementById('mdlSel').value;if(!AK)return toast('Escribe Key','error');document.getElementById('akSt').innerHTML='<div class="sp" style="width:16px;height:16px;display:inline-block;border-width:2px"></div> Probando '+MDL+'...';try{const r=await fetch(getEP()+'?key='+AK,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({contents:[{parts:[{text:'Di OK'}]}],generationConfig:{maxOutputTokens:10}})});if(r.ok){document.getElementById('akSt').innerHTML='<span style="color:var(--grn);font-weight:700">✅ Conexión OK con '+MDL+'</span>';localStorage.setItem('ism_ak',AK);localStorage.setItem('ism_mdl',MDL)}else{const e=await r.json();document.getElementById('akSt').innerHTML='<span style="color:var(--red)">❌ '+(e.error?.message||'Error')+'</span>'}}catch(e){document.getElementById('akSt').innerHTML='<span style="color:var(--red)">❌ Error red</span>'}}
 
-async function testAPI() {
-    if (!API_KEY) { API_KEY = document.getElementById('apiKeyInput').value.trim(); }
-    if (!API_KEY) return toast('Escribe una API Key', 'error');
-    document.getElementById('apiStatus').innerHTML = '<div class="loading-spinner" style="width:16px;height:16px;display:inline-block;"></div> Probando...';
-    try {
-        const r = await fetch(`${GEMINI_ENDPOINT}?key=${API_KEY}`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ contents: [{ parts: [{ text: 'Responde solo: OK' }] }] })
-        });
-        if (r.ok) {
-            document.getElementById('apiStatus').innerHTML = '<span style="color:var(--green);font-weight:700;">✅ Conexión exitosa</span>';
-            localStorage.setItem('ism_api_key', API_KEY);
-        } else {
-            const err = await r.json();
-            document.getElementById('apiStatus').innerHTML = `<span style="color:var(--red);">❌ ${err.error?.message || 'Error'}</span>`;
-        }
-    } catch (e) {
-        document.getElementById('apiStatus').innerHTML = `<span style="color:var(--red);">❌ Error de red</span>`;
-    }
-}
-
-function exportAllData() {
-    const data = { videos, inspo: inspoItems, version: 'ISM_FACTORY_V1', date: new Date().toISOString() };
-    const a = document.createElement('a');
-    a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
-    a.download = `ISM_FACTORY_backup_${new Date().toISOString().split('T')[0]}.json`;
-    a.click();
-    toast('📥 Backup exportado');
-}
-
-async function importAllData() {
-    const file = document.getElementById('importFile').files[0];
-    if (!file) return toast('Selecciona un archivo JSON', 'error');
-    const reader = new FileReader();
-    reader.onload = async e => {
-        try {
-            const data = JSON.parse(e.target.result);
-            if (data.videos) {
-                for (let v of videos) await dbDel(v.id);
-                for (let v of data.videos) await dbPut(v);
-                videos = data.videos;
-            }
-            if (data.inspo) {
-                inspoItems = data.inspo;
-                localStorage.setItem('ism_inspo_v2', JSON.stringify(inspoItems));
-            }
-            renderAll();
-            toast('📤 Datos importados');
-        } catch (err) { toast('Error en el JSON', 'error'); }
-    };
-    reader.readAsText(file);
-}
+function expData(){const d={videos:V,inspo:ins,version:'ISM_F21',date:new Date().toISOString()};const a=document.createElement('a');a.href='data:text/json;charset=utf-8,'+encodeURIComponent(JSON.stringify(d,null,2));a.download='ISM_backup_'+new Date().toISOString().split('T')[0]+'.json';a.click();toast('📥')}
+async function impData(){const f=document.getElementById('impF').files[0];if(!f)return toast('Selecciona JSON','error');const r=new FileReader();r.onload=async e=>{try{const d=JSON.parse(e.target.result);if(d.videos){for(let v of V)await dV(v.id);for(let v of d.videos)await pV(v);V=d.videos}if(d.inspo){ins=d.inspo;localStorage.setItem('ism_ins2',JSON.stringify(ins))}rAll();toast('📤 OK')}catch(e){toast('Error','error')}};r.readAsText(f)}
 </script>
-
 </body>
 </html>
