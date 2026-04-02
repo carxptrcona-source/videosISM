@@ -1,0 +1,1929 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISM FACTORY v1.0 — Inglés Sin Miedo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Montserrat:wght@400;600;700;800;900&family=Poppins:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #0a0a0f;
+            --bg-sidebar: #0f0f1a;
+            --bg-panel: #151525;
+            --bg-card: #1c1c35;
+            --bg-card-hover: #252548;
+            --bg-input: #12122a;
+            --text-primary: #f5f5f7;
+            --text-secondary: #9595b0;
+            --text-tertiary: #5a5a7a;
+            --accent: #e63946;
+            --accent-hover: #ff4d5a;
+            --accent-glow: rgba(230, 57, 70, 0.15);
+            --accent2: #1d3557;
+            --border: #2a2a4a;
+            --border-hover: #3a3a6a;
+            --green: #10b981;
+            --yellow: #f59e0b;
+            --red: #ef4444;
+            --cyan: #06b6d4;
+            --white: #ffffff;
+            --sidebar-w: 250px;
+            --radius: 10px;
+            --radius-sm: 6px;
+            --radius-lg: 16px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: var(--bg-base); color: var(--text-primary); display: flex; height: 100vh; overflow: hidden; }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: var(--sidebar-w); background: var(--bg-sidebar); border-right: 1px solid var(--border);
+            display: flex; flex-direction: column; flex-shrink: 0;
+        }
+        .sidebar-brand {
+            padding: 24px 20px; border-bottom: 1px solid var(--border); text-align: center;
+            background: linear-gradient(180deg, rgba(230,57,70,0.08), transparent);
+        }
+        .sidebar-brand h1 { font-size: 1.1rem; color: var(--accent); font-weight: 900; letter-spacing: 1px; }
+        .sidebar-brand p { font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
+        .sidebar-nav { padding: 12px; flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 2px; }
+        .nav-section { font-size: 0.6rem; color: var(--text-tertiary); text-transform: uppercase; font-weight: 800; letter-spacing: 1.5px; margin: 16px 0 8px 8px; }
+        .nav-btn {
+            background: transparent; border: none; color: var(--text-secondary); padding: 11px 14px;
+            border-radius: var(--radius-sm); cursor: pointer; font-size: 0.82rem; font-weight: 600;
+            text-align: left; transition: all 0.15s; display: flex; align-items: center; gap: 10px;
+        }
+        .nav-btn:hover { background: var(--bg-card); color: var(--white); }
+        .nav-btn.active { background: var(--accent-glow); color: var(--accent); border-left: 3px solid var(--accent); }
+        .nav-btn .badge-count {
+            margin-left: auto; background: var(--accent); color: white; font-size: 0.65rem;
+            padding: 2px 7px; border-radius: 10px; font-weight: 800;
+        }
+
+        /* MAIN */
+        .main { flex: 1; overflow-y: auto; padding: 28px 40px; }
+        .view { display: none; animation: fadeIn 0.25s ease; }
+        .view.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+        .page-title { font-size: 1.6rem; font-weight: 900; color: var(--white); margin-bottom: 4px; }
+        .page-desc { color: var(--text-secondary); font-size: 0.88rem; margin-bottom: 24px; }
+
+        /* CARDS & GRID */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+        .card {
+            background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 22px; transition: all 0.2s;
+        }
+        .card:hover { border-color: var(--border-hover); }
+        .card-title { font-size: 0.95rem; font-weight: 800; color: var(--white); margin-bottom: 8px; }
+        .card-subtitle { font-size: 0.75rem; color: var(--text-tertiary); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 12px; }
+
+        /* BUTTONS */
+        .btn {
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            padding: 10px 20px; border-radius: var(--radius-sm); cursor: pointer;
+            font-size: 0.82rem; font-weight: 700; border: none; transition: all 0.15s;
+        }
+        .btn-primary { background: var(--accent); color: white; }
+        .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 15px rgba(230,57,70,0.3); }
+        .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); color: var(--text-primary); }
+        .btn-secondary:hover { border-color: var(--accent); color: var(--accent); }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-secondary); }
+        .btn-sm { padding: 7px 14px; font-size: 0.75rem; }
+        .btn-lg { padding: 14px 28px; font-size: 0.95rem; }
+        .btn-block { width: 100%; }
+        .btn-success { background: var(--green); color: white; }
+        .btn-warning { background: var(--yellow); color: #000; }
+
+        /* FORMS */
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 0.7rem; color: var(--text-secondary); text-transform: uppercase; font-weight: 800; letter-spacing: 0.5px; margin-bottom: 6px; }
+        .form-input, .form-select, textarea {
+            width: 100%; background: var(--bg-input); border: 1px solid var(--border);
+            color: var(--white); padding: 10px 14px; border-radius: var(--radius-sm);
+            font-size: 0.88rem; transition: all 0.15s;
+        }
+        .form-input:focus, .form-select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+        textarea { resize: vertical; min-height: 80px; }
+
+        /* TABLES */
+        .table-wrap { border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px 16px; border-bottom: 1px solid var(--border); text-align: left; font-size: 0.84rem; }
+        th { background: var(--bg-card); color: var(--text-tertiary); text-transform: uppercase; font-size: 0.7rem; font-weight: 800; }
+        tbody tr:hover { background: var(--bg-card-hover); cursor: pointer; }
+
+        .badge {
+            display: inline-block; padding: 3px 10px; border-radius: 4px; font-size: 0.65rem;
+            font-weight: 800; text-transform: uppercase;
+        }
+        .badge-idea { background: rgba(150,150,180,0.1); color: var(--text-secondary); }
+        .badge-audio { background: rgba(230,57,70,0.1); color: var(--accent); }
+        .badge-edit { background: rgba(245,158,11,0.1); color: var(--yellow); }
+        .badge-ready { background: rgba(16,185,129,0.1); color: var(--green); }
+        .badge-pub { background: rgba(6,182,212,0.1); color: var(--cyan); }
+
+        /* STAT CARDS */
+        .stat-card { text-align: center; padding: 20px; }
+        .stat-num { font-size: 2.2rem; font-weight: 900; color: var(--white); }
+        .stat-label { font-size: 0.72rem; color: var(--text-tertiary); text-transform: uppercase; font-weight: 700; margin-top: 4px; }
+
+        /* FACTORY SPECIFIC */
+        .factory-input-area {
+            background: linear-gradient(135deg, var(--bg-panel), var(--bg-card));
+            border: 2px dashed var(--border); border-radius: var(--radius-lg);
+            padding: 40px; text-align: center; transition: all 0.3s;
+        }
+        .factory-input-area:hover { border-color: var(--accent); }
+        .factory-input-area h3 { font-size: 1.3rem; margin-bottom: 8px; }
+
+        .step-indicator {
+            display: flex; gap: 0; margin-bottom: 30px; background: var(--bg-panel);
+            border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
+        }
+        .step {
+            flex: 1; padding: 14px; text-align: center; font-size: 0.75rem; font-weight: 700;
+            color: var(--text-tertiary); border-right: 1px solid var(--border); position: relative;
+            transition: all 0.3s;
+        }
+        .step:last-child { border-right: none; }
+        .step.active { background: var(--accent-glow); color: var(--accent); }
+        .step.done { background: rgba(16,185,129,0.1); color: var(--green); }
+        .step-num { font-size: 1.1rem; font-weight: 900; display: block; margin-bottom: 2px; }
+
+        /* PREVIEW PANEL */
+        .preview-phone {
+            width: 320px; height: 568px; background: #000; border-radius: 20px;
+            border: 3px solid #333; margin: 0 auto; overflow: hidden; position: relative;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+        }
+        .preview-phone canvas { width: 100%; height: 100%; }
+
+        /* LOADING */
+        .loading-spinner {
+            display: inline-block; width: 20px; height: 20px; border: 3px solid var(--border);
+            border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-overlay {
+            position: fixed; inset: 0; background: rgba(10,10,15,0.92); z-index: 1000;
+            display: none; justify-content: center; align-items: center; flex-direction: column; gap: 20px;
+        }
+        .loading-overlay.active { display: flex; }
+        .loading-overlay .loading-spinner { width: 50px; height: 50px; border-width: 4px; }
+
+        /* GENERATED CONTENT */
+        .gen-phrase-row {
+            display: grid; grid-template-columns: 1fr 1fr 0.8fr 60px; gap: 10px;
+            margin-bottom: 8px; align-items: center;
+        }
+        .gen-phrase-row input {
+            background: var(--bg-input); border: 1px solid var(--border); color: white;
+            padding: 8px 12px; border-radius: var(--radius-sm); font-size: 0.85rem;
+        }
+        .gen-phrase-row input:focus { border-color: var(--accent); outline: none; }
+
+        /* TEMPLATE SELECTOR */
+        .template-option {
+            border: 2px solid var(--border); border-radius: var(--radius); padding: 16px;
+            cursor: pointer; transition: all 0.2s; text-align: center;
+        }
+        .template-option:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .template-option.selected { border-color: var(--accent); background: var(--accent-glow); }
+        .template-option img, .template-option canvas { width: 100%; border-radius: 6px; }
+        .template-option h4 { margin-top: 10px; font-size: 0.85rem; }
+        .template-option p { font-size: 0.72rem; color: var(--text-tertiary); }
+
+        /* KANBAN */
+        .kanban-board { display: flex; gap: 14px; overflow-x: auto; padding-bottom: 10px; }
+        .kanban-col {
+            flex: 0 0 260px; background: var(--bg-panel); border: 1px solid var(--border);
+            border-radius: var(--radius); display: flex; flex-direction: column; max-height: calc(100vh - 200px);
+        }
+        .kanban-head { padding: 14px; font-weight: 800; font-size: 0.85rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; }
+        .kanban-body { padding: 10px; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; }
+        .k-card {
+            background: var(--bg-card); border: 1px solid var(--border); padding: 12px;
+            border-radius: var(--radius-sm); cursor: grab; transition: all 0.15s;
+        }
+        .k-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+        .k-card-title { font-weight: 700; font-size: 0.85rem; margin-bottom: 4px; }
+        .k-card-meta { font-size: 0.72rem; color: var(--text-tertiary); }
+
+        /* TTS PANEL */
+        .tts-controls {
+            background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius);
+            padding: 20px; margin-top: 16px;
+        }
+        .voice-option { display: flex; align-items: center; gap: 12px; padding: 10px; border: 1px solid var(--border); border-radius: var(--radius-sm); margin-bottom: 8px; cursor: pointer; }
+        .voice-option:hover { border-color: var(--accent); }
+        .voice-option.selected { border-color: var(--green); background: rgba(16,185,129,0.05); }
+
+        /* TOAST */
+        #toast {
+            position: fixed; bottom: 30px; right: 30px; padding: 14px 24px;
+            border-radius: var(--radius-sm); color: white; font-weight: 700; font-size: 0.85rem;
+            opacity: 0; transition: all 0.3s; z-index: 9999; transform: translateY(20px);
+        }
+        #toast.show { opacity: 1; transform: translateY(0); }
+
+        /* MODAL */
+        .modal-overlay {
+            display: none; position: fixed; inset: 0; background: rgba(10,10,15,0.9);
+            z-index: 500; justify-content: center; align-items: center;
+        }
+        .modal-overlay.open { display: flex; }
+        .modal-box {
+            background: var(--bg-panel); border: 1px solid var(--border); border-radius: var(--radius-lg);
+            width: 95%; max-width: 950px; max-height: 90vh; display: flex; flex-direction: column;
+        }
+        .modal-header {
+            padding: 20px 28px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .modal-content { padding: 28px; overflow-y: auto; flex: 1; }
+        .modal-footer { padding: 16px 28px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 10px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1200px) {
+            .grid-2 { grid-template-columns: 1fr; }
+            .grid-3 { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+            .main { padding: 16px; }
+            .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+    <div class="sidebar-brand">
+        <h1>🎯 ISM FACTORY</h1>
+        <p>Inglés Sin Miedo</p>
+    </div>
+    <nav class="sidebar-nav">
+        <div class="nav-section">Producción</div>
+        <button class="nav-btn active" onclick="goTo('factory',this)">
+            🏭 Fábrica de Shorts
+        </button>
+        <button class="nav-btn" onclick="goTo('database',this)">
+            🗄️ Base de Videos
+            <span class="badge-count" id="nav-count">0</span>
+        </button>
+        <button class="nav-btn" onclick="goTo('kanban',this)">📋 Kanban</button>
+        <button class="nav-btn" onclick="goTo('calendar',this)">📅 Calendario</button>
+
+        <div class="nav-section">Herramientas</div>
+        <button class="nav-btn" onclick="goTo('tts',this)">🔊 Audio / TTS</button>
+        <button class="nav-btn" onclick="goTo('seo',this)">🔍 SEO Generator</button>
+        <button class="nav-btn" onclick="goTo('prompts',this)">🤖 Prompt Hub</button>
+
+        <div class="nav-section">Sistema</div>
+        <button class="nav-btn" onclick="goTo('inspo',this)">👁️ Swipe File</button>
+        <button class="nav-btn" onclick="goTo('settings',this)">⚙️ Config & Backup</button>
+    </nav>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+
+    <!-- ==================== FACTORY ==================== -->
+    <div class="view active" id="v-factory">
+        <h1 class="page-title">🏭 Fábrica de Shorts</h1>
+        <p class="page-desc">Escribe un tema → La IA genera todo → Descarga tus frames listos para CapCut.</p>
+
+        <!-- STEP INDICATOR -->
+        <div class="step-indicator" id="stepBar">
+            <div class="step active" id="step-1"><span class="step-num">1</span>Tema & IA</div>
+            <div class="step" id="step-2"><span class="step-num">2</span>Revisar Guion</div>
+            <div class="step" id="step-3"><span class="step-num">3</span>Template Visual</div>
+            <div class="step" id="step-4"><span class="step-num">4</span>Preview & Export</div>
+        </div>
+
+        <!-- STEP 1: TOPIC INPUT -->
+        <div id="factory-step-1">
+            <div class="factory-input-area" id="inputArea">
+                <h3>¿Sobre qué será tu Short?</h3>
+                <p style="color:var(--text-secondary); margin-bottom: 24px;">Escribe un tema y Gemini generará el guion completo automáticamente.</p>
+                <div style="max-width:600px; margin:0 auto;">
+                    <div class="form-group">
+                        <input type="text" class="form-input" id="topicInput" placeholder="Ej: Frases útiles para hablar inglés, Preguntas básicas, Verbos irregulares..." style="font-size:1.1rem; padding:14px 20px; text-align:center;">
+                    </div>
+                    <div class="grid-3" style="margin-bottom:20px;">
+                        <div class="form-group">
+                            <label class="form-label">Cantidad de frases</label>
+                            <select class="form-select" id="phraseCount">
+                                <option value="10">10 frases</option>
+                                <option value="12">12 frases</option>
+                                <option value="15" selected>15 frases</option>
+                                <option value="18">18 frases</option>
+                                <option value="20">20 frases</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Nivel</label>
+                            <select class="form-select" id="levelSelect">
+                                <option value="basico" selected>Básico</option>
+                                <option value="intermedio">Intermedio</option>
+                                <option value="avanzado">Avanzado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Estilo de Hook</label>
+                            <select class="form-select" id="hookStyle">
+                                <option value="curiosidad" selected>Curiosidad (El 90% no sabe...)</option>
+                                <option value="negacion">Negación (Deja de decir...)</option>
+                                <option value="reto">Reto (¿Puedes decir todas?)</option>
+                                <option value="emoji">Emoji llamativo (🤯🔥)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary btn-lg" onclick="generateWithGemini()" id="generateBtn" style="padding:16px 40px; font-size:1rem;">
+                        🚀 Generar con Gemini AI
+                    </button>
+                    <p style="color:var(--text-tertiary); font-size:0.72rem; margin-top:12px;">Usa la API gratuita de Gemini • ~5 segundos</p>
+                </div>
+            </div>
+
+            <!-- QUICK TOPICS -->
+            <div style="margin-top:24px;">
+                <p class="card-subtitle">⚡ Temas Rápidos (1 click)</p>
+                <div style="display:flex; flex-wrap:wrap; gap:8px;">
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Frases útiles para hablar inglés</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Preguntas básicas en inglés</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Verbos irregulares más usados</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Expresiones para el trabajo</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Cómo presentarte en inglés</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Frases para viajar</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Emociones y sentimientos</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Saludos y despedidas</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Conectores para hablar fluido</button>
+                    <button class="btn btn-ghost btn-sm" onclick="quickTopic(this)">Phrasal verbs esenciales</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- STEP 2: REVIEW SCRIPT -->
+        <div id="factory-step-2" style="display:none;">
+            <div class="card" style="margin-bottom:20px; border-left:4px solid var(--accent);">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                    <div>
+                        <input type="text" class="form-input" id="genTitle" style="font-size:1.2rem; font-weight:900; background:transparent; border:none; padding:0; width:500px;" placeholder="Título del video">
+                    </div>
+                    <div style="display:flex; gap:8px;">
+                        <button class="btn btn-secondary btn-sm" onclick="addGenPhrase()">+ Añadir frase</button>
+                        <button class="btn btn-ghost btn-sm" onclick="regenerateScript()">🔄 Regenerar</button>
+                    </div>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr 1fr 0.8fr 60px; gap:10px; margin-bottom:8px;">
+                    <span style="font-size:0.7rem; color:var(--text-tertiary); font-weight:800; text-transform:uppercase;">Español</span>
+                    <span style="font-size:0.7rem; color:var(--text-tertiary); font-weight:800; text-transform:uppercase;">Inglés</span>
+                    <span style="font-size:0.7rem; color:var(--text-tertiary); font-weight:800; text-transform:uppercase;">Fonética</span>
+                    <span></span>
+                </div>
+                <div id="genPhrasesContainer"></div>
+            </div>
+
+            <!-- SEO Preview -->
+            <div class="grid-2">
+                <div class="card">
+                    <p class="card-subtitle">🎯 Hook Generado</p>
+                    <input type="text" class="form-input" id="genHook" style="font-weight:700; font-size:1rem;">
+                </div>
+                <div class="card">
+                    <p class="card-subtitle">📂 Categoría</p>
+                    <input type="text" class="form-input" id="genCategory">
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                <button class="btn btn-secondary" onclick="goStep(1)">← Volver</button>
+                <button class="btn btn-primary btn-lg" onclick="goStep(3)">Elegir Template Visual →</button>
+            </div>
+        </div>
+
+        <!-- STEP 3: TEMPLATE SELECTION -->
+        <div id="factory-step-3" style="display:none;">
+            <p class="card-subtitle" style="margin-bottom:16px;">Elige el diseño de tu Short</p>
+            <div class="grid-3">
+                <div class="template-option selected" onclick="selectTemplate('lista_bicolor', this)" id="tpl-lista_bicolor">
+                    <div style="background:white; border-radius:6px; padding:12px; min-height:180px;" id="tpl-preview-1"></div>
+                    <h4>Lista Bicolor</h4>
+                    <p>Estilo clásico rojo/negro • 1.3M views</p>
+                </div>
+                <div class="template-option" onclick="selectTemplate('columnas_degradado', this)" id="tpl-columnas_degradado">
+                    <div style="background:linear-gradient(180deg,#1a3a5c,#0d1b2a); border-radius:6px; padding:12px; min-height:180px;" id="tpl-preview-2"></div>
+                    <h4>Columnas Degradado</h4>
+                    <p>Estilo tabla azul/blanco • Profesional</p>
+                </div>
+                <div class="template-option" onclick="selectTemplate('tarjetas_reveal', this)" id="tpl-tarjetas_reveal">
+                    <div style="background:#111; border-radius:6px; padding:12px; min-height:180px;" id="tpl-preview-3"></div>
+                    <h4>Tarjetas Individuales</h4>
+                    <p>Una frase por frame • Para reels</p>
+                </div>
+            </div>
+
+            <!-- CUSTOMIZATION -->
+            <div class="card" style="margin-top:20px;">
+                <p class="card-subtitle">🎨 Personalización</p>
+                <div class="grid-4">
+                    <div class="form-group">
+                        <label class="form-label">Color Español</label>
+                        <input type="color" class="form-input" id="colorEsp" value="#e63946" style="height:42px; padding:4px;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Color Inglés</label>
+                        <input type="color" class="form-input" id="colorEng" value="#1a1a2e" style="height:42px; padding:4px;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fondo</label>
+                        <input type="color" class="form-input" id="colorBg" value="#ffffff" style="height:42px; padding:4px;">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Fuente</label>
+                        <select class="form-select" id="fontSelect">
+                            <option value="Montserrat">Montserrat</option>
+                            <option value="Poppins">Poppins</option>
+                            <option value="Inter">Inter</option>
+                            <option value="Arial Black">Arial Black</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                <button class="btn btn-secondary" onclick="goStep(2)">← Volver</button>
+                <button class="btn btn-primary btn-lg" onclick="goStep(4)">Generar Preview →</button>
+            </div>
+        </div>
+
+        <!-- STEP 4: PREVIEW & EXPORT -->
+        <div id="factory-step-4" style="display:none;">
+            <div class="grid-2">
+                <div>
+                    <p class="card-subtitle">📱 Preview del Short</p>
+                    <div class="preview-phone">
+                        <canvas id="previewCanvas" width="1080" height="1920"></canvas>
+                    </div>
+                </div>
+                <div>
+                    <div class="card" style="margin-bottom:16px;">
+                        <p class="card-subtitle">📥 Exportar</p>
+                        <button class="btn btn-primary btn-block" onclick="downloadImage()" style="margin-bottom:10px; padding:14px;">
+                            📥 Descargar Imagen (1080x1920 PNG)
+                        </button>
+                        <button class="btn btn-success btn-block" onclick="downloadAllFrames()" style="margin-bottom:10px; padding:14px;">
+                            📦 Descargar Todos los Frames (ZIP)
+                        </button>
+                        <button class="btn btn-secondary btn-block" onclick="saveToDatabase()" style="padding:14px;">
+                            💾 Guardar en Base de Datos
+                        </button>
+                    </div>
+
+                    <div class="card" style="margin-bottom:16px;">
+                        <p class="card-subtitle">🔍 SEO Generado</p>
+                        <div class="form-group">
+                            <label class="form-label">Título YouTube</label>
+                            <input type="text" class="form-input" id="seoTitle" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Descripción</label>
+                            <textarea id="seoDesc" rows="3" readonly></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Tags</label>
+                            <input type="text" class="form-input" id="seoTags" readonly>
+                        </div>
+                        <button class="btn btn-secondary btn-sm" onclick="copySEO()">📋 Copiar Todo el SEO</button>
+                    </div>
+
+                    <div class="card">
+                        <p class="card-subtitle">⏱️ Guía de Ensamblaje (CapCut)</p>
+                        <div id="assemblyGuide" style="font-size:0.8rem; color:var(--text-secondary);"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display:flex; justify-content:space-between; margin-top:20px;">
+                <button class="btn btn-secondary" onclick="goStep(3)">← Volver</button>
+                <button class="btn btn-primary btn-lg" onclick="resetFactory()">🔄 Crear Nuevo Short</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== DATABASE ==================== -->
+    <div class="view" id="v-database">
+        <h1 class="page-title">🗄️ Base de Videos</h1>
+        <p class="page-desc">Todos tus guiones generados y en producción.</p>
+        <div style="display:flex; gap:12px; margin-bottom:20px; align-items:center;">
+            <input type="text" class="form-input" id="dbSearch" placeholder="Buscar videos..." onkeyup="renderDB()" style="max-width:400px;">
+            <select class="form-select" id="dbFilter" onchange="renderDB()" style="max-width:200px;">
+                <option value="all">Todos</option>
+                <option value="idea">Ideas</option>
+                <option value="audio">Audio</option>
+                <option value="edit">Edición</option>
+                <option value="ready">Listos</option>
+                <option value="pub">Publicados</option>
+            </select>
+            <div style="margin-left:auto;">
+                <button class="btn btn-primary btn-sm" onclick="goTo('factory', document.querySelectorAll('.nav-btn')[0])">+ Crear Nuevo</button>
+            </div>
+        </div>
+        <div class="table-wrap">
+            <table>
+                <thead><tr><th>Tema</th><th>Estado</th><th>Hook</th><th>Frases</th><th>Fecha</th></tr></thead>
+                <tbody id="dbBody"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ==================== KANBAN ==================== -->
+    <div class="view" id="v-kanban">
+        <h1 class="page-title">📋 Kanban Workflow</h1>
+        <p class="page-desc">Arrastra los videos entre columnas para actualizar su estado.</p>
+        <div class="kanban-board" id="kanbanBoard"></div>
+    </div>
+
+    <!-- ==================== CALENDAR ==================== -->
+    <div class="view" id="v-calendar">
+        <h1 class="page-title">📅 Calendario de Contenido</h1>
+        <p class="page-desc">Planifica tus publicaciones.</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <button class="btn btn-secondary btn-sm" onclick="changeMonth(-1)">◀ Anterior</button>
+            <h3 id="calTitle" style="font-size:1.1rem; font-weight:800;"></h3>
+            <button class="btn btn-secondary btn-sm" onclick="changeMonth(1)">Siguiente ▶</button>
+        </div>
+        <div style="display:grid; grid-template-columns:repeat(7,1fr); gap:6px;" id="calGrid"></div>
+    </div>
+
+    <!-- ==================== TTS / AUDIO ==================== -->
+    <div class="view" id="v-tts">
+        <h1 class="page-title">🔊 Audio / Text-to-Speech</h1>
+        <p class="page-desc">Genera audio para tus shorts con TTS del navegador o graba tu propia voz.</p>
+
+        <div class="grid-2">
+            <div class="card">
+                <p class="card-subtitle">🤖 TTS Automático (Gratis)</p>
+                <div class="form-group">
+                    <label class="form-label">Seleccionar Video</label>
+                    <select class="form-select" id="ttsVideoSel" onchange="loadTTSPhrases()"></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Idioma de voz</label>
+                    <select class="form-select" id="ttsLang">
+                        <option value="both">Español + Inglés (alternado)</option>
+                        <option value="en">Solo Inglés</option>
+                        <option value="es">Solo Español</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Velocidad</label>
+                    <input type="range" id="ttsSpeed" min="0.5" max="1.5" step="0.1" value="0.9" style="width:100%;">
+                    <span id="ttsSpeedVal" style="font-size:0.8rem; color:var(--text-secondary);">0.9x</span>
+                </div>
+                <div id="ttsPhraseList" style="margin:16px 0; max-height:300px; overflow-y:auto;"></div>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn btn-primary btn-block" onclick="playAllTTS()">▶ Reproducir Todo</button>
+                    <button class="btn btn-secondary" onclick="stopTTS()">⏹ Parar</button>
+                </div>
+            </div>
+
+            <div class="card">
+                <p class="card-subtitle">🎙️ Grabar tu Voz</p>
+                <p style="font-size:0.85rem; color:var(--text-secondary); margin-bottom:16px;">
+                    Usa el teleprompter integrado para grabar tu voz con ritmo perfecto.
+                </p>
+                <div class="form-group">
+                    <label class="form-label">Video para teleprompter</label>
+                    <select class="form-select" id="teleVideoSel"></select>
+                </div>
+                <button class="btn btn-primary btn-block" onclick="openTeleprompter()" style="margin-bottom:12px;">🎥 Abrir Teleprompter</button>
+                <button class="btn btn-secondary btn-block" onclick="startRecording()" id="recBtn">🔴 Grabar Audio</button>
+                <div id="recStatus" style="margin-top:12px; text-align:center; font-size:0.85rem; color:var(--text-tertiary);"></div>
+                <audio id="recPlayback" controls style="width:100%; margin-top:12px; display:none;"></audio>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SEO GENERATOR ==================== -->
+    <div class="view" id="v-seo">
+        <h1 class="page-title">🔍 SEO Generator</h1>
+        <p class="page-desc">Genera SEO optimizado con IA para cualquier video.</p>
+        <div class="card" style="max-width:700px;">
+            <div class="form-group">
+                <label class="form-label">Seleccionar Video</label>
+                <select class="form-select" id="seoVideoSel"></select>
+            </div>
+            <button class="btn btn-primary btn-block" onclick="generateSEO()">🔍 Generar SEO con Gemini</button>
+            <div id="seoResult" style="margin-top:20px; display:none;">
+                <div class="form-group">
+                    <label class="form-label">Títulos Sugeridos</label>
+                    <div id="seoTitles"></div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Descripción</label>
+                    <textarea id="seoDescription" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tags</label>
+                    <input type="text" class="form-input" id="seoTagsResult">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Hashtags</label>
+                    <input type="text" class="form-input" id="seoHashtags">
+                </div>
+                <button class="btn btn-secondary" onclick="copyAllSEO()">📋 Copiar Todo</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== PROMPT HUB ==================== -->
+    <div class="view" id="v-prompts">
+        <h1 class="page-title">🤖 Prompt Hub</h1>
+        <p class="page-desc">Prompts optimizados listos para copiar y pegar.</p>
+        <div class="grid-2">
+            <div class="card" onclick="copyPromptTemplate('script')" style="cursor:pointer;">
+                <p class="card-subtitle">📝 Generar Guion</p>
+                <p style="font-size:0.85rem; color:var(--text-secondary);">Prompt para crear listas de vocabulario estructuradas</p>
+            </div>
+            <div class="card" onclick="copyPromptTemplate('hooks')" style="cursor:pointer;">
+                <p class="card-subtitle">🎣 Generar Hooks Virales</p>
+                <p style="font-size:0.85rem; color:var(--text-secondary);">3 variantes de ganchos agresivos para un tema</p>
+            </div>
+            <div class="card" onclick="copyPromptTemplate('seo')" style="cursor:pointer;">
+                <p class="card-subtitle">🔍 SEO Completo</p>
+                <p style="font-size:0.85rem; color:var(--text-secondary);">Título + Desc + Tags + Hashtags</p>
+            </div>
+            <div class="card" onclick="copyPromptTemplate('broll')" style="cursor:pointer;">
+                <p class="card-subtitle">🎥 Ideas B-Roll</p>
+                <p style="font-size:0.85rem; color:var(--text-secondary);">Búsquedas exactas para Pexels/Pixabay</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== SWIPE FILE ==================== -->
+    <div class="view" id="v-inspo">
+        <h1 class="page-title">👁️ Swipe File</h1>
+        <p class="page-desc">Guarda links de videos virales como referencia.</p>
+        <div class="card">
+            <div style="display:flex; gap:10px; margin-bottom:20px;">
+                <input type="text" class="form-input" id="inspoURL" placeholder="URL del Short/Reel viral...">
+                <input type="text" class="form-input" id="inspoNote" placeholder="¿Por qué funciona?">
+                <button class="btn btn-primary" onclick="addInspo()">Guardar</button>
+            </div>
+            <div id="inspoList"></div>
+        </div>
+    </div>
+
+    <!-- ==================== SETTINGS ==================== -->
+    <div class="view" id="v-settings">
+        <h1 class="page-title">⚙️ Configuración</h1>
+        <p class="page-desc">API Keys, backups y ajustes del sistema.</p>
+        <div class="grid-2">
+            <div class="card" style="border-left:4px solid var(--accent);">
+                <p class="card-subtitle">🔑 API Key de Gemini</p>
+                <div class="form-group">
+                    <input type="password" class="form-input" id="apiKeyInput" placeholder="AIzaSy..." value="">
+                </div>
+                <button class="btn btn-primary btn-sm" onclick="saveAPIKey()">Guardar Key</button>
+                <button class="btn btn-secondary btn-sm" onclick="testAPI()" style="margin-left:8px;">🧪 Probar Conexión</button>
+                <div id="apiStatus" style="margin-top:10px; font-size:0.8rem;"></div>
+            </div>
+            <div class="card">
+                <p class="card-subtitle">💾 Backup de Datos</p>
+                <button class="btn btn-success btn-block" onclick="exportAllData()" style="margin-bottom:10px;">📥 Exportar JSON</button>
+                <input type="file" id="importFile" accept=".json" class="form-input" style="margin-bottom:10px;">
+                <button class="btn btn-warning btn-block" onclick="importAllData()">📤 Importar JSON</button>
+            </div>
+        </div>
+    </div>
+
+</main>
+
+<!-- LOADING OVERLAY -->
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="loading-spinner"></div>
+    <p style="color:var(--text-secondary); font-size:1rem; font-weight:600;" id="loadingText">Generando con Gemini AI...</p>
+</div>
+
+<!-- TELEPROMPTER MODAL -->
+<div class="modal-overlay" id="teleModal">
+    <div style="width:100%; height:100%; background:#000; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative;">
+        <button class="btn btn-ghost" onclick="closeTeleprompter()" style="position:fixed; top:20px; right:20px; z-index:10; color:#666;">✕ Cerrar (ESC)</button>
+        <div id="teleContent" style="max-width:800px; text-align:center; padding:40px;"></div>
+    </div>
+</div>
+
+<!-- EDIT VIDEO MODAL -->
+<div class="modal-overlay" id="editModal" onclick="if(event.target.id==='editModal') closeEditModal()">
+    <div class="modal-box">
+        <div class="modal-header">
+            <input type="text" class="form-input" id="editTitle" style="font-size:1.2rem; font-weight:900; background:transparent; border:none; width:60%;">
+            <button class="btn btn-ghost btn-sm" onclick="closeEditModal()">Cerrar</button>
+        </div>
+        <div class="modal-content">
+            <div class="grid-3" style="margin-bottom:20px;">
+                <div class="form-group">
+                    <label class="form-label">Estado</label>
+                    <select class="form-select" id="editStatus"><option value="idea">Idea</option><option value="audio">Audio</option><option value="edit">Edición</option><option value="ready">Listo</option><option value="pub">Publicado</option></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Fecha</label>
+                    <input type="date" class="form-input" id="editDate">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Categoría</label>
+                    <input type="text" class="form-input" id="editCat">
+                </div>
+            </div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                <span class="form-label" style="margin:0;">Frases del guion</span>
+                <button class="btn btn-ghost btn-sm" onclick="addEditPhrase()">+ Añadir</button>
+            </div>
+            <div id="editPhrasesContainer"></div>
+            <div class="form-group" style="margin-top:16px;">
+                <label class="form-label">Notas</label>
+                <textarea class="form-input" id="editNotes" rows="3"></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-ghost btn-sm" onclick="deleteEditVideo()" style="color:var(--red);">🗑 Eliminar</button>
+            <button class="btn btn-primary" onclick="saveEditVideo()">💾 Guardar</button>
+        </div>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<script>
+// =============================================
+// CONFIGURACIÓN & ESTADO
+// =============================================
+const GEMINI_ENDPOINT = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+let API_KEY = '';
+const DB_NAME = 'ISM_FACTORY_V1';
+const STORE = 'videos';
+let db = null;
+let videos = [];
+let inspoItems = [];
+let currentGen = null; // datos generados actualmente
+let selectedTemplate = 'lista_bicolor';
+let currentEditId = null;
+let calendarDate = new Date();
+let dragId = null;
+let mediaRecorder = null;
+let audioChunks = [];
+let ttsQueue = [];
+let ttsPlaying = false;
+
+// =============================================
+// INDEXED DB
+// =============================================
+function openDB() {
+    return new Promise((res, rej) => {
+        const r = indexedDB.open(DB_NAME, 1);
+        r.onupgradeneeded = e => {
+            const d = e.target.result;
+            if (!d.objectStoreNames.contains(STORE)) d.createObjectStore(STORE, { keyPath: 'id' });
+        };
+        r.onsuccess = e => { db = e.target.result; res(); };
+        r.onerror = () => rej('DB Error');
+    });
+}
+function dbGetAll() {
+    return new Promise(res => {
+        const tx = db.transaction(STORE, 'readonly');
+        const r = tx.objectStore(STORE).getAll();
+        r.onsuccess = () => res(r.result);
+    });
+}
+function dbPut(obj) {
+    return new Promise(res => {
+        const tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).put(obj);
+        tx.oncomplete = () => res();
+    });
+}
+function dbDel(id) {
+    return new Promise(res => {
+        const tx = db.transaction(STORE, 'readwrite');
+        tx.objectStore(STORE).delete(id);
+        tx.oncomplete = () => res();
+    });
+}
+
+// =============================================
+// INIT
+// =============================================
+window.onload = async () => {
+    await openDB();
+    videos = await dbGetAll();
+    API_KEY = localStorage.getItem('ism_api_key') || '';
+    if (API_KEY) document.getElementById('apiKeyInput').value = API_KEY;
+    const ins = localStorage.getItem('ism_inspo_v2');
+    if (ins) inspoItems = JSON.parse(ins);
+    renderAll();
+    document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') { closeTeleprompter(); closeEditModal(); }
+    });
+    document.getElementById('ttsSpeed').addEventListener('input', e => {
+        document.getElementById('ttsSpeedVal').textContent = e.target.value + 'x';
+    });
+};
+
+function renderAll() {
+    renderDB();
+    renderKanban();
+    renderCalendar();
+    populateSelects();
+    renderInspo();
+    document.getElementById('nav-count').textContent = videos.length;
+}
+
+// =============================================
+// NAVIGATION
+// =============================================
+function goTo(id, btn) {
+    document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('v-' + id).classList.add('active');
+    if (btn) btn.classList.add('active');
+    if (id === 'tts' || id === 'seo') populateSelects();
+}
+
+function toast(msg, type = 'success') {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.style.background = type === 'error' ? 'var(--red)' : 'var(--green)';
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+function showLoading(msg = 'Generando con Gemini AI...') {
+    document.getElementById('loadingText').textContent = msg;
+    document.getElementById('loadingOverlay').classList.add('active');
+}
+function hideLoading() {
+    document.getElementById('loadingOverlay').classList.remove('active');
+}
+
+// =============================================
+// FACTORY — STEP NAVIGATION
+// =============================================
+function goStep(n) {
+    for (let i = 1; i <= 4; i++) {
+        document.getElementById('factory-step-' + i).style.display = i === n ? 'block' : 'none';
+        const s = document.getElementById('step-' + i);
+        s.classList.remove('active', 'done');
+        if (i < n) s.classList.add('done');
+        if (i === n) s.classList.add('active');
+    }
+    if (n === 3) renderTemplatePreviews();
+    if (n === 4) renderFinalPreview();
+}
+
+// =============================================
+// FACTORY — GEMINI API CALL
+// =============================================
+function quickTopic(btn) {
+    document.getElementById('topicInput').value = btn.textContent;
+}
+
+async function generateWithGemini() {
+    const topic = document.getElementById('topicInput').value.trim();
+    if (!topic) return toast('Escribe un tema primero', 'error');
+
+    if (!API_KEY) {
+        API_KEY = localStorage.getItem('ism_api_key') || '';
+        if (!API_KEY) return toast('Configura tu API Key en ⚙️ Settings', 'error');
+    }
+
+    const count = document.getElementById('phraseCount').value;
+    const level = document.getElementById('levelSelect').value;
+    const hookStyle = document.getElementById('hookStyle').value;
+
+    const hookInstructions = {
+        curiosidad: 'Usa un hook de curiosidad como "El 90% no sabe decir esto en inglés 🤯" o "¿Sabías que...?"',
+        negacion: 'Usa un hook de negación como "Deja de decir X, di Y" o "NUNCA digas esto en inglés"',
+        reto: 'Usa un hook de reto como "¿Puedes decir las 15 sin equivocarte?" o "Solo el 5% puede con la #10"',
+        emoji: 'Usa un hook con emojis llamativos como "🤯🔥 Frases que NECESITAS saber"'
+    };
+
+    const prompt = `Eres un profesor de inglés experto creando contenido viral para YouTube Shorts en español para hispanohablantes.
+
+TEMA: "${topic}"
+NIVEL: ${level}
+CANTIDAD DE FRASES: ${count}
+
+INSTRUCCIONES:
+1. Genera exactamente ${count} pares de frases (español → inglés)
+2. ${hookInstructions[hookStyle]}
+3. Incluye la fonética aproximada en español para cada frase en inglés (entre barras /)
+4. Las frases deben ser progresivas: de más fácil a más difícil
+5. Cada frase en inglés debe ser CORTA (máximo 5 palabras idealmente)
+6. Genera un título viral para YouTube (máximo 60 caracteres)
+7. Genera una descripción corta para YouTube
+8. Genera 8 tags relevantes separados por comas
+9. Genera 5 hashtags
+10. Sugiere una categoría (Ej: Vocabulario, Gramática, Frases Útiles, etc.)
+
+FORMATO DE RESPUESTA: Responde ÚNICAMENTE con un JSON válido, sin markdown, sin backticks, sin explicaciones. Solo el JSON puro:
+{
+  "titulo": "título viral aquí",
+  "hook": "gancho para el inicio del video",
+  "categoria": "categoría",
+  "frases": [
+    {"esp": "frase en español", "eng": "English phrase", "fon": "/fonética/"}
+  ],
+  "seo": {
+    "titulo_yt": "título para YouTube",
+    "descripcion": "descripción corta",
+    "tags": "tag1, tag2, tag3",
+    "hashtags": "#hashtag1 #hashtag2"
+  }
+}`;
+
+    showLoading('🧠 Generando guion con Gemini AI...');
+
+    try {
+        const response = await fetch(`${GEMINI_ENDPOINT}?key=${API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                contents: [{ parts: [{ text: prompt }] }],
+                generationConfig: {
+                    temperature: 0.8,
+                    maxOutputTokens: 2048
+                }
+            })
+        });
+
+        if (!response.ok) {
+            const err = await response.json();
+            throw new Error(err.error?.message || 'Error de API');
+        }
+
+        const data = await response.json();
+        let text = data.candidates[0].content.parts[0].text;
+
+        // Limpiar posible markdown
+        text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+        currentGen = JSON.parse(text);
+        hideLoading();
+        loadGeneratedScript();
+        goStep(2);
+        toast('✅ Guion generado exitosamente');
+    } catch (err) {
+        hideLoading();
+        console.error(err);
+        toast('Error: ' + err.message, 'error');
+    }
+}
+
+function regenerateScript() {
+    goStep(1);
+    generateWithGemini();
+}
+
+function loadGeneratedScript() {
+    if (!currentGen) return;
+    document.getElementById('genTitle').value = currentGen.titulo || '';
+    document.getElementById('genHook').value = currentGen.hook || '';
+    document.getElementById('genCategory').value = currentGen.categoria || '';
+    renderGenPhrases();
+}
+
+function renderGenPhrases() {
+    const container = document.getElementById('genPhrasesContainer');
+    container.innerHTML = currentGen.frases.map((f, i) => `
+        <div class="gen-phrase-row">
+            <input type="text" value="${f.esp}" onchange="currentGen.frases[${i}].esp=this.value" placeholder="Español" style="${i===0?'border-color:var(--accent);font-weight:700;':''}">
+            <input type="text" value="${f.eng}" onchange="currentGen.frases[${i}].eng=this.value" placeholder="English" style="font-weight:700;">
+            <input type="text" value="${f.fon||''}" onchange="currentGen.frases[${i}].fon=this.value" placeholder="/fonética/">
+            <button class="btn btn-ghost btn-sm" onclick="currentGen.frases.splice(${i},1);renderGenPhrases()" style="color:var(--red);">✕</button>
+        </div>
+    `).join('');
+}
+
+function addGenPhrase() {
+    currentGen.frases.push({ esp: '', eng: '', fon: '' });
+    renderGenPhrases();
+}
+
+// =============================================
+// FACTORY — TEMPLATE SELECTION
+// =============================================
+function selectTemplate(tpl, el) {
+    selectedTemplate = tpl;
+    document.querySelectorAll('.template-option').forEach(t => t.classList.remove('selected'));
+    el.classList.add('selected');
+}
+
+function renderTemplatePreviews() {
+    if (!currentGen || !currentGen.frases.length) return;
+    const f = currentGen.frases.slice(0, 5);
+
+    // Preview 1: Lista Bicolor
+    const p1 = document.getElementById('tpl-preview-1');
+    p1.innerHTML = f.map(fr => `<div style="display:flex;justify-content:space-between;padding:3px 0;font-size:0.65rem;font-family:Montserrat,sans-serif;">
+        <span style="color:#e63946;font-weight:700;">${fr.esp}</span>
+        <span style="color:#1a1a2e;font-weight:800;">${fr.eng}</span>
+    </div>`).join('') + '<div style="text-align:center;color:#999;font-size:0.5rem;margin-top:6px;">+ ' + (currentGen.frases.length - 5) + ' más...</div>';
+
+    // Preview 2: Columnas degradado
+    const p2 = document.getElementById('tpl-preview-2');
+    p2.innerHTML = `<div style="display:grid;grid-template-columns:1fr 1fr;gap:2px;font-size:0.6rem;">
+        <div style="background:rgba(255,255,255,0.15);color:#fff;padding:4px;text-align:center;font-weight:800;border-radius:3px;">ESPAÑOL</div>
+        <div style="background:rgba(255,255,255,0.15);color:#fff;padding:4px;text-align:center;font-weight:800;border-radius:3px;">INGLÉS</div>
+        ${f.map(fr => `<div style="color:#ffd;padding:3px;font-size:0.58rem;">${fr.esp}</div><div style="color:#8ef;padding:3px;font-weight:700;font-size:0.58rem;">${fr.eng}</div>`).join('')}
+    </div>`;
+
+    // Preview 3: Tarjetas
+    const p3 = document.getElementById('tpl-preview-3');
+    p3.innerHTML = `<div style="text-align:center;">
+        <div style="color:#e63946;font-size:0.8rem;font-weight:800;margin-bottom:4px;">${f[0].esp}</div>
+        <div style="color:#fff;font-size:1.1rem;font-weight:900;">${f[0].eng}</div>
+        <div style="color:#06b6d4;font-size:0.65rem;font-family:monospace;margin-top:4px;">${f[0].fon||''}</div>
+        <div style="color:#555;font-size:0.5rem;margin-top:12px;">Frame 1 de ${currentGen.frases.length}</div>
+    </div>`;
+}
+
+// =============================================
+// FACTORY — CANVAS RENDERING
+// =============================================
+function renderFinalPreview() {
+    if (!currentGen) return;
+    const canvas = document.getElementById('previewCanvas');
+    const ctx = canvas.getContext('2d');
+    canvas.width = 1080;
+    canvas.height = 1920;
+
+    const colorEsp = document.getElementById('colorEsp').value;
+    const colorEng = document.getElementById('colorEng').value;
+    const colorBg = document.getElementById('colorBg').value;
+    const fontFamily = document.getElementById('fontSelect').value;
+
+    if (selectedTemplate === 'lista_bicolor') {
+        renderListaBicolor(ctx, canvas, colorEsp, colorEng, colorBg, fontFamily);
+    } else if (selectedTemplate === 'columnas_degradado') {
+        renderColumnasDegradado(ctx, canvas, fontFamily);
+    } else if (selectedTemplate === 'tarjetas_reveal') {
+        renderTarjetasReveal(ctx, canvas, colorEsp, colorEng, fontFamily);
+    }
+
+    // SEO fields
+    if (currentGen.seo) {
+        document.getElementById('seoTitle').value = currentGen.seo.titulo_yt || '';
+        document.getElementById('seoDesc').value = currentGen.seo.descripcion || '';
+        document.getElementById('seoTags').value = currentGen.seo.tags || '';
+    }
+
+    // Assembly guide
+    renderAssemblyGuide();
+}
+
+function renderListaBicolor(ctx, canvas, colorEsp, colorEng, colorBg, fontFamily) {
+    const W = canvas.width, H = canvas.height;
+    const frases = currentGen.frases;
+    const count = frases.length;
+
+    // Background
+    ctx.fillStyle = colorBg;
+    ctx.fillRect(0, 0, W, H);
+
+    // Title area
+    ctx.fillStyle = colorEsp;
+    ctx.fillRect(0, 0, W, 160);
+    ctx.fillStyle = '#fff';
+    ctx.font = `bold 52px ${fontFamily}`;
+    ctx.textAlign = 'center';
+    const title = currentGen.hook || currentGen.titulo || 'Inglés Sin Miedo';
+    wrapText(ctx, title, W / 2, 70, W - 80, 56);
+
+    // Phrases
+    const startY = 220;
+    const lineH = Math.min(85, (H - 400) / count);
+    const midX = W / 2;
+
+    frases.forEach((f, i) => {
+        const y = startY + i * lineH;
+
+        // Alternating row background
+        if (i % 2 === 0) {
+            ctx.fillStyle = 'rgba(0,0,0,0.03)';
+            ctx.fillRect(20, y - lineH * 0.3, W - 40, lineH);
+        }
+
+        // Spanish (left)
+        ctx.textAlign = 'left';
+        ctx.font = `bold ${Math.min(42, 600/count*2.5)}px ${fontFamily}`;
+        ctx.fillStyle = colorEsp;
+        ctx.fillText(f.esp, 60, y + 15);
+
+        // English (right)
+        ctx.textAlign = 'right';
+        ctx.font = `800 ${Math.min(44, 600/count*2.5)}px ${fontFamily}`;
+        ctx.fillStyle = colorEng;
+        ctx.fillText(f.eng, W - 60, y + 15);
+    });
+
+    // Bottom branding
+    ctx.fillStyle = colorEsp;
+    ctx.fillRect(0, H - 140, W, 140);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.font = `900 48px ${fontFamily}`;
+    ctx.fillText('INGLÉS SIN MIEDO', W / 2, H - 70);
+    ctx.font = `600 28px ${fontFamily}`;
+    ctx.fillStyle = 'rgba(255,255,255,0.7)';
+    ctx.fillText('@inglessinmiedo', W / 2, H - 30);
+}
+
+function renderColumnasDegradado(ctx, canvas, fontFamily) {
+    const W = canvas.width, H = canvas.height;
+    const frases = currentGen.frases;
+    const count = frases.length;
+
+    // Gradient background
+    const grad = ctx.createLinearGradient(0, 0, 0, H);
+    grad.addColorStop(0, '#1a3a5c');
+    grad.addColorStop(0.5, '#0d2137');
+    grad.addColorStop(1, '#091520');
+    ctx.fillStyle = grad;
+    ctx.fillRect(0, 0, W, H);
+
+    // Title
+    ctx.fillStyle = '#ffd700';
+    ctx.font = `900 48px ${fontFamily}`;
+    ctx.textAlign = 'center';
+    ctx.fillText('💡 ' + (currentGen.hook || currentGen.titulo), W / 2, 90);
+
+    // Column headers
+    const headerY = 160;
+    const colW = (W - 100) / 2;
+    ctx.fillStyle = 'rgba(255,255,255,0.12)';
+    ctx.beginPath();
+    ctx.roundRect(40, headerY, colW, 60, 10);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.roundRect(60 + colW, headerY, colW, 60, 10);
+    ctx.fill();
+
+    ctx.fillStyle = '#fff';
+    ctx.font = `800 36px ${fontFamily}`;
+    ctx.textAlign = 'center';
+    ctx.fillText('ESPAÑOL', 40 + colW / 2, headerY + 42);
+    ctx.fillText('INGLÉS', 60 + colW + colW / 2, headerY + 42);
+
+    // Phrases
+    const startY = 260;
+    const lineH = Math.min(80, (H - 450) / count);
+
+    frases.forEach((f, i) => {
+        const y = startY + i * lineH;
+
+        if (i % 2 === 0) {
+            ctx.fillStyle = 'rgba(255,255,255,0.03)';
+            ctx.fillRect(40, y - 10, W - 80, lineH);
+        }
+
+        const fontSize = Math.min(38, 550 / count * 2.2);
+
+        ctx.textAlign = 'left';
+        ctx.font = `600 ${fontSize}px ${fontFamily}`;
+        ctx.fillStyle = '#fff';
+        ctx.fillText(f.esp, 60, y + 30);
+
+        ctx.fillStyle = '#5cb8ff';
+        ctx.font = `800 ${fontSize}px ${fontFamily}`;
+        ctx.fillText(f.eng, 60 + colW + 20, y + 30);
+    });
+
+    // Separator line
+    ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    ctx.moveTo(W / 2, 240);
+    ctx.lineTo(W / 2, startY + count * lineH);
+    ctx.stroke();
+
+    // Bottom
+    ctx.fillStyle = 'rgba(255,255,255,0.08)';
+    ctx.fillRect(0, H - 120, W, 120);
+    ctx.fillStyle = '#fff';
+    ctx.textAlign = 'center';
+    ctx.font = `800 40px ${fontFamily}`;
+    ctx.fillText('INGLÉS SIN MIEDO 🎯', W / 2, H - 55);
+}
+
+function renderTarjetasReveal(ctx, canvas, colorEsp, colorEng, fontFamily) {
+    const W = canvas.width, H = canvas.height;
+    const f = currentGen.frases[0];
+    if (!f) return;
+
+    // Dark background
+    ctx.fillStyle = '#0a0a15';
+    ctx.fillRect(0, 0, W, H);
+
+    // Center card
+    const cardW = W - 160, cardH = 600;
+    const cx = (W - cardW) / 2, cy = (H - cardH) / 2 - 80;
+
+    ctx.fillStyle = '#1a1a30';
+    ctx.strokeStyle = '#333';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.roundRect(cx, cy, cardW, cardH, 30);
+    ctx.fill();
+    ctx.stroke();
+
+    // Glow effect
+    ctx.shadowColor = colorEsp;
+    ctx.shadowBlur = 40;
+    ctx.fillStyle = colorEsp;
+    ctx.beginPath();
+    ctx.roundRect(cx, cy, cardW, 8, [30, 30, 0, 0]);
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    // Spanish
+    ctx.fillStyle = colorEsp;
+    ctx.font = `700 64px ${fontFamily}`;
+    ctx.textAlign = 'center';
+    ctx.fillText(f.esp, W / 2, cy + 180);
+
+    // English
+    ctx.fillStyle = '#fff';
+    ctx.font = `900 84px ${fontFamily}`;
+    ctx.fillText(f.eng, W / 2, cy + 320);
+
+    // Phonetics
+    if (f.fon) {
+        ctx.fillStyle = '#06b6d4';
+        ctx.font = `600 48px monospace`;
+        ctx.fillText(f.fon, W / 2, cy + 430);
+    }
+
+    // Counter
+    ctx.fillStyle = '#555';
+    ctx.font = `600 36px ${fontFamily}`;
+    ctx.fillText(`1 / ${currentGen.frases.length}`, W / 2, cy + cardH + 80);
+
+    // Branding
+    ctx.fillStyle = colorEsp;
+    ctx.font = `900 44px ${fontFamily}`;
+    ctx.fillText('INGLÉS SIN MIEDO', W / 2, H - 100);
+}
+
+function wrapText(ctx, text, x, y, maxW, lineH) {
+    const words = text.split(' ');
+    let line = '';
+    for (let w of words) {
+        const test = line + w + ' ';
+        if (ctx.measureText(test).width > maxW && line) {
+            ctx.fillText(line.trim(), x, y);
+            line = w + ' ';
+            y += lineH;
+        } else { line = test; }
+    }
+    ctx.fillText(line.trim(), x, y);
+}
+
+function renderAssemblyGuide() {
+    if (!currentGen) return;
+    const guide = document.getElementById('assemblyGuide');
+    let time = 0;
+    let html = '<table style="width:100%;font-size:0.75rem;"><tr><th style="padding:6px;">Frame</th><th>Frase</th><th>Inicio</th><th>Duración</th></tr>';
+    currentGen.frases.forEach((f, i) => {
+        const dur = Math.max(1.5, f.eng.split(/\s+/).length * 0.5 + 0.8);
+        html += `<tr><td style="padding:6px;color:var(--accent);font-weight:700;">#${i + 1}</td>
+            <td>${f.eng}</td><td>${time.toFixed(1)}s</td><td>${dur.toFixed(1)}s</td></tr>`;
+        time += dur;
+    });
+    html += '</table>';
+    html += `<p style="margin-top:10px;color:var(--accent);font-weight:700;">⏱ Duración total estimada: ${time.toFixed(1)}s</p>`;
+    if (time > 58) html += `<p style="color:var(--red);font-weight:700;">⚠️ Demasiado largo para Short (máx 60s). Reduce frases.</p>`;
+    guide.innerHTML = html;
+}
+
+// =============================================
+// EXPORT
+// =============================================
+function downloadImage() {
+    const canvas = document.getElementById('previewCanvas');
+    const link = document.createElement('a');
+    link.download = `ISM_${(currentGen.titulo || 'short').replace(/\s+/g, '_')}_1080x1920.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    toast('📥 Imagen descargada');
+}
+
+function downloadAllFrames() {
+    if (selectedTemplate !== 'tarjetas_reveal') {
+        downloadImage();
+        return;
+    }
+    // For card template, generate one frame per phrase
+    const canvas = document.createElement('canvas');
+    canvas.width = 1080;
+    canvas.height = 1920;
+    const ctx = canvas.getContext('2d');
+    const colorEsp = document.getElementById('colorEsp').value;
+    const colorEng = document.getElementById('colorEng').value;
+    const fontFamily = document.getElementById('fontSelect').value;
+
+    currentGen.frases.forEach((f, i) => {
+        const W = 1080, H = 1920;
+        ctx.fillStyle = '#0a0a15';
+        ctx.fillRect(0, 0, W, H);
+
+        const cardW = W - 160, cardH = 600;
+        const cx = (W - cardW) / 2, cy = (H - cardH) / 2 - 80;
+        ctx.fillStyle = '#1a1a30';
+        ctx.strokeStyle = '#333';
+        ctx.lineWidth = 3;
+        ctx.beginPath();
+        ctx.roundRect(cx, cy, cardW, cardH, 30);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.shadowColor = colorEsp;
+        ctx.shadowBlur = 40;
+        ctx.fillStyle = colorEsp;
+        ctx.beginPath();
+        ctx.roundRect(cx, cy, cardW, 8, [30, 30, 0, 0]);
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        ctx.fillStyle = colorEsp;
+        ctx.font = `700 64px ${fontFamily}`;
+        ctx.textAlign = 'center';
+        ctx.fillText(f.esp, W / 2, cy + 180);
+
+        ctx.fillStyle = '#fff';
+        ctx.font = `900 84px ${fontFamily}`;
+        ctx.fillText(f.eng, W / 2, cy + 320);
+
+        if (f.fon) {
+            ctx.fillStyle = '#06b6d4';
+            ctx.font = `600 48px monospace`;
+            ctx.fillText(f.fon, W / 2, cy + 430);
+        }
+
+        ctx.fillStyle = '#555';
+        ctx.font = `600 36px ${fontFamily}`;
+        ctx.fillText(`${i + 1} / ${currentGen.frases.length}`, W / 2, cy + cardH + 80);
+
+        ctx.fillStyle = colorEsp;
+        ctx.font = `900 44px ${fontFamily}`;
+        ctx.fillText('INGLÉS SIN MIEDO', W / 2, H - 100);
+
+        const link = document.createElement('a');
+        link.download = `ISM_frame_${String(i + 1).padStart(2, '0')}.png`;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    });
+    toast(`📦 ${currentGen.frases.length} frames descargados`);
+}
+
+function copySEO() {
+    const t = document.getElementById('seoTitle').value;
+    const d = document.getElementById('seoDesc').value;
+    const tags = document.getElementById('seoTags').value;
+    const all = `TÍTULO:\n${t}\n\nDESCRIPCIÓN:\n${d}\n\nTAGS:\n${tags}`;
+    navigator.clipboard.writeText(all).then(() => toast('📋 SEO copiado'));
+}
+
+async function saveToDatabase() {
+    if (!currentGen) return;
+    const video = {
+        id: Date.now(),
+        tema: currentGen.titulo || 'Sin título',
+        estado: 'ready',
+        category: currentGen.categoria || '',
+        date: '',
+        hook: currentGen.hook || '',
+        frases: currentGen.frases,
+        seo: currentGen.seo || {},
+        notas: '',
+        template: selectedTemplate,
+        created: Date.now()
+    };
+    videos.push(video);
+    await dbPut(video);
+    renderAll();
+    toast('💾 Video guardado en la base de datos');
+}
+
+function resetFactory() {
+    currentGen = null;
+    document.getElementById('topicInput').value = '';
+    goStep(1);
+}
+
+// =============================================
+// DATABASE
+// =============================================
+function renderDB() {
+    const search = (document.getElementById('dbSearch')?.value || '').toLowerCase();
+    const filter = document.getElementById('dbFilter')?.value || 'all';
+    let filtered = videos.filter(v => {
+        const matchS = v.tema.toLowerCase().includes(search);
+        const matchF = filter === 'all' || v.estado === filter;
+        return matchS && matchF;
+    });
+    document.getElementById('dbBody').innerHTML = filtered.map(v => `
+        <tr onclick="openEditModal(${v.id})">
+            <td style="font-weight:700;">${v.tema}</td>
+            <td><span class="badge badge-${v.estado}">${v.estado}</span></td>
+            <td style="color:var(--text-secondary);font-size:0.8rem;font-style:italic;">"${v.hook || (v.frases?.[0]?.eng || '-')}"</td>
+            <td>${v.frases?.length || 0}</td>
+            <td style="font-size:0.8rem;color:var(--text-tertiary);">${v.date || '-'}</td>
+        </tr>
+    `).join('');
+}
+
+// =============================================
+// KANBAN
+// =============================================
+function renderKanban() {
+    const cols = [
+        { k: 'idea', l: '💡 Ideas', c: 'var(--text-secondary)' },
+        { k: 'audio', l: '🎙 Audio', c: 'var(--accent)' },
+        { k: 'edit', l: '✂️ Edición', c: 'var(--yellow)' },
+        { k: 'ready', l: '✅ Listo', c: 'var(--green)' },
+        { k: 'pub', l: '🚀 Publicado', c: 'var(--cyan)' }
+    ];
+    document.getElementById('kanbanBoard').innerHTML = cols.map(c => {
+        const items = videos.filter(v => v.estado === c.k);
+        return `<div class="kanban-col" ondragover="event.preventDefault()" ondrop="kanbanDrop(event,'${c.k}')">
+            <div class="kanban-head"><span>${c.l}</span><span style="color:var(--text-tertiary);">${items.length}</span></div>
+            <div class="kanban-body">
+                ${items.map(v => `<div class="k-card" draggable="true" ondragstart="dragId=${v.id}" onclick="openEditModal(${v.id})">
+                    <div class="k-card-title">${v.tema}</div>
+                    <div class="k-card-meta">${v.frases?.length || 0} frases • ${v.category || ''}</div>
+                </div>`).join('')}
+            </div>
+        </div>`;
+    }).join('');
+}
+
+async function kanbanDrop(e, status) {
+    e.preventDefault();
+    if (!dragId) return;
+    const v = videos.find(x => x.id === dragId);
+    if (v) {
+        v.estado = status;
+        if (status === 'pub' && !v.date) v.date = new Date().toISOString().split('T')[0];
+        await dbPut(v);
+        renderAll();
+    }
+    dragId = null;
+}
+
+// =============================================
+// CALENDAR
+// =============================================
+function renderCalendar() {
+    const m = calendarDate.getMonth(), y = calendarDate.getFullYear();
+    const months = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+    document.getElementById('calTitle').textContent = `${months[m]} ${y}`;
+    const days = ['Dom', 'Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'];
+    let html = days.map(d => `<div style="text-align:center;font-size:0.7rem;font-weight:800;color:var(--text-tertiary);padding:8px;">${d}</div>`).join('');
+    const first = new Date(y, m, 1).getDay();
+    const total = new Date(y, m + 1, 0).getDate();
+    for (let i = 0; i < first; i++) html += '<div></div>';
+    for (let d = 1; d <= total; d++) {
+        const ds = `${y}-${String(m + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+        const vids = videos.filter(v => v.date === ds);
+        const today = new Date().toISOString().split('T')[0] === ds;
+        html += `<div style="background:var(--bg-panel);border:1px solid ${today ? 'var(--accent)' : 'var(--border)'};border-radius:6px;min-height:80px;padding:8px;">
+            <div style="font-size:0.7rem;font-weight:800;color:${today ? 'var(--accent)' : 'var(--text-tertiary)'};">${d}</div>
+            ${vids.map(v => `<div style="font-size:0.6rem;background:var(--bg-card);padding:4px 6px;border-radius:4px;margin-top:4px;border-left:3px solid var(--accent);cursor:pointer;" onclick="openEditModal(${v.id})">${v.tema}</div>`).join('')}
+        </div>`;
+    }
+    document.getElementById('calGrid').innerHTML = html;
+}
+
+function changeMonth(d) {
+    calendarDate.setMonth(calendarDate.getMonth() + d);
+    renderCalendar();
+}
+
+// =============================================
+// EDIT MODAL
+// =============================================
+function openEditModal(id) {
+    const v = videos.find(x => x.id === id);
+    if (!v) return;
+    currentEditId = id;
+    document.getElementById('editTitle').value = v.tema;
+    document.getElementById('editStatus').value = v.estado;
+    document.getElementById('editDate').value = v.date || '';
+    document.getElementById('editCat').value = v.category || '';
+    document.getElementById('editNotes').value = v.notas || '';
+    renderEditPhrases();
+    document.getElementById('editModal').classList.add('open');
+}
+
+function renderEditPhrases() {
+    const v = videos.find(x => x.id === currentEditId);
+    if (!v || !v.frases) return;
+    document.getElementById('editPhrasesContainer').innerHTML = v.frases.map((f, i) => `
+        <div class="gen-phrase-row">
+            <input type="text" value="${f.esp}" id="ep-${i}-esp" placeholder="Español">
+            <input type="text" value="${f.eng}" id="ep-${i}-eng" placeholder="English" style="font-weight:700;">
+            <input type="text" value="${f.fon || ''}" id="ep-${i}-fon" placeholder="/fonética/">
+            <button class="btn btn-ghost btn-sm" onclick="removeEditPhrase(${i})" style="color:var(--red);">✕</button>
+        </div>
+    `).join('');
+}
+
+function addEditPhrase() {
+    const v = videos.find(x => x.id === currentEditId);
+    if (!v) return;
+    collectEditPhrases();
+    v.frases.push({ esp: '', eng: '', fon: '' });
+    renderEditPhrases();
+}
+
+function removeEditPhrase(i) {
+    const v = videos.find(x => x.id === currentEditId);
+    collectEditPhrases();
+    v.frases.splice(i, 1);
+    renderEditPhrases();
+}
+
+function collectEditPhrases() {
+    const v = videos.find(x => x.id === currentEditId);
+    if (!v) return;
+    v.frases = v.frases.map((f, i) => ({
+        esp: document.getElementById(`ep-${i}-esp`)?.value || f.esp,
+        eng: document.getElementById(`ep-${i}-eng`)?.value || f.eng,
+        fon: document.getElementById(`ep-${i}-fon`)?.value || f.fon || ''
+    }));
+}
+
+async function saveEditVideo() {
+    const v = videos.find(x => x.id === currentEditId);
+    if (!v) return;
+    collectEditPhrases();
+    v.tema = document.getElementById('editTitle').value;
+    v.estado = document.getElementById('editStatus').value;
+    v.date = document.getElementById('editDate').value;
+    v.category = document.getElementById('editCat').value;
+    v.notas = document.getElementById('editNotes').value;
+    await dbPut(v);
+    closeEditModal();
+    renderAll();
+    toast('💾 Guardado');
+}
+
+async function deleteEditVideo() {
+    if (!confirm('¿Eliminar este video?')) return;
+    await dbDel(currentEditId);
+    videos = videos.filter(v => v.id !== currentEditId);
+    closeEditModal();
+    renderAll();
+    toast('🗑 Eliminado');
+}
+
+function closeEditModal() {
+    document.getElementById('editModal').classList.remove('open');
+    currentEditId = null;
+}
+
+// =============================================
+// TTS / AUDIO
+// =============================================
+function populateSelects() {
+    const opts = '<option value="">-- Selecciona --</option>' + videos.map(v => `<option value="${v.id}">${v.tema}</option>`).join('');
+    ['ttsVideoSel', 'teleVideoSel', 'seoVideoSel'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerHTML = opts;
+    });
+}
+
+function loadTTSPhrases() {
+    const id = parseInt(document.getElementById('ttsVideoSel').value);
+    const v = videos.find(x => x.id === id);
+    if (!v || !v.frases) { document.getElementById('ttsPhraseList').innerHTML = ''; return; }
+    document.getElementById('ttsPhraseList').innerHTML = v.frases.map((f, i) => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--bg-card);border-radius:var(--radius-sm);margin-bottom:6px;font-size:0.82rem;">
+            <div><span style="color:var(--accent);font-weight:700;">${f.esp}</span> → <span style="color:var(--white);font-weight:800;">${f.eng}</span></div>
+            <button class="btn btn-ghost btn-sm" onclick="speakPhrase('${f.esp.replace(/'/g,"\\'")}','${f.eng.replace(/'/g,"\\'")}')">▶</button>
+        </div>
+    `).join('');
+}
+
+function speakPhrase(esp, eng) {
+    const lang = document.getElementById('ttsLang').value;
+    const speed = parseFloat(document.getElementById('ttsSpeed').value);
+    window.speechSynthesis.cancel();
+
+    if (lang === 'es' || lang === 'both') {
+        const u1 = new SpeechSynthesisUtterance(esp);
+        u1.lang = 'es-MX'; u1.rate = speed;
+        window.speechSynthesis.speak(u1);
+    }
+    if (lang === 'en' || lang === 'both') {
+        const u2 = new SpeechSynthesisUtterance(eng);
+        u2.lang = 'en-US'; u2.rate = speed;
+        window.speechSynthesis.speak(u2);
+    }
+}
+
+function playAllTTS() {
+    const id = parseInt(document.getElementById('ttsVideoSel').value);
+    const v = videos.find(x => x.id === id);
+    if (!v || !v.frases) return toast('Selecciona un video', 'error');
+    const lang = document.getElementById('ttsLang').value;
+    const speed = parseFloat(document.getElementById('ttsSpeed').value);
+    window.speechSynthesis.cancel();
+
+    v.frases.forEach(f => {
+        if (lang === 'es' || lang === 'both') {
+            const u1 = new SpeechSynthesisUtterance(f.esp);
+            u1.lang = 'es-MX'; u1.rate = speed;
+            window.speechSynthesis.speak(u1);
+        }
+        if (lang === 'en' || lang === 'both') {
+            const u2 = new SpeechSynthesisUtterance(f.eng);
+            u2.lang = 'en-US'; u2.rate = speed;
+            window.speechSynthesis.speak(u2);
+        }
+    });
+    toast('▶ Reproduciendo...');
+}
+
+function stopTTS() {
+    window.speechSynthesis.cancel();
+    toast('⏹ Detenido');
+}
+
+// =============================================
+// TELEPROMPTER
+// =============================================
+function openTeleprompter() {
+    const id = parseInt(document.getElementById('teleVideoSel').value);
+    const v = videos.find(x => x.id === id);
+    if (!v) return toast('Selecciona un video', 'error');
+    document.getElementById('teleContent').innerHTML = v.frases.map(f => `
+        <div style="margin-bottom:60px;">
+            <div style="font-size:2rem;color:var(--yellow);font-weight:700;opacity:0.8;margin-bottom:10px;">${f.esp}</div>
+            <div style="font-size:4rem;color:#fff;font-weight:900;line-height:1.1;text-transform:uppercase;margin-bottom:10px;">${f.eng}</div>
+            <div style="font-size:2rem;color:var(--cyan);font-family:monospace;">${f.fon || ''}</div>
+        </div>
+    `).join('');
+    document.getElementById('teleModal').classList.add('open');
+}
+
+function closeTeleprompter() {
+    document.getElementById('teleModal').classList.remove('open');
+}
+
+// =============================================
+// RECORDING
+// =============================================
+async function startRecording() {
+    const btn = document.getElementById('recBtn');
+    if (mediaRecorder && mediaRecorder.state === 'recording') {
+        mediaRecorder.stop();
+        btn.innerHTML = '🔴 Grabar Audio';
+        btn.classList.remove('btn-warning');
+        btn.classList.add('btn-secondary');
+        return;
+    }
+    try {
+        const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+        mediaRecorder = new MediaRecorder(stream);
+        audioChunks = [];
+        mediaRecorder.ondataavailable = e => audioChunks.push(e.data);
+        mediaRecorder.onstop = () => {
+            const blob = new Blob(audioChunks, { type: 'audio/webm' });
+            const url = URL.createObjectURL(blob);
+            const audio = document.getElementById('recPlayback');
+            audio.src = url;
+            audio.style.display = 'block';
+            document.getElementById('recStatus').innerHTML = '✅ Grabación lista • <a href="' + url + '" download="ISM_audio.webm" style="color:var(--accent);">Descargar</a>';
+            stream.getTracks().forEach(t => t.stop());
+        };
+        mediaRecorder.start();
+        btn.innerHTML = '⏹ Detener Grabación';
+        btn.classList.remove('btn-secondary');
+        btn.classList.add('btn-warning');
+        document.getElementById('recStatus').textContent = '🔴 Grabando...';
+        document.getElementById('recPlayback').style.display = 'none';
+    } catch (err) {
+        toast('No se pudo acceder al micrófono', 'error');
+    }
+}
+
+// =============================================
+// SEO GENERATOR
+// =============================================
+async function generateSEO() {
+    const id = parseInt(document.getElementById('seoVideoSel').value);
+    const v = videos.find(x => x.id === id);
+    if (!v) return toast('Selecciona un video', 'error');
+    if (!API_KEY) return toast('Configura tu API Key', 'error');
+
+    const frases = v.frases.map(f => `${f.esp} → ${f.eng}`).join('\n');
+    const prompt = `Eres un experto en YouTube SEO para el nicho de educación en inglés para hispanohablantes.
+
+Video: "${v.tema}"
+Canal: "Inglés Sin Miedo" (YouTube Shorts)
+Contenido del video:
+${frases}
+
+Genera:
+1. 3 títulos virales para YouTube (máx 60 caracteres cada uno, incluir emojis)
+2. Descripción optimizada (máx 200 caracteres, con CTA y emojis)
+3. 10 tags SEO separados por comas
+4. 5 hashtags relevantes
+
+Responde SOLO con JSON puro sin markdown:
+{"titulos":["t1","t2","t3"],"descripcion":"desc","tags":"tag1,tag2","hashtags":"#h1 #h2"}`;
+
+    showLoading('🔍 Generando SEO...');
+    try {
+        const response = await fetch(`${GEMINI_ENDPOINT}?key=${API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { temperature: 0.7, maxOutputTokens: 1024 } })
+        });
+        const data = await response.json();
+        let text = data.candidates[0].content.parts[0].text;
+        text = text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const seo = JSON.parse(text);
+
+        document.getElementById('seoTitles').innerHTML = seo.titulos.map((t, i) =>
+            `<div style="padding:8px 12px;background:var(--bg-card);border-radius:var(--radius-sm);margin-bottom:6px;cursor:pointer;font-weight:700;" onclick="navigator.clipboard.writeText('${t.replace(/'/g, "\\'")}');toast('Copiado')">${i + 1}. ${t}</div>`
+        ).join('');
+        document.getElementById('seoDescription').value = seo.descripcion;
+        document.getElementById('seoTagsResult').value = seo.tags;
+        document.getElementById('seoHashtags').value = seo.hashtags;
+        document.getElementById('seoResult').style.display = 'block';
+        hideLoading();
+        toast('✅ SEO generado');
+    } catch (err) {
+        hideLoading();
+        toast('Error: ' + err.message, 'error');
+    }
+}
+
+function copyAllSEO() {
+    const titles = document.getElementById('seoTitles').textContent;
+    const desc = document.getElementById('seoDescription').value;
+    const tags = document.getElementById('seoTagsResult').value;
+    const hash = document.getElementById('seoHashtags').value;
+    navigator.clipboard.writeText(`TÍTULOS:\n${titles}\n\nDESCRIPCIÓN:\n${desc}\n\nTAGS:\n${tags}\n\nHASHTAGS:\n${hash}`);
+    toast('📋 SEO copiado');
+}
+
+// =============================================
+// PROMPT HUB
+// =============================================
+function copyPromptTemplate(type) {
+    const templates = {
+        script: `Eres un profesor de inglés para hispanohablantes. Crea una lista de vocabulario para un YouTube Short.
+
+TEMA: [ESCRIBE TU TEMA AQUÍ]
+CANTIDAD: 15 frases
+NIVEL: Básico
+
+REGLAS:
+1. Genera pares español → inglés
+2. La primera frase debe ser un HOOK viral
+3. Incluye fonética aproximada
+4. Progresión fácil → difícil
+5. Frases cortas (máx 5 palabras en inglés)
+
+Formato: JSON con campos: titulo, hook, categoria, frases[{esp,eng,fon}], seo{titulo_yt,descripcion,tags,hashtags}`,
+
+        hooks: `Dame 5 variantes de hooks virales para un YouTube Short de inglés sobre: [TU TEMA]
+
+Estilos:
+1. Curiosidad ("El 90% no sabe...")
+2. Negación ("NUNCA digas esto...")
+3. Reto ("¿Puedes decir las 10?")
+4. Shock ("Esta palabra NO significa lo que crees")
+5. Autoridad ("Un nativo NUNCA diría esto")`,
+
+        seo: `Experto YouTube SEO. Canal: "Inglés Sin Miedo" (Shorts educativos).
+Video sobre: [TEMA]
+Genera: 3 títulos virales (<60 chars), descripción con CTA, 10 tags, 5 hashtags.`,
+
+        broll: `Analiza este guion de Short educativo de inglés y dame 5 búsquedas exactas en inglés para encontrar B-Roll en Pexels.com:
+[PEGA TU GUION AQUÍ]
+Que sean búsquedas específicas como "business meeting office" no genéricas.`
+    };
+
+    navigator.clipboard.writeText(templates[type]).then(() => toast('📋 Prompt copiado al portapapeles'));
+}
+
+// =============================================
+// SWIPE FILE
+// =============================================
+function addInspo() {
+    const url = document.getElementById('inspoURL').value;
+    const note = document.getElementById('inspoNote').value;
+    if (!url) return;
+    inspoItems.push({ url, note, date: new Date().toLocaleDateString() });
+    localStorage.setItem('ism_inspo_v2', JSON.stringify(inspoItems));
+    document.getElementById('inspoURL').value = '';
+    document.getElementById('inspoNote').value = '';
+    renderInspo();
+}
+
+function renderInspo() {
+    document.getElementById('inspoList').innerHTML = inspoItems.map((item, i) => `
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);margin-bottom:8px;">
+            <div>
+                <a href="${item.url}" target="_blank" style="color:var(--accent);font-weight:700;word-break:break-all;font-size:0.85rem;">${item.url}</a>
+                <div style="font-size:0.75rem;color:var(--text-secondary);margin-top:4px;">${item.note} • ${item.date}</div>
+            </div>
+            <button class="btn btn-ghost btn-sm" onclick="inspoItems.splice(${i},1);localStorage.setItem('ism_inspo_v2',JSON.stringify(inspoItems));renderInspo();" style="color:var(--red);">✕</button>
+        </div>
+    `).join('');
+}
+
+// =============================================
+// SETTINGS
+// =============================================
+function saveAPIKey() {
+    API_KEY = document.getElementById('apiKeyInput').value.trim();
+    localStorage.setItem('ism_api_key', API_KEY);
+    toast('🔑 API Key guardada');
+}
+
+async function testAPI() {
+    if (!API_KEY) { API_KEY = document.getElementById('apiKeyInput').value.trim(); }
+    if (!API_KEY) return toast('Escribe una API Key', 'error');
+    document.getElementById('apiStatus').innerHTML = '<div class="loading-spinner" style="width:16px;height:16px;display:inline-block;"></div> Probando...';
+    try {
+        const r = await fetch(`${GEMINI_ENDPOINT}?key=${API_KEY}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ contents: [{ parts: [{ text: 'Responde solo: OK' }] }] })
+        });
+        if (r.ok) {
+            document.getElementById('apiStatus').innerHTML = '<span style="color:var(--green);font-weight:700;">✅ Conexión exitosa</span>';
+            localStorage.setItem('ism_api_key', API_KEY);
+        } else {
+            const err = await r.json();
+            document.getElementById('apiStatus').innerHTML = `<span style="color:var(--red);">❌ ${err.error?.message || 'Error'}</span>`;
+        }
+    } catch (e) {
+        document.getElementById('apiStatus').innerHTML = `<span style="color:var(--red);">❌ Error de red</span>`;
+    }
+}
+
+function exportAllData() {
+    const data = { videos, inspo: inspoItems, version: 'ISM_FACTORY_V1', date: new Date().toISOString() };
+    const a = document.createElement('a');
+    a.href = 'data:text/json;charset=utf-8,' + encodeURIComponent(JSON.stringify(data, null, 2));
+    a.download = `ISM_FACTORY_backup_${new Date().toISOString().split('T')[0]}.json`;
+    a.click();
+    toast('📥 Backup exportado');
+}
+
+async function importAllData() {
+    const file = document.getElementById('importFile').files[0];
+    if (!file) return toast('Selecciona un archivo JSON', 'error');
+    const reader = new FileReader();
+    reader.onload = async e => {
+        try {
+            const data = JSON.parse(e.target.result);
+            if (data.videos) {
+                for (let v of videos) await dbDel(v.id);
+                for (let v of data.videos) await dbPut(v);
+                videos = data.videos;
+            }
+            if (data.inspo) {
+                inspoItems = data.inspo;
+                localStorage.setItem('ism_inspo_v2', JSON.stringify(inspoItems));
+            }
+            renderAll();
+            toast('📤 Datos importados');
+        } catch (err) { toast('Error en el JSON', 'error'); }
+    };
+    reader.readAsText(file);
+}
+</script>
+
+</body>
+</html>
